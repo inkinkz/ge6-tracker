@@ -62,7 +62,7 @@ export function Dashboard({ initial }: { initial: StatsSnapshot | null }) {
         refreshing={refreshing}
         onRefresh={refresh}
       />
-      <main className='mx-auto max-w-5xl px-5 pt-7 pb-14 sm:pt-10'>
+      <main className='mx-auto max-w-5xl px-4 pt-7 pb-14 sm:pt-10'>
         <div className='mb-7 space-y-5 sm:mb-9'>
           <div className='grid items-center gap-4 sm:grid-cols-[minmax(0,1fr)_220px] sm:gap-8'>
             <div className='space-y-2.5'>
@@ -110,11 +110,7 @@ export function Dashboard({ initial }: { initial: StatsSnapshot | null }) {
             <ActivityChart daily={data.daily} hourly={data.hourly} />
             <div className='grid items-start gap-5 sm:gap-6 lg:grid-cols-2'>
               <TopVoters data={data} myWallet={myWallet} />
-              <RecentVotes
-                votes={data.recent}
-                myWallet={myWallet}
-                pollSeconds={pollSeconds}
-              />
+              <RecentVotes votes={data.recent} myWallet={myWallet} pollSeconds={pollSeconds} />
               <WalletLookup />
               <Distribution data={data} />
             </div>
