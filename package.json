@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "data:ge5": "node scripts/build-ge5-data.mjs"
   },
   "dependencies": {
     "next": "16.4.1",

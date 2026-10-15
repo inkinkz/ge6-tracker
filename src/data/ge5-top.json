@@ -1,0 +1,2706 @@
+{
+ "source": "GE5 voter export (wallet × member totals)",
+ "totals": {
+  "tokens": 1161494.37,
+  "wallets": 3160,
+  "members": 48
+ },
+ "top": [
+  {
+   "rank": 1,
+   "address": "0x05f9e78a92fb9a8dd5434503f1e61e2126dd1367",
+   "tokens": 103578,
+   "memberCount": 5,
+   "members": [
+    {
+     "name": "Nenie CGM48",
+     "tokens": 76119
+    },
+    {
+     "name": "Jew BNK48",
+     "tokens": 16225
+    },
+    {
+     "name": "Arlee BNK48",
+     "tokens": 8234
+    }
+   ]
+  },
+  {
+   "rank": 2,
+   "address": "0x91ef5e8a8ff131cb9ab9cb236be88ff620974583",
+   "tokens": 46096,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 46096
+    }
+   ]
+  },
+  {
+   "rank": 3,
+   "address": "0xa38361605c8c4e20a4232b4eb161efb3779574e5",
+   "tokens": 39002,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 39002
+    }
+   ]
+  },
+  {
+   "rank": 4,
+   "address": "0x8b9e9959c6fba81337520fda22d12ffc3cab4ab9",
+   "tokens": 15044,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Hoop BNK48",
+     "tokens": 15044
+    }
+   ]
+  },
+  {
+   "rank": 5,
+   "address": "0x6040f06f791f50c9b5070eb491e57e6e968ddd24",
+   "tokens": 13720.8,
+   "memberCount": 6,
+   "members": [
+    {
+     "name": "Champoo CGM48",
+     "tokens": 9326.5
+    },
+    {
+     "name": "Ploen CGM48",
+     "tokens": 3101.3
+    },
+    {
+     "name": "Kaning CGM48",
+     "tokens": 724
+    }
+   ]
+  },
+  {
+   "rank": 6,
+   "address": "0x1c79a41a9319510fd549b1e8084b5db14a05028b",
+   "tokens": 12198,
+   "memberCount": 12,
+   "members": [
+    {
+     "name": "Hoop BNK48",
+     "tokens": 11650
+    },
+    {
+     "name": "L BNK48",
+     "tokens": 507
+    },
+    {
+     "name": "Janry BNK48",
+     "tokens": 14
+    }
+   ]
+  },
+  {
+   "rank": 7,
+   "address": "0x5e5f04aa95880119072250e5554abda2d75cb6bf",
+   "tokens": 11613,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 11613
+    }
+   ]
+  },
+  {
+   "rank": 8,
+   "address": "0x01bc49fda80a99031317ba50d56eaf787042c6ec",
+   "tokens": 10321,
+   "memberCount": 3,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 10319
+    },
+    {
+     "name": "Earn BNK48",
+     "tokens": 1
+    },
+    {
+     "name": "Hoop BNK48",
+     "tokens": 1
+    }
+   ]
+  },
+  {
+   "rank": 9,
+   "address": "0xe9a58980c9618339264e3f0186e4d82d8947ef53",
+   "tokens": 10301,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Grace BNK48",
+     "tokens": 10301
+    }
+   ]
+  },
+  {
+   "rank": 10,
+   "address": "0x76961dd459ce0f92b580cb88c2368a77ebe623e9",
+   "tokens": 10001,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 10001
+    }
+   ]
+  },
+  {
+   "rank": 10,
+   "address": "0x13467ddd950c0d226c3bd2caa8456959b9b1213b",
+   "tokens": 10001,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaofrang BNK48",
+     "tokens": 10001
+    }
+   ]
+  },
+  {
+   "rank": 12,
+   "address": "0x6734cad6183cf2793eab37ef019f9174cd107b75",
+   "tokens": 9634,
+   "memberCount": 5,
+   "members": [
+    {
+     "name": "Nana CGM48",
+     "tokens": 4133
+    },
+    {
+     "name": "Lookked CGM48",
+     "tokens": 2981
+    },
+    {
+     "name": "Arlee BNK48",
+     "tokens": 1265
+    }
+   ]
+  },
+  {
+   "rank": 13,
+   "address": "0xa6420ef2230685b2a4838278b70dee66e1911619",
+   "tokens": 9113,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 9113
+    }
+   ]
+  },
+  {
+   "rank": 14,
+   "address": "0xe740a773f227958d106ed9e4b41b0c2769c0d5f0",
+   "tokens": 8698,
+   "memberCount": 10,
+   "members": [
+    {
+     "name": "Khaimook BNK48",
+     "tokens": 4546
+    },
+    {
+     "name": "Champoo CGM48",
+     "tokens": 3972
+    },
+    {
+     "name": "Janry BNK48",
+     "tokens": 50
+    }
+   ]
+  },
+  {
+   "rank": 15,
+   "address": "0x5db1e08dd7346ba1b853fa44f8dc1a03f6082949",
+   "tokens": 8605,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Neen BNK48",
+     "tokens": 8605
+    }
+   ]
+  },
+  {
+   "rank": 16,
+   "address": "0x10e59399f4f6032491ef273564444096c6df217b",
+   "tokens": 8112.65,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "L BNK48",
+     "tokens": 8112.65
+    }
+   ]
+  },
+  {
+   "rank": 17,
+   "address": "0x544e453b629192d03f2bdb37fab0e54b892be218",
+   "tokens": 8001.06,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Sita CGM48",
+     "tokens": 8001.06
+    }
+   ]
+  },
+  {
+   "rank": 18,
+   "address": "0x712c62fb6393f8858b91989b6fcaf6898b7e1d5c",
+   "tokens": 7802,
+   "memberCount": 2,
+   "members": [
+    {
+     "name": "Popper BNK48",
+     "tokens": 7777
+    },
+    {
+     "name": "Proud BNK48",
+     "tokens": 25
+    }
+   ]
+  },
+  {
+   "rank": 19,
+   "address": "0x8df2f4d5a784f0903d782f200b667a3ec06170ea",
+   "tokens": 7716,
+   "memberCount": 5,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 7596
+    },
+    {
+     "name": "Saonoi BNK48",
+     "tokens": 90
+    },
+    {
+     "name": "Arlee BNK48",
+     "tokens": 10
+    }
+   ]
+  },
+  {
+   "rank": 20,
+   "address": "0x2201963b8cbaf2c6f8c27cd01683979fd6924c2c",
+   "tokens": 7359.99,
+   "memberCount": 26,
+   "members": [
+    {
+     "name": "Wawa BNK48",
+     "tokens": 6873.79
+    },
+    {
+     "name": "Sindy BNK48",
+     "tokens": 451
+    },
+    {
+     "name": "Proud BNK48",
+     "tokens": 5.2
+    }
+   ]
+  },
+  {
+   "rank": 21,
+   "address": "0x1ddcb35c7ec6f96767271d6cb28cb63a98bc7b2e",
+   "tokens": 7350.35,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "L BNK48",
+     "tokens": 7350.35
+    }
+   ]
+  },
+  {
+   "rank": 22,
+   "address": "0x0cac2bb76ac49b17ad374e678855837e125026a4",
+   "tokens": 7191,
+   "memberCount": 6,
+   "members": [
+    {
+     "name": "Niya BNK48",
+     "tokens": 7174
+    },
+    {
+     "name": "Saonoi BNK48",
+     "tokens": 13
+    },
+    {
+     "name": "Champoo CGM48",
+     "tokens": 1
+    }
+   ]
+  },
+  {
+   "rank": 23,
+   "address": "0x0eebb2d4d5451fb9dec305c3c5976ede13371099",
+   "tokens": 7041,
+   "memberCount": 7,
+   "members": [
+    {
+     "name": "Jew BNK48",
+     "tokens": 6709
+    },
+    {
+     "name": "Galeya BNK48",
+     "tokens": 134
+    },
+    {
+     "name": "Lingling CGM48",
+     "tokens": 125
+    }
+   ]
+  },
+  {
+   "rank": 24,
+   "address": "0x2f17f86c32d60d4666ce3ba51304019c55a7cf14",
+   "tokens": 7020,
+   "memberCount": 2,
+   "members": [
+    {
+     "name": "Hoop BNK48",
+     "tokens": 6519
+    },
+    {
+     "name": "Pancake BNK48",
+     "tokens": 501
+    }
+   ]
+  },
+  {
+   "rank": 25,
+   "address": "0x20e0e0a0fb09e6f5c0e5dae7590fb41485cfe511",
+   "tokens": 7007,
+   "memberCount": 19,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 6953
+    },
+    {
+     "name": "Khaimook BNK48",
+     "tokens": 11
+    },
+    {
+     "name": "Hoop BNK48",
+     "tokens": 10
+    }
+   ]
+  },
+  {
+   "rank": 26,
+   "address": "0xc2512dbdf4183e34df68b306278c99c521a60719",
+   "tokens": 7000,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Champoo CGM48",
+     "tokens": 7000
+    }
+   ]
+  },
+  {
+   "rank": 26,
+   "address": "0xdd855a16857ddf4c8e9b16a46b0204336c3bcfec",
+   "tokens": 7000,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Grace BNK48",
+     "tokens": 7000
+    }
+   ]
+  },
+  {
+   "rank": 28,
+   "address": "0xc14185169fff94ac3f5489be564aac8ee03229e1",
+   "tokens": 6610,
+   "memberCount": 4,
+   "members": [
+    {
+     "name": "Earn BNK48",
+     "tokens": 6546
+    },
+    {
+     "name": "Mean BNK48",
+     "tokens": 60
+    },
+    {
+     "name": "Earth BNK48",
+     "tokens": 2
+    }
+   ]
+  },
+  {
+   "rank": 29,
+   "address": "0xa8c34fad758165821db12530423fe6a848dc78d6",
+   "tokens": 6308.6,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Popper BNK48",
+     "tokens": 6308.6
+    }
+   ]
+  },
+  {
+   "rank": 30,
+   "address": "0x142eb4268f95e36ed4d6103dceeaca5d8f400700",
+   "tokens": 6250,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Janry BNK48",
+     "tokens": 6250
+    }
+   ]
+  },
+  {
+   "rank": 31,
+   "address": "0x59e934a9903ce8799f5abcf51daf649af2ab6fc5",
+   "tokens": 6127,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Yoghurt BNK48",
+     "tokens": 6127
+    }
+   ]
+  },
+  {
+   "rank": 32,
+   "address": "0xdecd9f389ab472d6c2987d134f4a04c7d40fa2a4",
+   "tokens": 6099,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Mean BNK48",
+     "tokens": 6099
+    }
+   ]
+  },
+  {
+   "rank": 33,
+   "address": "0x391ab12f1afab5db0111dfb35d605941228a8a49",
+   "tokens": 5837.8,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Mei CGM48",
+     "tokens": 5837.8
+    }
+   ]
+  },
+  {
+   "rank": 34,
+   "address": "0x89d614ac456332d25510076bef00cda58cbd344c",
+   "tokens": 5767.72,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Yoghurt BNK48",
+     "tokens": 5767.72
+    }
+   ]
+  },
+  {
+   "rank": 35,
+   "address": "0x7f949c4ab77706006c650df0f2799243588ba894",
+   "tokens": 5738,
+   "memberCount": 2,
+   "members": [
+    {
+     "name": "Patt BNK48",
+     "tokens": 5400
+    },
+    {
+     "name": "Prae CGM48",
+     "tokens": 338
+    }
+   ]
+  },
+  {
+   "rank": 36,
+   "address": "0x6f859e4fdf091d4b4a240542a4b4ca11b1b3f05d",
+   "tokens": 5643,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Janry BNK48",
+     "tokens": 5643
+    }
+   ]
+  },
+  {
+   "rank": 37,
+   "address": "0xb4f94b6beee7cd8f483bac8acd1bc90d4e2b49b9",
+   "tokens": 5531,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Popper BNK48",
+     "tokens": 5531
+    }
+   ]
+  },
+  {
+   "rank": 38,
+   "address": "0x0857b1604a5dce96b0e98277d6b338b9a28c0b66",
+   "tokens": 5452,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Earn BNK48",
+     "tokens": 5452
+    }
+   ]
+  },
+  {
+   "rank": 39,
+   "address": "0x694c2ea27e9bdc613b34af42ebcabd33644bcee0",
+   "tokens": 5409,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Micha BNK48",
+     "tokens": 5409
+    }
+   ]
+  },
+  {
+   "rank": 40,
+   "address": "0x65c4dcf89e7e3f44ad5ba15ff5bfe200b8c8dd0d",
+   "tokens": 5400,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Popper BNK48",
+     "tokens": 5400
+    }
+   ]
+  },
+  {
+   "rank": 41,
+   "address": "0x75e946f811d2b418ca10bcca28fcd905017d2210",
+   "tokens": 5359.5,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Hoop BNK48",
+     "tokens": 5359.5
+    }
+   ]
+  },
+  {
+   "rank": 42,
+   "address": "0xc2d728c8f904327edfe32aff7ae26ed4ca08bb52",
+   "tokens": 5093,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Neen BNK48",
+     "tokens": 5093
+    }
+   ]
+  },
+  {
+   "rank": 43,
+   "address": "0x72b05eeba55f78877c447fca7fe2ac2664253b60",
+   "tokens": 5000,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 5000
+    }
+   ]
+  },
+  {
+   "rank": 44,
+   "address": "0xa6b550336f8b71091b99956762d38fe79e927534",
+   "tokens": 4906,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 4906
+    }
+   ]
+  },
+  {
+   "rank": 45,
+   "address": "0xb1af95b4f58693912cc70c1321566b9a37dd2afe",
+   "tokens": 4800,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 4800
+    }
+   ]
+  },
+  {
+   "rank": 45,
+   "address": "0x4272897701d443b8f7021b534c792f6ab04fc962",
+   "tokens": 4800,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 4800
+    }
+   ]
+  },
+  {
+   "rank": 45,
+   "address": "0x9d75832d5da4900ca04d49c872e5e96a95058bf7",
+   "tokens": 4800,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 4800
+    }
+   ]
+  },
+  {
+   "rank": 45,
+   "address": "0x9e6fdaf02cfb8198d69beb3810e3c2cf812fd926",
+   "tokens": 4800,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 4800
+    }
+   ]
+  },
+  {
+   "rank": 45,
+   "address": "0x032afa6f647f0d3a4d742628fc504423c966e893",
+   "tokens": 4800,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 4800
+    }
+   ]
+  },
+  {
+   "rank": 45,
+   "address": "0xce8d9a4892cb6d0eb9e5b2872a87a2ec238aba4e",
+   "tokens": 4800,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 4800
+    }
+   ]
+  },
+  {
+   "rank": 51,
+   "address": "0x123264d86a455351d2d37a725f6d4dca81a6398e",
+   "tokens": 4678,
+   "memberCount": 4,
+   "members": [
+    {
+     "name": "Nall BNK48",
+     "tokens": 4219
+    },
+    {
+     "name": "Arlee BNK48",
+     "tokens": 254
+    },
+    {
+     "name": "Marine BNK48",
+     "tokens": 105
+    }
+   ]
+  },
+  {
+   "rank": 52,
+   "address": "0x92f5f73f0b0ec20bb9af95d588e61246f4536712",
+   "tokens": 4639,
+   "memberCount": 3,
+   "members": [
+    {
+     "name": "Proud BNK48",
+     "tokens": 4427
+    },
+    {
+     "name": "Saonoi BNK48",
+     "tokens": 111
+    },
+    {
+     "name": "Neen BNK48",
+     "tokens": 101
+    }
+   ]
+  },
+  {
+   "rank": 53,
+   "address": "0xe99ad35d46bfa2a8b01d37e5e27a0f699e139217",
+   "tokens": 4533,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Nammonn BNK48",
+     "tokens": 4533
+    }
+   ]
+  },
+  {
+   "rank": 54,
+   "address": "0x6811abd3e43b41ab7c462bc22ce334387472ee2e",
+   "tokens": 4500,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 4500
+    }
+   ]
+  },
+  {
+   "rank": 54,
+   "address": "0xc5eb5b7b81373b644d80a2e4a4518b426013c058",
+   "tokens": 4500,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 4500
+    }
+   ]
+  },
+  {
+   "rank": 56,
+   "address": "0xb88da71bd3ea3ad26098fc3f4d0c0efd467875eb",
+   "tokens": 4422,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 4422
+    }
+   ]
+  },
+  {
+   "rank": 57,
+   "address": "0x38321f6c8db96a672c8395af996f0a97450c96c4",
+   "tokens": 4419.8,
+   "memberCount": 3,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 2369.8
+    },
+    {
+     "name": "Nenie CGM48",
+     "tokens": 2000
+    },
+    {
+     "name": "Niya BNK48",
+     "tokens": 50
+    }
+   ]
+  },
+  {
+   "rank": 58,
+   "address": "0xeba4be4e4e72288113f6672448718182f6872f4e",
+   "tokens": 4356,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Sindy BNK48",
+     "tokens": 4356
+    }
+   ]
+  },
+  {
+   "rank": 59,
+   "address": "0xfa5454a8c3c2f4b0053bd95d01398e716f75957a",
+   "tokens": 4348,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Palmmy BNK48",
+     "tokens": 4348
+    }
+   ]
+  },
+  {
+   "rank": 60,
+   "address": "0x93603c390422aec3f207ae9c55877f3a38023f08",
+   "tokens": 4319,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Sita CGM48",
+     "tokens": 4319
+    }
+   ]
+  },
+  {
+   "rank": 61,
+   "address": "0x9233a859cc307678fbca7605637a6b92acbb5ce6",
+   "tokens": 4228,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 4228
+    }
+   ]
+  },
+  {
+   "rank": 62,
+   "address": "0x3cbe0d3224c7f76c237d23be1f0a07ed8d1d0009",
+   "tokens": 4213,
+   "memberCount": 4,
+   "members": [
+    {
+     "name": "Mean BNK48",
+     "tokens": 4110
+    },
+    {
+     "name": "Earth BNK48",
+     "tokens": 100
+    },
+    {
+     "name": "Wawa BNK48",
+     "tokens": 2
+    }
+   ]
+  },
+  {
+   "rank": 63,
+   "address": "0x136576c67e660f5fe2a4ced60c5297e33ceb016e",
+   "tokens": 4200,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 4200
+    }
+   ]
+  },
+  {
+   "rank": 63,
+   "address": "0x23256cfc305035ae608e6b3301d8632bfd7d52cb",
+   "tokens": 4200,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 4200
+    }
+   ]
+  },
+  {
+   "rank": 63,
+   "address": "0x316c4b7f232adaed7dcfcdaf5a514caeff1284c0",
+   "tokens": 4200,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 4200
+    }
+   ]
+  },
+  {
+   "rank": 66,
+   "address": "0x87d92c1c71303168d68b6c3404013d2de29d9187",
+   "tokens": 4114.28,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Yoghurt BNK48",
+     "tokens": 4114.28
+    }
+   ]
+  },
+  {
+   "rank": 67,
+   "address": "0x1b9adbc0bb78cf27db85154fcfa004e2f9a0cb44",
+   "tokens": 4087,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Sita CGM48",
+     "tokens": 4087
+    }
+   ]
+  },
+  {
+   "rank": 68,
+   "address": "0x6d3bdb1bcc16a1614873579b579acc8903444a65",
+   "tokens": 4030,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 4030
+    }
+   ]
+  },
+  {
+   "rank": 69,
+   "address": "0x6808c82d468353b7363172ae94bb41b8af477346",
+   "tokens": 3900,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 3900
+    }
+   ]
+  },
+  {
+   "rank": 70,
+   "address": "0x3e82a559b6972d8ed3317ce232f64b1ff73dbc00",
+   "tokens": 3793,
+   "memberCount": 2,
+   "members": [
+    {
+     "name": "Mean BNK48",
+     "tokens": 3293
+    },
+    {
+     "name": "Pancake BNK48",
+     "tokens": 500
+    }
+   ]
+  },
+  {
+   "rank": 71,
+   "address": "0xab2275f9ecd5512e984776da8552502e08345051",
+   "tokens": 3714,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "L BNK48",
+     "tokens": 3714
+    }
+   ]
+  },
+  {
+   "rank": 72,
+   "address": "0x53359851d32ca4ad15e12f251c2755f87a6f0970",
+   "tokens": 3650.4,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 3650.4
+    }
+   ]
+  },
+  {
+   "rank": 73,
+   "address": "0xc52d82a21d96adf95223838afb710b95d2a82409",
+   "tokens": 3609,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 3609
+    }
+   ]
+  },
+  {
+   "rank": 74,
+   "address": "0x3821bb8ee6bab892bd042475ae3df7a5bb0432e6",
+   "tokens": 3600,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 3600
+    }
+   ]
+  },
+  {
+   "rank": 74,
+   "address": "0xacdfb2f1e3ccee6da1a43b4d8ecf2e2682b025d7",
+   "tokens": 3600,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 3600
+    }
+   ]
+  },
+  {
+   "rank": 74,
+   "address": "0x6d109ad1fe9900f295aa22213bd576c06d842dca",
+   "tokens": 3600,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 3600
+    }
+   ]
+  },
+  {
+   "rank": 74,
+   "address": "0xc7669c3a797544adaaeb16e5aac5a1c7bf1cd3ff",
+   "tokens": 3600,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 3600
+    }
+   ]
+  },
+  {
+   "rank": 74,
+   "address": "0x919998e2da50ce1af81c15acbb9b2e1729676cb3",
+   "tokens": 3600,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 3600
+    }
+   ]
+  },
+  {
+   "rank": 79,
+   "address": "0xf5725a60c53442f07125b478abf5afaa301514d1",
+   "tokens": 3569,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Sita CGM48",
+     "tokens": 3569
+    }
+   ]
+  },
+  {
+   "rank": 80,
+   "address": "0xea6fcecb903a55b3aaa6502b39079c458d4c5be7",
+   "tokens": 3538,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Marine BNK48",
+     "tokens": 3538
+    }
+   ]
+  },
+  {
+   "rank": 81,
+   "address": "0x3a9f26d6c90884828b98e33a7bead1158fc34129",
+   "tokens": 3480,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 3480
+    }
+   ]
+  },
+  {
+   "rank": 82,
+   "address": "0x21f4f86d91c38b691f32074be868a234f99c387d",
+   "tokens": 3443,
+   "memberCount": 7,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 1243
+    },
+    {
+     "name": "Hoop BNK48",
+     "tokens": 700
+    },
+    {
+     "name": "Emmy BNK48",
+     "tokens": 300
+    }
+   ]
+  },
+  {
+   "rank": 83,
+   "address": "0x2a4a41322fd0061c254ad81d84e92d3fc0f99976",
+   "tokens": 3370,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Grace BNK48",
+     "tokens": 3370
+    }
+   ]
+  },
+  {
+   "rank": 84,
+   "address": "0xeebd11308c344bd5fe33a604586b0679cfed49f7",
+   "tokens": 3300,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 3300
+    }
+   ]
+  },
+  {
+   "rank": 85,
+   "address": "0x6d363fcc4e746b303620b40b7c4909178ed8077a",
+   "tokens": 3242,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Palmmy BNK48",
+     "tokens": 3242
+    }
+   ]
+  },
+  {
+   "rank": 86,
+   "address": "0x909eeeb60881469ce9a6fbb0a4654d772a83f3c9",
+   "tokens": 3172,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Earth BNK48",
+     "tokens": 3172
+    }
+   ]
+  },
+  {
+   "rank": 87,
+   "address": "0xa6ab54709d58fa2aabdcdcfdbaa45bcdba039994",
+   "tokens": 3144,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 3144
+    }
+   ]
+  },
+  {
+   "rank": 88,
+   "address": "0xf33f9abd2d25a09db55ed25fa749e0d3278e3cdd",
+   "tokens": 3140,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 3140
+    }
+   ]
+  },
+  {
+   "rank": 89,
+   "address": "0x031846fd427a2d42516b293bd97b7388366daf44",
+   "tokens": 3103,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Champoo CGM48",
+     "tokens": 3103
+    }
+   ]
+  },
+  {
+   "rank": 90,
+   "address": "0xf4d68100f3cc27ef60066b670ccba9ebddb7e73d",
+   "tokens": 3101,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Saonoi BNK48",
+     "tokens": 3101
+    }
+   ]
+  },
+  {
+   "rank": 91,
+   "address": "0xf11f5a15517da10bfe6f933b575d64b9c82af75e",
+   "tokens": 3100,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 3100
+    }
+   ]
+  },
+  {
+   "rank": 92,
+   "address": "0x59d0e03e86c57ab1cd98c0b4b2ba4b97809572a9",
+   "tokens": 3053,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Hoop BNK48",
+     "tokens": 3053
+    }
+   ]
+  },
+  {
+   "rank": 93,
+   "address": "0x749f333d07b4cead1d4e0068b2c533fedee59aa5",
+   "tokens": 3024,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 3024
+    }
+   ]
+  },
+  {
+   "rank": 94,
+   "address": "0x6866835ea6997bbe9af70d333212c5799a446979",
+   "tokens": 3020,
+   "memberCount": 32,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 2954
+    },
+    {
+     "name": "Kaning CGM48",
+     "tokens": 16
+    },
+    {
+     "name": "Popper BNK48",
+     "tokens": 16
+    }
+   ]
+  },
+  {
+   "rank": 95,
+   "address": "0x5edeae310b05aaaeee9242c706ba78176a44a039",
+   "tokens": 3006,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Hoop BNK48",
+     "tokens": 3006
+    }
+   ]
+  },
+  {
+   "rank": 96,
+   "address": "0x260ad137b10a50cd2ad23a643e81ec9ad6cc0aff",
+   "tokens": 3002,
+   "memberCount": 2,
+   "members": [
+    {
+     "name": "Micha BNK48",
+     "tokens": 2001.43
+    },
+    {
+     "name": "Emmy BNK48",
+     "tokens": 1000.57
+    }
+   ]
+  },
+  {
+   "rank": 97,
+   "address": "0x42ab39b829a454864aa2b481a627a97e6e4a6050",
+   "tokens": 3000,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 3000
+    }
+   ]
+  },
+  {
+   "rank": 97,
+   "address": "0xcdf84f9cef6bac8a79e679cd2cfad7ea75f625fa",
+   "tokens": 3000,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 3000
+    }
+   ]
+  },
+  {
+   "rank": 97,
+   "address": "0xc800093183be492099fd104577199445c36e3bff",
+   "tokens": 3000,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 3000
+    }
+   ]
+  },
+  {
+   "rank": 100,
+   "address": "0x9ff5010580729183fd51a28aba4ba298c2b23f12",
+   "tokens": 2982,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 2982
+    }
+   ]
+  },
+  {
+   "rank": 101,
+   "address": "0xd41d75345b362e89c1de92c10a0c33ebd1f88575",
+   "tokens": 2966,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 2966
+    }
+   ]
+  },
+  {
+   "rank": 102,
+   "address": "0xc410efdfa815c5a15d22ba574f90b9bed87113c3",
+   "tokens": 2943,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 2943
+    }
+   ]
+  },
+  {
+   "rank": 103,
+   "address": "0x6ba656b790f08479e46861aa98892f0dd45e2d7f",
+   "tokens": 2940,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 2940
+    }
+   ]
+  },
+  {
+   "rank": 104,
+   "address": "0x8f9642b07cd698edaa03c98aefa6c0214d026ce7",
+   "tokens": 2939,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 2939
+    }
+   ]
+  },
+  {
+   "rank": 105,
+   "address": "0xff7334a5821194e21113923acf49df0c87e8e588",
+   "tokens": 2925,
+   "memberCount": 2,
+   "members": [
+    {
+     "name": "Emmy BNK48",
+     "tokens": 1918.5
+    },
+    {
+     "name": "Janry BNK48",
+     "tokens": 1006.5
+    }
+   ]
+  },
+  {
+   "rank": 106,
+   "address": "0xb539478c37a20ec9ffffbbb84dd559468f5a313e",
+   "tokens": 2854.2,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Champoo CGM48",
+     "tokens": 2854.2
+    }
+   ]
+  },
+  {
+   "rank": 107,
+   "address": "0x28a36bce97bfdb1ff8da0f501e3732bc5c9faa2d",
+   "tokens": 2748,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 2748
+    }
+   ]
+  },
+  {
+   "rank": 108,
+   "address": "0x33f3911309c71de4e267b7c12be7ef96072766b5",
+   "tokens": 2700,
+   "memberCount": 2,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 2550
+    },
+    {
+     "name": "Saonoi BNK48",
+     "tokens": 150
+    }
+   ]
+  },
+  {
+   "rank": 109,
+   "address": "0x536897d4a32bf98c8f33aeebcefd51287d4ccd5d",
+   "tokens": 2667.6,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Sita CGM48",
+     "tokens": 2667.6
+    }
+   ]
+  },
+  {
+   "rank": 110,
+   "address": "0x752ad4237454cbf5383298983e8abd9caec2800b",
+   "tokens": 2650,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Earn BNK48",
+     "tokens": 2650
+    }
+   ]
+  },
+  {
+   "rank": 110,
+   "address": "0xa1755f704679ad1cf8506756fa90e4f855ff5502",
+   "tokens": 2650,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Patt BNK48",
+     "tokens": 2650
+    }
+   ]
+  },
+  {
+   "rank": 112,
+   "address": "0x5a669aab640ba6ac1f164b78a3461323c11d75e9",
+   "tokens": 2601,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Jingjing CGM48",
+     "tokens": 2601
+    }
+   ]
+  },
+  {
+   "rank": 113,
+   "address": "0xb7f192d526fc54736fe39d5d2d8ae6d84585641b",
+   "tokens": 2565,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 2565
+    }
+   ]
+  },
+  {
+   "rank": 114,
+   "address": "0xc8bcb5de4fc07c26f16b7edab668718ed1659f24",
+   "tokens": 2551,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Emmy BNK48",
+     "tokens": 2551
+    }
+   ]
+  },
+  {
+   "rank": 115,
+   "address": "0x2acd700b6fbf28854c0d8b9a4ed9591b12da6bad",
+   "tokens": 2546,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 2546
+    }
+   ]
+  },
+  {
+   "rank": 116,
+   "address": "0x45c483cd86bf6556745e3c76db401e3589f2a0c8",
+   "tokens": 2486,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 2486
+    }
+   ]
+  },
+  {
+   "rank": 117,
+   "address": "0xadd750ca39ed2b795a8838223c4ff436f0cd2835",
+   "tokens": 2476,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 2476
+    }
+   ]
+  },
+  {
+   "rank": 118,
+   "address": "0x94868806a002fbc88574bd4afe00d67c43663784",
+   "tokens": 2427,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 2427
+    }
+   ]
+  },
+  {
+   "rank": 119,
+   "address": "0xb539cab0b5d63858c1e8a8b34ac3b4ed43cd61ba",
+   "tokens": 2422,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 2422
+    }
+   ]
+  },
+  {
+   "rank": 120,
+   "address": "0xcadf21a50d5c6b1c765f7571d4fe5a610ec6a6bd",
+   "tokens": 2400,
+   "memberCount": 2,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 2294
+    },
+    {
+     "name": "Hoop BNK48",
+     "tokens": 106
+    }
+   ]
+  },
+  {
+   "rank": 120,
+   "address": "0x9f678b8dc46d3c5b18c70f96ef504c7983fc126c",
+   "tokens": 2400,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 2400
+    }
+   ]
+  },
+  {
+   "rank": 120,
+   "address": "0x03b7cbbe676e272919207936f01cfad982c027d8",
+   "tokens": 2400,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 2400
+    }
+   ]
+  },
+  {
+   "rank": 120,
+   "address": "0x0a5dc1f45429ee7261fd485ddd7a37b0a84b86f0",
+   "tokens": 2400,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 2400
+    }
+   ]
+  },
+  {
+   "rank": 120,
+   "address": "0x9d8037080045eecf06a73a3446ade68138610176",
+   "tokens": 2400,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 2400
+    }
+   ]
+  },
+  {
+   "rank": 120,
+   "address": "0x7bcaac8f6b529e1f65ba805c986356d53eac10f8",
+   "tokens": 2400,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 2400
+    }
+   ]
+  },
+  {
+   "rank": 120,
+   "address": "0x8d626d1d62b38662712bc14e63234fd1589f118b",
+   "tokens": 2400,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 2400
+    }
+   ]
+  },
+  {
+   "rank": 120,
+   "address": "0x4845993d67c7ec610c18d25ba2d12b300ca96912",
+   "tokens": 2400,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 2400
+    }
+   ]
+  },
+  {
+   "rank": 120,
+   "address": "0xb74e68b6c480767440421d7679d103f97bed76a5",
+   "tokens": 2400,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 2400
+    }
+   ]
+  },
+  {
+   "rank": 120,
+   "address": "0xd86408c564047181de7fa92e0f6d85da000aa6e5",
+   "tokens": 2400,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 2400
+    }
+   ]
+  },
+  {
+   "rank": 130,
+   "address": "0xd146cc230e1b764e1078b85921f30e60f9e93429",
+   "tokens": 2357,
+   "memberCount": 7,
+   "members": [
+    {
+     "name": "Nana CGM48",
+     "tokens": 2345.6
+    },
+    {
+     "name": "Jingjing CGM48",
+     "tokens": 4.9
+    },
+    {
+     "name": "Ginna CGM48",
+     "tokens": 2
+    }
+   ]
+  },
+  {
+   "rank": 131,
+   "address": "0x24802f839172098ac4c9ff824d99d9a6ff8a6d16",
+   "tokens": 2345,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Popper BNK48",
+     "tokens": 2345
+    }
+   ]
+  },
+  {
+   "rank": 132,
+   "address": "0xc9ee4c21c0e2d95671581d232f045b8f82a17cfd",
+   "tokens": 2342,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "L BNK48",
+     "tokens": 2342
+    }
+   ]
+  },
+  {
+   "rank": 133,
+   "address": "0x34fd346ec0082e6fc2115129efaab38cd8b3e38d",
+   "tokens": 2340,
+   "memberCount": 18,
+   "members": [
+    {
+     "name": "Emmy BNK48",
+     "tokens": 1442
+    },
+    {
+     "name": "Janry BNK48",
+     "tokens": 300
+    },
+    {
+     "name": "Pancake BNK48",
+     "tokens": 150
+    }
+   ]
+  },
+  {
+   "rank": 134,
+   "address": "0x22116a01e58ac9b6e5a97b9710283ae2278bc79b",
+   "tokens": 2304,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 2304
+    }
+   ]
+  },
+  {
+   "rank": 135,
+   "address": "0xbfd6f075e65f97435bcc25f7d406ee5dcbe49be8",
+   "tokens": 2303,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Sita CGM48",
+     "tokens": 2303
+    }
+   ]
+  },
+  {
+   "rank": 136,
+   "address": "0x0f6ad8d95fc13a4b04e7d6fc01df14fa479e8337",
+   "tokens": 2302,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Jingjing CGM48",
+     "tokens": 2302
+    }
+   ]
+  },
+  {
+   "rank": 137,
+   "address": "0x851d7aa7ab023fbe9d1a1a079749db99ceec618b",
+   "tokens": 2280,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 2280
+    }
+   ]
+  },
+  {
+   "rank": 138,
+   "address": "0xac01828e324fdf2e817c3a090e4a986cc0625c51",
+   "tokens": 2272,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 2272
+    }
+   ]
+  },
+  {
+   "rank": 139,
+   "address": "0xab65f9aac05449930648118294283080dd1e9da1",
+   "tokens": 2216,
+   "memberCount": 7,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 2010
+    },
+    {
+     "name": "Yoghurt BNK48",
+     "tokens": 201
+    },
+    {
+     "name": "Emmy BNK48",
+     "tokens": 1
+    }
+   ]
+  },
+  {
+   "rank": 140,
+   "address": "0x605e92091ea54f5bdd4a66db7d720a9da82baaad",
+   "tokens": 2200,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Sita CGM48",
+     "tokens": 2200
+    }
+   ]
+  },
+  {
+   "rank": 141,
+   "address": "0xa1ede5138e7012b3e0faf3a1b1803f7fda00f232",
+   "tokens": 2184,
+   "memberCount": 3,
+   "members": [
+    {
+     "name": "Mei CGM48",
+     "tokens": 2142
+    },
+    {
+     "name": "Wawa BNK48",
+     "tokens": 25
+    },
+    {
+     "name": "Berry BNK48",
+     "tokens": 17
+    }
+   ]
+  },
+  {
+   "rank": 142,
+   "address": "0xe6c8d3232050a8ef5d342dcc398e06d48a2ea634",
+   "tokens": 2177,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Saonoi BNK48",
+     "tokens": 2177
+    }
+   ]
+  },
+  {
+   "rank": 143,
+   "address": "0x996882092f394f506938c729d1287a03ffb4bdd9",
+   "tokens": 2172,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 2172
+    }
+   ]
+  },
+  {
+   "rank": 144,
+   "address": "0x19031e1301b259feaa5302604b292395c8eca46e",
+   "tokens": 2160,
+   "memberCount": 14,
+   "members": [
+    {
+     "name": "Kaofrang BNK48",
+     "tokens": 2030
+    },
+    {
+     "name": "Arlee BNK48",
+     "tokens": 10
+    },
+    {
+     "name": "Champoo CGM48",
+     "tokens": 10
+    }
+   ]
+  },
+  {
+   "rank": 145,
+   "address": "0xfb47e5fde96c91fb091daaca4b6f6da0bdc3139c",
+   "tokens": 2154,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 2154
+    }
+   ]
+  },
+  {
+   "rank": 146,
+   "address": "0xb369dbbb6365b196ed473452e6d306324a62e7cc",
+   "tokens": 2149.5,
+   "memberCount": 48,
+   "members": [
+    {
+     "name": "Mei CGM48",
+     "tokens": 2074.8
+    },
+    {
+     "name": "Nana CGM48",
+     "tokens": 20.1
+    },
+    {
+     "name": "Jew BNK48",
+     "tokens": 10.1
+    }
+   ]
+  },
+  {
+   "rank": 147,
+   "address": "0x5ff9be6148adde20f7e37ae9c868a7f956f3c84c",
+   "tokens": 2100,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 2100
+    }
+   ]
+  },
+  {
+   "rank": 147,
+   "address": "0xba2b3b22a8cf22b3d23459e2ec86ba0c67929ebd",
+   "tokens": 2100,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 2100
+    }
+   ]
+  },
+  {
+   "rank": 147,
+   "address": "0xc06e1e6f55b9d18cb4bcc9f12302ba3c1124db31",
+   "tokens": 2100,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 2100
+    }
+   ]
+  },
+  {
+   "rank": 147,
+   "address": "0xa628ef8d9afa8578f3bd8118f61999fe7f882fe0",
+   "tokens": 2100,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 2100
+    }
+   ]
+  },
+  {
+   "rank": 147,
+   "address": "0x370d7d176378746a18c779769b9d671ef36698ad",
+   "tokens": 2100,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 2100
+    }
+   ]
+  },
+  {
+   "rank": 147,
+   "address": "0xf34abf57a6e11b7cf3f9d078a1360954a0a83663",
+   "tokens": 2100,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 2100
+    }
+   ]
+  },
+  {
+   "rank": 147,
+   "address": "0x5f0fdfe34078c3ad984f8d0c884db80e8454b4ed",
+   "tokens": 2100,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 2100
+    }
+   ]
+  },
+  {
+   "rank": 147,
+   "address": "0xb1a9beb41867bd37a134c4979c99578801af4ca9",
+   "tokens": 2100,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 2100
+    }
+   ]
+  },
+  {
+   "rank": 155,
+   "address": "0x7dbe0f87cd65afdace05b3f7645386439bb315ef",
+   "tokens": 2073,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Champoo CGM48",
+     "tokens": 2073
+    }
+   ]
+  },
+  {
+   "rank": 156,
+   "address": "0x90b7a0e260fe555d568656aa254cf53787b99785",
+   "tokens": 2054,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Yoghurt BNK48",
+     "tokens": 2054
+    }
+   ]
+  },
+  {
+   "rank": 157,
+   "address": "0xd0a0cb6f5d05576585879bd743956a67be079a25",
+   "tokens": 2038,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Lookked CGM48",
+     "tokens": 2038
+    }
+   ]
+  },
+  {
+   "rank": 158,
+   "address": "0x94efd637d4124efb8940528e16eca6787ae6d17b",
+   "tokens": 2036,
+   "memberCount": 14,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 2023
+    },
+    {
+     "name": "Arlee BNK48",
+     "tokens": 1
+    },
+    {
+     "name": "Janry BNK48",
+     "tokens": 1
+    }
+   ]
+  },
+  {
+   "rank": 159,
+   "address": "0xf0a54bb7d432ed847ac5514c2d2bf42b8c25e39a",
+   "tokens": 2014,
+   "memberCount": 2,
+   "members": [
+    {
+     "name": "Nammonn BNK48",
+     "tokens": 2004
+    },
+    {
+     "name": "Champoo CGM48",
+     "tokens": 10
+    }
+   ]
+  },
+  {
+   "rank": 160,
+   "address": "0xd4ecb3262445ccc6cf321862cf88e483198c6fa1",
+   "tokens": 2009,
+   "memberCount": 3,
+   "members": [
+    {
+     "name": "Grace BNK48",
+     "tokens": 2000
+    },
+    {
+     "name": "Sindy BNK48",
+     "tokens": 8
+    },
+    {
+     "name": "Marine BNK48",
+     "tokens": 1
+    }
+   ]
+  },
+  {
+   "rank": 161,
+   "address": "0x18a3fd494aa37ab02f2432a5ba1b68e83fef5fe4",
+   "tokens": 1953,
+   "memberCount": 2,
+   "members": [
+    {
+     "name": "Popper BNK48",
+     "tokens": 1727
+    },
+    {
+     "name": "Champoo CGM48",
+     "tokens": 226
+    }
+   ]
+  },
+  {
+   "rank": 162,
+   "address": "0xf6c36c2783638c47d1a30d0d8ca654daa7a1e7af",
+   "tokens": 1925.2,
+   "memberCount": 8,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 1871.1
+    },
+    {
+     "name": "Niya BNK48",
+     "tokens": 15
+    },
+    {
+     "name": "Earth BNK48",
+     "tokens": 10
+    }
+   ]
+  },
+  {
+   "rank": 163,
+   "address": "0x4179b995a0861ca381cbcee8015d41d32a46d0c9",
+   "tokens": 1898,
+   "memberCount": 5,
+   "members": [
+    {
+     "name": "Galeya BNK48",
+     "tokens": 1818.18
+    },
+    {
+     "name": "Sindy BNK48",
+     "tokens": 50
+    },
+    {
+     "name": "Khaimook BNK48",
+     "tokens": 20.2
+    }
+   ]
+  },
+  {
+   "rank": 164,
+   "address": "0xc41d55293ec56b22523634d5ae08e7fb164ccaa8",
+   "tokens": 1895,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Nana CGM48",
+     "tokens": 1895
+    }
+   ]
+  },
+  {
+   "rank": 165,
+   "address": "0xb1a850af25b87b4dc3b491cf8d2b03308b2b8597",
+   "tokens": 1880,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Nana CGM48",
+     "tokens": 1880
+    }
+   ]
+  },
+  {
+   "rank": 166,
+   "address": "0x933003a6c11c1b53c191a327a0473d9ac362884a",
+   "tokens": 1845,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Nana CGM48",
+     "tokens": 1845
+    }
+   ]
+  },
+  {
+   "rank": 167,
+   "address": "0x626e90874f30b2a1081865560332e98ef81587ed",
+   "tokens": 1840,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 1840
+    }
+   ]
+  },
+  {
+   "rank": 168,
+   "address": "0xcd906e6b4ba708218cfb0fbdb373e7ea908977c5",
+   "tokens": 1816,
+   "memberCount": 7,
+   "members": [
+    {
+     "name": "Hoop BNK48",
+     "tokens": 1596
+    },
+    {
+     "name": "Yoghurt BNK48",
+     "tokens": 210
+    },
+    {
+     "name": "Earth BNK48",
+     "tokens": 2
+    }
+   ]
+  },
+  {
+   "rank": 169,
+   "address": "0x6aeb0949a96960fa90b86ba4ea763f6e606f004d",
+   "tokens": 1805,
+   "memberCount": 2,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 1800
+    },
+    {
+     "name": "Ploen CGM48",
+     "tokens": 5
+    }
+   ]
+  },
+  {
+   "rank": 170,
+   "address": "0x73e2f20e143603ff076495e356ff29b608d1549b",
+   "tokens": 1801,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Earn BNK48",
+     "tokens": 1801
+    }
+   ]
+  },
+  {
+   "rank": 171,
+   "address": "0xd0bb42b0ddb2b083d1605c0fa5de89c001d94465",
+   "tokens": 1800,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 1800
+    }
+   ]
+  },
+  {
+   "rank": 171,
+   "address": "0xd181fd19c1d271fd11a4146c530c3d3f58fd70d4",
+   "tokens": 1800,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 1800
+    }
+   ]
+  },
+  {
+   "rank": 171,
+   "address": "0xa36558ee986a5b9b88fb4b6f47845b51ba2c5393",
+   "tokens": 1800,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 1800
+    }
+   ]
+  },
+  {
+   "rank": 171,
+   "address": "0x0af176abe8c1a8b82b2862a95093c87be0135e86",
+   "tokens": 1800,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 1800
+    }
+   ]
+  },
+  {
+   "rank": 171,
+   "address": "0x58bb9f544d8283d1c9c09803a85493e48775ae7c",
+   "tokens": 1800,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 1800
+    }
+   ]
+  },
+  {
+   "rank": 171,
+   "address": "0x6d80ae3e9a6391a27e3ad65aab2565363ea74723",
+   "tokens": 1800,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 1800
+    }
+   ]
+  },
+  {
+   "rank": 171,
+   "address": "0x2426e58119e85799ebb6249a9e58778e23eefdd7",
+   "tokens": 1800,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 1800
+    }
+   ]
+  },
+  {
+   "rank": 171,
+   "address": "0xf01d25ad9949ae6322c7b26656f45cefe73a47c1",
+   "tokens": 1800,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 1800
+    }
+   ]
+  },
+  {
+   "rank": 171,
+   "address": "0x25f00c5184df4fac7f2587a5cab48fb9de54f125",
+   "tokens": 1800,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 1800
+    }
+   ]
+  },
+  {
+   "rank": 171,
+   "address": "0xea74056f865194a58ebae9023a21fb6d42b198e8",
+   "tokens": 1800,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 1800
+    }
+   ]
+  },
+  {
+   "rank": 171,
+   "address": "0x55ddf3dcaad76f053f90b7d74319a4db0f3c565d",
+   "tokens": 1800,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 1800
+    }
+   ]
+  },
+  {
+   "rank": 171,
+   "address": "0x50d94dcddd82b2591e943042b53dba2058aec906",
+   "tokens": 1800,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 1800
+    }
+   ]
+  },
+  {
+   "rank": 171,
+   "address": "0x848c9265de873bf055fd29b6f8bcfe564d87557d",
+   "tokens": 1800,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 1800
+    }
+   ]
+  },
+  {
+   "rank": 171,
+   "address": "0xec2347f9b5f3d5a404588d7e50e239b096c00528",
+   "tokens": 1800,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 1800
+    }
+   ]
+  },
+  {
+   "rank": 185,
+   "address": "0x607bd39fe2ce02718c597ed7f7f2c91ad3736f83",
+   "tokens": 1799,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Arlee BNK48",
+     "tokens": 1799
+    }
+   ]
+  },
+  {
+   "rank": 186,
+   "address": "0x8b91a42ad0c99cd709b84053d9a59f5dcb1da99e",
+   "tokens": 1795,
+   "memberCount": 5,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 1522
+    },
+    {
+     "name": "Yoghurt BNK48",
+     "tokens": 108
+    },
+    {
+     "name": "Jew BNK48",
+     "tokens": 55
+    }
+   ]
+  },
+  {
+   "rank": 187,
+   "address": "0x2dee25d33bd6783e5e8b0dc8f1956c5f5f1a37ce",
+   "tokens": 1740,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 1740
+    }
+   ]
+  },
+  {
+   "rank": 188,
+   "address": "0x64c3a004b870ba099d73dc08e3bcde75cf267299",
+   "tokens": 1736,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 1736
+    }
+   ]
+  },
+  {
+   "rank": 189,
+   "address": "0x77dfe4807d4e87dbd49865cc2e7df8a4c784b747",
+   "tokens": 1713,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 1713
+    }
+   ]
+  },
+  {
+   "rank": 190,
+   "address": "0xb889f7af854fdb15499c0e700bb4589015e47103",
+   "tokens": 1703.05,
+   "memberCount": 6,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 1657.85
+    },
+    {
+     "name": "Arlee BNK48",
+     "tokens": 20
+    },
+    {
+     "name": "Hoop BNK48",
+     "tokens": 20
+    }
+   ]
+  },
+  {
+   "rank": 191,
+   "address": "0xbef904a36e482dbd30cd75194dd81faa48473404",
+   "tokens": 1700,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 1700
+    }
+   ]
+  },
+  {
+   "rank": 192,
+   "address": "0x9ab99c952564a2370b5a52b285e906ab5ae34059",
+   "tokens": 1680,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 1680
+    }
+   ]
+  },
+  {
+   "rank": 193,
+   "address": "0x45c7426bff9fa2ccc2176f93b74eb95568b6cc57",
+   "tokens": 1663,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Nenie CGM48",
+     "tokens": 1663
+    }
+   ]
+  },
+  {
+   "rank": 194,
+   "address": "0xa53dff440fbd06e4adc65f99726365b09d007f8a",
+   "tokens": 1622,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Hoop BNK48",
+     "tokens": 1622
+    }
+   ]
+  },
+  {
+   "rank": 195,
+   "address": "0x94fe9f8de032b9378418681c892bb858d7cf7fcd",
+   "tokens": 1620,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 1620
+    }
+   ]
+  },
+  {
+   "rank": 196,
+   "address": "0xe0288f1b81bccdc492fe12e2e7a6e798a9d7e9a9",
+   "tokens": 1619,
+   "memberCount": 2,
+   "members": [
+    {
+     "name": "Yoghurt BNK48",
+     "tokens": 1518
+    },
+    {
+     "name": "Pancake BNK48",
+     "tokens": 101
+    }
+   ]
+  },
+  {
+   "rank": 197,
+   "address": "0x5a5e0a18aa90227286b599f17cd0148857f3414f",
+   "tokens": 1612,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Mei CGM48",
+     "tokens": 1612
+    }
+   ]
+  },
+  {
+   "rank": 198,
+   "address": "0x1649d35e4e696b75a6be205ec47f9f34d0bea120",
+   "tokens": 1600,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Marine BNK48",
+     "tokens": 1600
+    }
+   ]
+  },
+  {
+   "rank": 198,
+   "address": "0xdec1808862b073074acd0a6d0ee1802f871ee2b7",
+   "tokens": 1600,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Neen BNK48",
+     "tokens": 1600
+    }
+   ]
+  },
+  {
+   "rank": 198,
+   "address": "0x58fa840046cae9b688890adc67fc0bc97f4d6d20",
+   "tokens": 1600,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 1600
+    }
+   ]
+  }
+ ]
+}

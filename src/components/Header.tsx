@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useNow, type LiveStatus } from "@/lib/use-live-stats";
 import { ThemeToggle } from "./ThemeToggle";
 
@@ -71,17 +72,12 @@ function LivePill({
   );
 }
 
-/** Compact sticky bar with the brand, live status, and theme control. */
-export function Header(props: {
-  status: LiveStatus;
-  updatedAt: number | null;
-  refreshing: boolean;
-  onRefresh: () => void;
-}) {
+/** Sticky bar with the brand on the left and page-specific controls on the right. */
+export function BrandHeader({ href, children }: { href: string; children: React.ReactNode }) {
   return (
     <header className="sticky top-0 z-30 border-b border-line bg-page/85 backdrop-blur-md supports-[backdrop-filter]:bg-page/70">
       <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-5 py-3">
-        <a href="#overview" className="flex min-w-0 items-center gap-3">
+        <a href={href} className="flex min-w-0 items-center gap-3">
           {/* Same artwork as app/icon.svg, inlined so the header costs no extra request. */}
           <svg viewBox="0 0 64 64" fill="none" aria-hidden className="size-10 shrink-0 rounded-xl">
             <rect width="64" height="64" rx="16" fill="#2A78D6" />
@@ -99,12 +95,24 @@ export function Header(props: {
             <span className="block truncate text-xs text-muted">BNK48 &amp; CGM48 Election 6</span>
           </span>
         </a>
-        <div className="flex shrink-0 items-center gap-2">
-          <LivePill {...props} />
-          <ThemeToggle />
-        </div>
+        <div className="flex shrink-0 items-center gap-2">{children}</div>
       </div>
     </header>
+  );
+}
+
+/** Home page header: brand, live status, and theme control. */
+export function Header(props: {
+  status: LiveStatus;
+  updatedAt: number | null;
+  refreshing: boolean;
+  onRefresh: () => void;
+}) {
+  return (
+    <BrandHeader href="#overview">
+      <LivePill {...props} />
+      <ThemeToggle />
+    </BrandHeader>
   );
 }
 
@@ -113,6 +121,16 @@ export function SectionNav() {
   return (
     <nav aria-label="ไปยังส่วนต่างๆ" className="-mx-5 sm:mx-0">
       <ul className="no-scrollbar flex gap-2.5 overflow-x-auto px-5 py-1 [mask-image:linear-gradient(to_right,transparent,#000_20px,#000_calc(100%-28px),transparent)] sm:flex-wrap sm:px-0 sm:[mask-image:none]">
+        <li className="shrink-0">
+          {/* No prefetch: otherwise every home-page visitor would also download /ge5. */}
+          <Link
+            href="/ge5"
+            prefetch={false}
+            className="inline-flex min-h-10 items-center gap-1.5 rounded-full bg-data px-4 text-sm font-semibold whitespace-nowrap text-white hover:opacity-90"
+          >
+            Top 200 จาก GE5 <span aria-hidden>→</span>
+          </Link>
+        </li>
         {NAV.map((n) => (
           <li key={n.id} className="shrink-0">
             <a

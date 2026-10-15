@@ -96,3 +96,47 @@ export type WalletInfo = {
   recent: RecentVote[];
   updatedAt: number;
 };
+
+export type VoterSummaries = {
+  /** Server time of the GE6 data, ms. */
+  updatedAt: number;
+  totalTokens: number;
+  totalVoters: number;
+  /** Keyed by lowercase address; wallets that haven't voted in GE6 are absent. */
+  voters: Record<string, { tokens: number; votes: number; rank: number; lastVoteAt: number }>;
+};
+
+export type Ge5Member = { name: string; tokens: number };
+
+export type Ge5Row = {
+  /** Rank among GE5 voters by total tokens. */
+  rank: number;
+  address: string;
+  /** Total GE5 tokens from this wallet. */
+  tokens: number;
+  /** How many members this wallet voted for in GE5. */
+  memberCount: number;
+  /** Members this wallet voted for most (largest first); members[0] is its top pick. */
+  members: Ge5Member[];
+  /** This wallet's GE6 votes so far, or null if it hasn't voted in GE6 yet. */
+  ge6: { tokens: number; votes: number; rank: number; lastVoteAt: number } | null;
+};
+
+/** A member that is some listed wallet's top GE5 pick (for the member filter). */
+export type Ge5MemberOption = { name: string; wallets: number };
+
+export type Ge5Comparison = {
+  ge5: { wallets: number; members: number };
+  ge6: {
+    available: boolean;
+    updatedAt: number | null;
+    totalTokens: number;
+    totalVoters: number;
+    /** GE6 tokens voted so far by the listed GE5 wallets. */
+    topTokens: number;
+    /** How many of the listed GE5 wallets have voted in GE6. */
+    returning: number;
+  };
+  rows: Ge5Row[];
+  members: Ge5MemberOption[];
+};

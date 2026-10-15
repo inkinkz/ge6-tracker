@@ -53,6 +53,27 @@ Blockscout /api/eth-rpc  +  Token X node RPC
 - `src/app/api/stats`, `src/app/api/wallet/[address]`: JSON endpoints with `Vercel-CDN-Cache-Control`.
 - `src/components/*`: the Thai UI. Charts are hand-rolled HTML/SVG, with no chart library.
 
+## GE5 → GE6 page (`/ge5`)
+
+Lists the 200 wallets that voted the most in GE5. Each row shows the wallet's GE5 total next to
+its GE6 total so far (0 if it hasn't voted yet), plus the member it voted for most in GE5 and an
+expandable top 3. Tap the GE5 / GE6 column headers to sort, filter by "voted in GE6 yet", or
+filter by member. GE6 votes are hashed on-chain, so GE6 shows token totals only, not who they
+voted for.
+
+- GE5 data is static: `src/data/ge5-top.json`, generated from the GE5 export CSV
+  (one row per wallet × member). It keeps only addresses, totals, and member names; the
+  export's internal "Wallet code" column is dropped. Wallets tied at the cutoff are all kept.
+  To regenerate it (change `TOP_N` in the script for a different size):
+
+  ```bash
+  npm run data:ge5 -- path/to/ge5_voters.csv
+  ```
+
+- The GE6 side is joined on the server from the live tracker. The page is prerendered and
+  regenerated in the background at most every 2 minutes. It has no client polling, so a view
+  costs about the same as a static page.
+
 ## Staying on the Vercel Hobby (free) plan
 
 Hobby includes per month (as of Sept 2026): **1M CDN requests**, 100 GB Fast Data Transfer,

@@ -40,3 +40,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# raw GE5 export (contains app account IDs); the page uses src/data/ge5-top.json
+/ge5_voters.csv

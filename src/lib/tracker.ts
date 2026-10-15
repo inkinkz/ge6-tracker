@@ -21,6 +21,7 @@ import type {
   SeriesPoint,
   StatsSnapshot,
   VoterEntry,
+  VoterSummaries,
   WalletInfo,
   WindowStats,
 } from "./types";
@@ -466,5 +467,29 @@ export async function getWallet(address: string): Promise<WalletInfo> {
     lastVoteAt: agg ? at(agg.lastBlock) : null,
     recent,
     updatedAt: built.snapshot.updatedAt,
+  };
+}
+
+/** GE6 totals for many wallets at once (used by the GE5 comparison page). */
+export async function getVoterSummaries(addresses: string[]): Promise<VoterSummaries> {
+  const built = await getStats();
+  const s = store.state!;
+  const voters: VoterSummaries["voters"] = {};
+  for (const address of addresses) {
+    const addr = address.toLowerCase();
+    const agg = s.voters.get(addr);
+    if (!agg) continue;
+    voters[addr] = {
+      tokens: toTokens(agg.wei),
+      votes: agg.votes,
+      rank: built.rankByVoter.get(addr) ?? 0,
+      lastVoteAt: tsOf(s, agg.lastBlock),
+    };
+  }
+  return {
+    updatedAt: built.snapshot.updatedAt,
+    totalTokens: built.snapshot.totals.tokens,
+    totalVoters: built.snapshot.totals.voters,
+    voters,
   };
 }
