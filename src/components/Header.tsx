@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useNow, type LiveStatus } from "@/lib/use-live-stats";
+import { ThemeToggle } from "./ThemeToggle";
 
 const NAV = [
   { id: "overview", label: "ภาพรวม" },
@@ -61,7 +62,7 @@ function LivePill({
   );
 }
 
-/** Slim sticky bar: brand + live status only, so it doesn't eat the top of a phone screen. */
+/** Compact sticky bar with the brand, live status, and theme control. */
 export function Header(props: {
   status: LiveStatus;
   updatedAt: number | null;
@@ -70,7 +71,7 @@ export function Header(props: {
 }) {
   return (
     <header className="sticky top-0 z-30 border-b border-line bg-page/85 backdrop-blur-md supports-[backdrop-filter]:bg-page/70">
-      <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-5 py-3">
+      <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-5 py-3">
         <a href="#overview" className="flex min-w-0 items-center gap-3">
           <Image src="/icon.svg" alt="" width={40} height={40} loading="eager" className="size-10 shrink-0 rounded-xl" />
           <span className="min-w-0 leading-snug">
@@ -78,7 +79,10 @@ export function Header(props: {
             <span className="block truncate text-xs text-muted">BNK48 &amp; CGM48 Election 6</span>
           </span>
         </a>
-        <LivePill {...props} />
+        <div className="flex shrink-0 items-center gap-2">
+          <LivePill {...props} />
+          <ThemeToggle />
+        </div>
       </div>
     </header>
   );

@@ -18,16 +18,21 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f4f4f1" },
-    { media: "(prefers-color-scheme: dark)", color: "#0d0d0d" },
-  ],
+  themeColor: "#f4f4f1",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="th" className={`${thai.variable} antialiased`}>
-      <body className="min-h-dvh font-sans">{children}</body>
+    <html lang="th" data-theme="light" suppressHydrationWarning className={`${thai.variable} antialiased`}>
+      <body className="min-h-dvh font-sans">
+        {/* Restore the saved theme before the page paints, including when storage is blocked. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{document.documentElement.dataset.theme=localStorage.getItem("ge6:theme")==="dark"?"dark":"light"}catch{}`,
+          }}
+        />
+        {children}
+      </body>
     </html>
   );
 }
