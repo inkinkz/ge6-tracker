@@ -1,5 +1,7 @@
 // JSON shapes shared by the API routes and the client. Token amounts are GE6 (already divided by 1e18).
 
+import type { PollPolicy } from "./config";
+
 export type VoterEntry = {
   rank: number;
   address: string;
@@ -15,7 +17,6 @@ export type RecentVote = {
   tx: string;
   voter: string;
   tokens: number;
-  block: number;
   at: number;
 };
 
@@ -46,6 +47,8 @@ export type WindowStats = {
 export type StatsSnapshot = {
   /** Server time of the last successful upstream sync, ms. */
   updatedAt: number;
+  /** How often clients should poll (set by TRAFFIC_MODE on the server). */
+  policy: PollPolicy;
   syncedBlock: number;
   /** Timestamp of `syncedBlock`, unix seconds. */
   syncedBlockAt: number;

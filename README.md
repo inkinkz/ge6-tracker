@@ -35,8 +35,8 @@ What the contract tells us:
 ## Architecture
 
 ```
-Browser (polls every 30s while visible + active)
-   │  GET /api/stats   ← Vercel CDN caches 20s (+60s stale-while-revalidate)
+Browser (polls every 60s for the first 5 min of a visit; rate set by TRAFFIC_MODE)
+   │  GET /api/stats   ← Vercel CDN caches 30s (+90s stale-while-revalidate)
    ▼
 Route handler (Fluid compute, region sin1)
    │  in-memory vote index per instance, synced at most every 10s:
@@ -49,27 +49,69 @@ Blockscout /api/eth-rpc  +  Token X node RPC
 - `src/lib/chain.ts`: RPC client, `Voted` log decoding, and pagination past the 1,000-log cap.
 - `src/lib/tracker.ts`: sync engine (single-flight, stale-on-error), gap repair using `_index`, and snapshot aggregation in exact integer micro-GE6.
 - `src/lib/windows.ts`: immutable history windows cached with `'use cache: remote'`, so a cold instance doesn't rescan the whole chain.
-- `src/lib/initial.ts`: snapshot baked into the page HTML (ISR, regenerated at most every 2 minutes), so the first paint already has numbers.
+- `src/lib/initial.ts`: snapshot baked into the page HTML (ISR, regenerated at most once a minute), so the first paint already has numbers.
 - `src/app/api/stats`, `src/app/api/wallet/[address]`: JSON endpoints with `Vercel-CDN-Cache-Control`.
 - `src/components/*`: the Thai UI. Charts are hand-rolled HTML/SVG, with no chart library.
 
-## Update frequency vs. Vercel cost
+## Staying on the Vercel Hobby (free) plan
 
-The defaults are tuned so a busy election still fits the free tier for function usage. The thing to watch is **Edge Requests**.
+Hobby includes per month (as of Sept 2026): **1M CDN requests**, 100 GB Fast Data Transfer,
+10 GB Fast Origin Transfer, 1M function invocations, 4 h Active CPU. Sustained overage can get
+the project **paused** (unpausing is manual), so the app is built around the scarcest one:
+**CDN requests**. Every request to the site counts, even when it's served from cache.
 
-| Cost driver | What drives it | Default | Rough monthly volume |
+What one viewer costs:
+
+| | CDN requests | Notes |
+| --- | --- | --- |
+| First visit | ~11 | HTML (data + CSS inlined), 6 JS chunks, 2 font files, illustrations, favicon |
+| Returning visit | ~2 | JS/fonts are immutable and stay in the browser cache |
+| Auto-refresh, `normal` mode | ≤ 5 | One poll per minute for the first 5 minutes, then it stops |
+| Auto-refresh, `busy` mode | ≤ 2 | One poll every 2 minutes for the first 3 minutes |
+| Auto-refresh, `surge` mode | 0 | Off; viewers tap the status pill |
+| Each "continue" tap | 1 + another window | Tapping the status pill refreshes and restarts the window |
+
+Auto-refresh is a fixed window per visit, not "while active": scrolling doesn't extend it, so a
+tab someone forgets to close costs at most ~5 requests. Polling also stops while the tab is hidden.
+
+Rough monthly budget: 1M ÷ (11 + 5 polls) ≈ **60k new visitors** in `normal` mode,
+≈ 75k in `busy`, ≈ 85k in `surge` (fewer if many viewers keep tapping to continue). Bandwidth (~8 KB per poll, ~250 KB per
+first visit) and function invocations stay far below their limits at those numbers.
+
+### Turning the dial during a traffic spike
+
+Set `TRAFFIC_MODE` in Vercel → Project → Settings → Environment Variables, then redeploy
+(Deployments → ⋯ → Redeploy). The poll policy rides inside every `/api/stats` response, so
+**tabs that are already open pick it up too**, on their next poll.
+
+| `TRAFFIC_MODE` | Poll | Auto-refresh window | Use when |
 | --- | --- | --- | --- |
-| Function invocations | CDN misses on `/api/stats` and page regeneration | CDN 20s + SWR 60s; ISR 120s | ≤ ~130k per active CDN region + ≤ ~22k ISR. Hobby includes 1M. |
-| Active CPU | Re-aggregating when new votes arrive | Rebuild only on new votes or every 30s | Milliseconds per sync. Network waits aren't billed under Fluid compute. |
-| Edge requests | **Every client poll**, even CDN hits | Poll 30s; pause when tab hidden or after 10 min idle | 120 per viewer-hour. ~1M on Hobby ≈ 8k viewer-hours; 10M on Pro ≈ 80k. |
-| Data transfer | ~9 KB gzipped per poll; ~23 KB gzipped HTML | – | 1M polls ≈ 9 GB. Hobby includes 100 GB. |
-| Upstream (Blockscout) | 2–3 small RPC calls per sync | ≤ 6 syncs/min per instance | Polite; no API key needed. |
+| `normal` (default) | 60 s | 5 min | Daily CDN requests under ~30k (1M ÷ 30 days) |
+| `busy` | 120 s | 3 min | You're trending over budget |
+| `surge` | off (tap to refresh) | – | A viral spike / announcement night |
 
-If you outgrow the limits:
+`POLL_INTERVAL_SEC` and `AUTO_REFRESH_MIN` override the preset (`POLL_INTERVAL_SEC=0` = manual only).
+Watch **Usage → CDN Requests** in the Vercel dashboard daily while voting is open.
 
-- **Fewer edge requests:** raise `NEXT_PUBLIC_POLL_INTERVAL_SEC` (60s halves them) or lower `NEXT_PUBLIC_IDLE_PAUSE_MIN`. Votes currently arrive about once a minute, so 60s still feels live.
-- **Fresher numbers:** lower `STATS_CDN_MAX_AGE_SEC` in `src/lib/config.ts`. This costs more invocations, not more edge requests.
-- Check current allowances in your Vercel dashboard (Usage tab). Hobby is for personal, non-commercial projects; use Pro for anything else.
+### Where the savings come from
+
+- **The CDN absorbs the crowd.** `/api/stats` is cached at Vercel's CDN for 30 s (+ stale-while-revalidate),
+  so the function runs about twice a minute per region no matter how many viewers there are.
+  The page HTML is ISR, regenerated at most once a minute.
+- **No request on page load.** The HTML already contains a snapshot that's under a minute old,
+  so a new tab waits for its first scheduled poll instead of fetching immediately.
+- **Fewer files per first visit:** one variable font (2 files instead of 8), CSS inlined into the HTML,
+  and the header logo as inline SVG. A first visit went from ~20 requests to ~11.
+- **Small payloads:** numbers rounded to what the UI shows, unused fields dropped (~8 KB gzipped per poll).
+- **Browser cache:** `/api/stats` may be reused for 10 s, so reloads, double taps, and multiple tabs are free.
+- **Cheap compute:** aggregates are rebuilt only when new votes arrive; network waits aren't billed as Active CPU.
+
+### If it's still not enough
+
+Put the site behind **Cloudflare's free plan** on a custom domain with a cache rule for `/` and
+`/api/stats` (respecting origin `Cache-Control`). Cloudflare then serves most requests and
+Vercel only sees cache misses — typically a >90% cut in Vercel CDN requests, at zero cost.
+Hobby is also for non-commercial use only; anything commercial needs Pro.
 
 ## Run locally
 
@@ -86,7 +128,7 @@ Open http://localhost:3000. No API keys or database are needed.
 ## Deploy to Vercel
 
 1. Push this repo to GitHub and import it in Vercel. Framework preset: Next.js, no build settings needed.
-2. Optional: set `NEXT_PUBLIC_POLL_INTERVAL_SEC` / `NEXT_PUBLIC_IDLE_PAUSE_MIN` (see `.env.example`).
+2. Optional: set `TRAFFIC_MODE` (see `.env.example` and the section above).
 3. `vercel.json` pins functions to `sin1` (Singapore), close to Thai users and to the Token X explorer.
 4. After the first deploy, open `/api/stats` once to warm the cache.
 

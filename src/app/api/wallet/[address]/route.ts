@@ -1,5 +1,5 @@
 import { connection } from "next/server";
-import { STATS_CDN_MAX_AGE_SEC, STATS_CDN_SWR_SEC } from "@/lib/config";
+import { STATS_BROWSER_MAX_AGE_SEC, STATS_CDN_MAX_AGE_SEC, STATS_CDN_SWR_SEC } from "@/lib/config";
 import { getWallet } from "@/lib/tracker";
 
 export const maxDuration = 60;
@@ -14,7 +14,7 @@ export async function GET(_req: Request, ctx: RouteContext<"/api/wallet/[address
     const info = await getWallet(address);
     return Response.json(info, {
       headers: {
-        "Cache-Control": "public, max-age=0, must-revalidate",
+        "Cache-Control": `public, max-age=${STATS_BROWSER_MAX_AGE_SEC}`,
         "Vercel-CDN-Cache-Control": `max-age=${STATS_CDN_MAX_AGE_SEC}, stale-while-revalidate=${STATS_CDN_SWR_SEC}`,
       },
     });

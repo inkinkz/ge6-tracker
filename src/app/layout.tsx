@@ -1,11 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Sans_Thai } from "next/font/google";
+import { Anuphan } from "next/font/google";
 import "./globals.css";
 
-const thai = IBM_Plex_Sans_Thai({
+// Variable font: every weight comes from one file per subset (2 requests instead of 8 with
+// a static family like IBM Plex Sans Thai), which matters when every request is metered.
+const thai = Anuphan({
   variable: "--font-thai",
   subsets: ["thai", "latin"],
-  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 

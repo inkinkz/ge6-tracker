@@ -11,6 +11,7 @@ import {
   TZ_OFFSET_SEC,
   WINDOW_BLOCKS,
   WINDOW_SAFETY_BLOCKS,
+  getPollPolicy,
 } from "./config";
 import { fetchChainHead, fetchIndexedHead, fetchVotes, unpackRow, type VoteRow } from "./chain";
 import { getWindowVotes } from "./windows";
@@ -50,7 +51,7 @@ type State = {
   built: Built | null;
 };
 
-type LiveFields = "updatedAt" | "syncedBlock" | "syncedBlockAt";
+type LiveFields = "updatedAt" | "policy" | "syncedBlock" | "syncedBlockAt";
 
 /** Aggregates are rebuilt only when votes arrive (or every 30s for the rolling windows). */
 type Built = {
@@ -225,6 +226,24 @@ async function ensureFresh(): Promise<State> {
 // ---------------------------------------------------------------------------
 // Snapshot
 
+/**
+ * Trim float noise before serializing: every byte is multiplied by every poll of every viewer.
+ * Shares keep 3 significant digits (so "<0.01%" still works); other fractions keep 2 decimals,
+ * which is what the UI displays. Integers (counts, timestamps, blocks) are untouched.
+ */
+function compactNumbers<T>(value: T, key = ""): T {
+  if (typeof value === "number") {
+    if (Number.isInteger(value)) return value;
+    const rounded = /share$/i.test(key) ? Number(value.toPrecision(3)) : Math.round(value * 100) / 100;
+    return rounded as T;
+  }
+  if (Array.isArray(value)) return value.map((v) => compactNumbers(v, key)) as T;
+  if (value && typeof value === "object") {
+    return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, compactNumbers(v, k)])) as T;
+  }
+  return value;
+}
+
 const emptyWindow = (): WindowStats => ({ tokens: 0, votes: 0, activeVoters: 0, newVoters: 0 });
 
 const DISTRIBUTION: { label: string; min: number; max: number }[] = [
@@ -246,7 +265,6 @@ function build(s: State): Built {
     tx: r.tx,
     voter: r.voter,
     tokens: toTokens(r.wei),
-    block: r.block,
     at: at(r.block),
   });
 
@@ -394,7 +412,8 @@ function build(s: State): Built {
     recent: s.rows.slice(-RECENT_VOTES_LIMIT).reverse().map(toRecent),
     integrity: { expectedVotes: lastIndex + 1, missingVotes: lastIndex + 1 - s.rows.length },
   };
-  return { body, bodyJson: JSON.stringify(body), rankByVoter, builtAt: Date.now() };
+  const compact = compactNumbers(body);
+  return { body: compact, bodyJson: JSON.stringify(compact), rankByVoter, builtAt: Date.now() };
 }
 
 /** Fresh-enough stats (syncs with Blockscout at most every SYNC_MIN_INTERVAL_MS per instance). */
@@ -406,6 +425,7 @@ export async function getStats(): Promise<Served> {
   }
   const live: Pick<StatsSnapshot, LiveFields> = {
     updatedAt: s.lastSyncAt,
+    policy: getPollPolicy(),
     syncedBlock: s.syncedBlock,
     syncedBlockAt: tsOf(s, s.syncedBlock),
   };
@@ -430,7 +450,7 @@ export async function getWallet(address: string): Promise<WalletInfo> {
     for (let i = s.rows.length - 1; i >= 0 && recent.length < 20; i--) {
       const r = s.rows[i];
       if (r.voter === addr) {
-        recent.push({ index: r.index, tx: r.tx, voter: r.voter, tokens: toTokens(r.wei), block: r.block, at: at(r.block) });
+        recent.push({ index: r.index, tx: r.tx, voter: r.voter, tokens: toTokens(r.wei), at: at(r.block) });
       }
     }
   }

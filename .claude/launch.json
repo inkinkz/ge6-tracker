@@ -4,14 +4,34 @@
     {
       "name": "ge6-dev",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
       "port": 3000
     },
     {
       "name": "ge6-prod",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "start"],
+      "runtimeArgs": [
+        "run",
+        "start"
+      ],
       "port": 3000
+    },
+    {
+      "name": "ge6-prod-surge",
+      "runtimeExecutable": "env",
+      "runtimeArgs": [
+        "TRAFFIC_MODE=surge",
+        "npm",
+        "run",
+        "start",
+        "--",
+        "-p",
+        "3002"
+      ],
+      "port": 3002
     }
   ]
 }

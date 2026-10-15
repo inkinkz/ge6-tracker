@@ -1,35 +1,57 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import type { PollPolicy } from "./config";
 import type { StatsSnapshot } from "./types";
 
 /*
- * Polling budget: every poll is one Vercel edge request (served from the CDN cache, so it is
- * not a function invocation). Polling stops while the tab is hidden and after the viewer has
- * been idle for a while; any tap/scroll resumes it immediately.
+ * Polling budget: every poll is one Vercel CDN request (Hobby includes 1M/month). The server
+ * decides the rate (TRAFFIC_MODE → `policy` in every response). Auto-refresh runs for a fixed
+ * window (`autoMin`, 5 min by default) after the page opens, then stops by itself so a forgotten
+ * tab costs nothing; tapping the status pill refreshes and starts a new window. Polling also
+ * pauses while the tab is hidden, and in "surge" mode it's off entirely. A short browser cache
+ * on /api/stats makes rapid taps free.
  */
-const POLL_MS = Math.max(10, Number(process.env.NEXT_PUBLIC_POLL_INTERVAL_SEC) || 30) * 1000;
-const IDLE_MS = Math.max(1, Number(process.env.NEXT_PUBLIC_IDLE_PAUSE_MIN) || 10) * 60_000;
+const DEFAULT_POLICY: PollPolicy = { mode: "normal", pollSec: 60, autoMin: 5 };
 const MAX_BACKOFF_MS = 5 * 60_000;
+const MIN_DELAY_MS = 5_000;
 
-export type LiveStatus = "connecting" | "live" | "paused" | "error";
+/**
+ * "paused" = the auto-refresh window ran out (tap to continue).
+ * "manual" = auto-refresh is switched off by the server (surge mode).
+ */
+export type LiveStatus = "connecting" | "live" | "paused" | "manual" | "error";
 
 export function useLiveStats(initial: StatsSnapshot | null) {
+  const initialPolicy = initial?.policy ?? DEFAULT_POLICY;
   const [data, setData] = useState<StatsSnapshot | null>(initial);
-  const [status, setStatus] = useState<LiveStatus>(initial ? "live" : "connecting");
+  const [policy, setPolicy] = useState<PollPolicy>(initialPolicy);
+  const [status, setStatus] = useState<LiveStatus>(
+    !initial ? "connecting" : initialPolicy.pollSec > 0 ? "live" : "manual",
+  );
   const [refreshing, setRefreshing] = useState(false);
   const resumeRef = useRef<() => void>(() => {});
   const initialUpdatedAt = initial?.updatedAt ?? 0;
+  const initialPollSec = initialPolicy.pollSec;
+  const initialAutoMin = initialPolicy.autoMin;
 
   useEffect(() => {
+    let current: PollPolicy = { mode: "normal", pollSec: initialPollSec, autoMin: initialAutoMin };
     let timer: ReturnType<typeof setTimeout> | undefined;
     let inflight = false;
     let failures = 0;
-    let lastFetchAt = 0;
-    let lastActivityAt = Date.now();
     let paused = false;
     let disposed = false;
     let latestUpdatedAt = initialUpdatedAt;
+    /** Client time when the data we show was last known fresh. */
+    let freshAt = initialUpdatedAt ? Math.min(Date.now(), initialUpdatedAt) : 0;
+    /** Auto-refresh runs for `autoMin` from here, then waits for the viewer to tap to continue. */
+    let windowStartedAt = Date.now();
+    // Derived from the latest policy, so switching TRAFFIC_MODE also shortens windows in open tabs.
+    const windowEndsAt = () => windowStartedAt + current.autoMin * 60_000;
+
+    const pollMs = () => current.pollSec * 1000;
+    const autoStatus = (): LiveStatus => (current.pollSec > 0 ? "live" : "manual");
 
     async function fetchNow() {
       if (inflight || disposed) return;
@@ -39,77 +61,89 @@ export function useLiveStats(initial: StatsSnapshot | null) {
         const res = await fetch("/api/stats");
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const next = (await res.json()) as StatsSnapshot;
+        if (next.policy) {
+          current = next.policy;
+          setPolicy(next.policy);
+        }
         // CDN edges can briefly disagree; never step backwards in time.
         if (!disposed && next.updatedAt >= latestUpdatedAt) {
           latestUpdatedAt = next.updatedAt;
           setData(next);
         }
+        freshAt = Date.now();
         failures = 0;
-        if (!paused) setStatus("live");
+        if (!paused) setStatus(autoStatus());
       } catch {
         failures += 1;
         setStatus("error");
       } finally {
-        lastFetchAt = Date.now();
         inflight = false;
         setRefreshing(false);
       }
     }
 
-    function schedule() {
+    function pauseIfWindowOver() {
+      if (Date.now() < windowEndsAt()) return false;
       clearTimeout(timer);
-      if (disposed || paused || document.visibilityState !== "visible") return;
-      const delay = failures ? Math.min(POLL_MS * 2 ** failures, MAX_BACKOFF_MS) : POLL_MS;
+      paused = true;
+      setStatus("paused");
+      return true;
+    }
+
+    function schedule(delayMs?: number) {
+      clearTimeout(timer);
+      if (disposed || paused || current.pollSec <= 0 || document.visibilityState !== "visible") return;
+      if (pauseIfWindowOver()) return;
+      const base = pollMs();
+      const wanted = delayMs ?? (failures ? Math.min(base * 2 ** failures, MAX_BACKOFF_MS) : base);
+      // Wake up at the end of the window too, so the pill flips to "paused" on time.
+      const delay = Math.min(Math.max(MIN_DELAY_MS, wanted), Math.max(0, windowEndsAt() - Date.now()));
       timer = setTimeout(async () => {
-        if (Date.now() - lastActivityAt > IDLE_MS) {
-          paused = true;
-          setStatus("paused");
-          return;
-        }
+        if (pauseIfWindowOver()) return;
         await fetchNow();
         schedule();
       }, delay);
     }
 
+    /** Poll now if our data is a full interval old, otherwise wait out the remainder. */
+    function catchUp() {
+      if (current.pollSec <= 0 || pauseIfWindowOver()) return;
+      const age = Date.now() - freshAt;
+      if (!freshAt || age >= pollMs()) fetchNow().then(() => schedule());
+      else schedule(pollMs() - age);
+    }
+
+    /** Explicit tap: refresh now and, if auto-refresh is on, start a new window. */
     async function resume() {
-      lastActivityAt = Date.now();
+      await fetchNow();
+      windowStartedAt = Date.now();
       if (paused) {
         paused = false;
-        setStatus("live");
+        if (!failures) setStatus(autoStatus());
       }
-      await fetchNow();
       schedule();
     }
     resumeRef.current = resume;
 
-    // The HTML may be a couple of minutes old (it is regenerated in the background), so catch up now.
-    if (!latestUpdatedAt || Date.now() - latestUpdatedAt > 15_000) fetchNow().then(schedule);
-    else schedule();
+    // The page HTML already carries a snapshot (regenerated about once a minute), so a new
+    // visitor usually doesn't need an extra request until the first scheduled poll.
+    if (!latestUpdatedAt) fetchNow().then(() => schedule());
+    else catchUp();
 
-    const onActivity = () => {
-      lastActivityAt = Date.now();
-      if (paused) resume();
-    };
     const onVisibility = () => {
       if (document.visibilityState !== "visible") return clearTimeout(timer);
-      if (paused) return;
-      if (Date.now() - lastFetchAt > POLL_MS) fetchNow().then(schedule);
-      else schedule();
+      if (!paused) catchUp();
     };
-
-    const events = ["pointerdown", "keydown", "scroll", "touchstart"] as const;
-    for (const e of events) window.addEventListener(e, onActivity, { passive: true });
     document.addEventListener("visibilitychange", onVisibility);
     return () => {
       disposed = true;
       clearTimeout(timer);
-      for (const e of events) window.removeEventListener(e, onActivity);
       document.removeEventListener("visibilitychange", onVisibility);
     };
-  }, [initialUpdatedAt]);
+  }, [initialUpdatedAt, initialPollSec, initialAutoMin]);
 
   const refresh = useCallback(() => resumeRef.current(), []);
-  return { data, status, refreshing, refresh, pollSeconds: POLL_MS / 1000 };
+  return { data, status, refreshing, refresh, pollSeconds: policy.pollSec, autoMinutes: policy.autoMin };
 }
 
 /** Current time, ticking at `granularityMs`. Returns 0 during SSR/hydration so markup matches. */

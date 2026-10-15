@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useNow, type LiveStatus } from "@/lib/use-live-stats";
 import { ThemeToggle } from "./ThemeToggle";
 
@@ -34,17 +33,27 @@ function LivePill({
 }) {
   const now = useNow(1000);
   const dot =
-    status === "live" ? "bg-good live-pulse" : status === "error" ? "bg-critical" : status === "paused" ? "bg-warning" : "bg-axis";
+    status === "live"
+      ? "bg-good live-pulse"
+      : status === "error"
+        ? "bg-critical"
+        : status === "paused"
+          ? "bg-warning"
+          : status === "manual"
+            ? "bg-data"
+            : "bg-axis";
   const label =
     status === "live"
       ? "อัปเดตสด"
       : status === "paused"
         ? "หยุดอัปเดตชั่วคราว"
-        : status === "error"
-          ? "เชื่อมต่อไม่ได้"
-          : "กำลังเชื่อมต่อ";
-  const hint =
-    status === "paused" ? "แตะเพื่ออัปเดตต่อ" : status === "error" ? "แตะเพื่อลองใหม่" : updatedAt && now ? agoShort(updatedAt, now) : "";
+        : status === "manual"
+          ? "แตะเพื่ออัปเดต"
+          : status === "error"
+            ? "เชื่อมต่อไม่ได้"
+            : "กำลังเชื่อมต่อ";
+  const ago = updatedAt && now ? agoShort(updatedAt, now) : "";
+  const hint = status === "paused" ? "แตะเพื่ออัปเดตต่อ" : status === "error" ? "แตะเพื่อลองใหม่" : ago;
 
   return (
     <button
@@ -73,7 +82,18 @@ export function Header(props: {
     <header className="sticky top-0 z-30 border-b border-line bg-page/85 backdrop-blur-md supports-[backdrop-filter]:bg-page/70">
       <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-5 py-3">
         <a href="#overview" className="flex min-w-0 items-center gap-3">
-          <Image src="/icon.svg" alt="" width={40} height={40} loading="eager" className="size-10 shrink-0 rounded-xl" />
+          {/* Same artwork as app/icon.svg, inlined so the header costs no extra request. */}
+          <svg viewBox="0 0 64 64" fill="none" aria-hidden className="size-10 shrink-0 rounded-xl">
+            <rect width="64" height="64" rx="16" fill="#2A78D6" />
+            <path
+              d="M39 17h-6c-8 0-13 7-13 16v3c0 7 5 11 12 11s12-4 12-11-5-11-12-11c-5 0-9 3-12 8"
+              stroke="#FFF"
+              strokeWidth="6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <circle cx="49" cy="15" r="4" fill="#B9F2C8" />
+          </svg>
           <span className="min-w-0 leading-snug">
             <span className="block truncate text-[15px] font-semibold">GE6 Vote Tracker</span>
             <span className="block truncate text-xs text-muted">BNK48 &amp; CGM48 Election 6</span>
