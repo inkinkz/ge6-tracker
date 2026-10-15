@@ -229,7 +229,7 @@ export function Ge5View({ data }: { data: Ge5Comparison }) {
           </p>
           <p className='text-xs text-muted'>
             {ge6.available && ge6.updatedAt
-              ? `ข้อมูล GE6 ณ ${fmtDateTime(ge6.updatedAt / 1000)} น. · หน้านี้อัปเดตทุกไม่กี่นาที`
+              ? `ข้อมูล GE6 ณ ${fmtDateTime(ge6.updatedAt / 1000)} น.`
               : 'ตอนนี้ดึงข้อมูล GE6 ไม่ได้ชั่วคราว ยอด GE6 จึงแสดงเป็น 0'}
           </p>
         </div>

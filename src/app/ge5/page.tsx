@@ -10,8 +10,8 @@ export const metadata: Metadata = {
 };
 
 // getGe5Comparison is cached (`use cache`), so this page is prerendered and regenerated in the
-// background — no request-time work and no client polling. The boundary is normally already
-// filled in the prerendered HTML.
+// background. It deliberately has no client polling (unlike the home page): the GE6 numbers are
+// as of page load. The boundary is normally already filled in the prerendered HTML.
 async function Ge5WithData() {
   const data = await getGe5Comparison();
   return <Ge5View data={data} />;
