@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import type { WalletInfo } from "@/lib/types";
 import { fmtDateTime, fmtNumber, fmtPercent, fmtTokens, shortAddr } from "@/lib/format";
@@ -70,6 +71,13 @@ export function WalletLookup() {
           {loading ? "กำลังค้น…" : "ค้นหา"}
         </button>
       </form>
+
+      {!result && !loading ? (
+        <div className="mt-5 flex items-center gap-4 rounded-xl bg-surface-2 p-4">
+          <Image src="/images/wallet-placeholder.svg" alt="" width={96} height={72} className="w-24 shrink-0" />
+          <p className="text-sm leading-relaxed text-ink-2">ใส่ที่อยู่กระเป๋าเพื่อดูยอดโหวตและประวัติของคุณ</p>
+        </div>
+      ) : null}
 
       {result?.kind === "error" ? (
         <p role="alert" className="mt-3 text-sm text-critical">

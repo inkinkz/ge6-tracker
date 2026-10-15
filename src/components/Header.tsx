@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useNow, type LiveStatus } from "@/lib/use-live-stats";
 
 const NAV = [
@@ -71,12 +72,7 @@ export function Header(props: {
     <header className="sticky top-0 z-30 border-b border-line bg-page/85 backdrop-blur-md supports-[backdrop-filter]:bg-page/70">
       <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-5 py-3">
         <a href="#overview" className="flex min-w-0 items-center gap-3">
-          <span
-            aria-hidden
-            className="grid size-10 shrink-0 place-items-center rounded-xl bg-data text-sm font-bold tracking-tight text-white"
-          >
-            GE6
-          </span>
+          <Image src="/icon.svg" alt="" width={40} height={40} loading="eager" className="size-10 shrink-0 rounded-xl" />
           <span className="min-w-0 leading-snug">
             <span className="block truncate text-[15px] font-semibold">GE6 Vote Tracker</span>
             <span className="block truncate text-xs text-muted">BNK48 &amp; CGM48 Election 6</span>

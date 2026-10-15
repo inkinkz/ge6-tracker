@@ -1,11 +1,11 @@
 'use client';
 
+import Image from 'next/image';
 import type { StatsSnapshot } from '@/lib/types';
 import { explorerTransfersUrl } from '@/lib/config';
 import { fmtNumber } from '@/lib/format';
 import { useLiveStats } from '@/lib/use-live-stats';
 import { useSavedWallet } from '@/lib/use-saved-wallet';
-import { About } from './About';
 import { ActivityChart } from './ActivityChart';
 import { Distribution } from './Distribution';
 import { Header, SectionNav } from './Header';
@@ -63,21 +63,31 @@ export function Dashboard({ initial }: { initial: StatsSnapshot | null }) {
       />
       <main className='mx-auto max-w-5xl px-5 pt-7 pb-14 sm:pt-10'>
         <div className='mb-7 space-y-5 sm:mb-9'>
-          <div className='space-y-2.5'>
-            <h1 className='text-[22px] leading-snug font-bold text-balance sm:text-3xl'>
-              ติดตามยอดโหวต BNK48 &amp; CGM48 General Election ครั้งที่ 6
-            </h1>
-            <p className='text-[15px] leading-relaxed text-ink-2'>
-              นับจากโทเคน GE6 ที่ส่งเข้ากระเป๋าโหวตบนบล็อกเชน Token X แบบเรียลไทม์ ·{' '}
-              <a
-                href={explorerTransfersUrl}
-                target='_blank'
-                rel='noopener noreferrer'
-                className='text-link underline underline-offset-2'
-              >
-                ดูข้อมูลต้นทาง
-              </a>
-            </p>
+          <div className='grid items-center gap-4 sm:grid-cols-[minmax(0,1fr)_220px] sm:gap-8'>
+            <div className='space-y-2.5'>
+              <h1 className='text-[22px] leading-snug font-bold text-balance sm:text-3xl'>
+                ติดตามยอดโหวต BNK48 &amp; CGM48 General Election ครั้งที่ 6
+              </h1>
+              <p className='text-[15px] leading-relaxed text-ink-2'>
+                นับจากโทเคน GE6 ที่ส่งเข้ากระเป๋าโหวตบนบล็อกเชน Token X แบบเรียลไทม์ ·{' '}
+                <a
+                  href={explorerTransfersUrl}
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  className='text-link underline underline-offset-2'
+                >
+                  ดูข้อมูลต้นทาง
+                </a>
+              </p>
+            </div>
+            <Image
+              src='/images/election-placeholder.svg'
+              alt=''
+              width={360}
+              height={240}
+              loading='eager'
+              className='mx-auto h-28 w-auto sm:h-auto sm:w-full'
+            />
           </div>
           <SectionNav />
         </div>
