@@ -493,3 +493,28 @@ export async function getVoterSummaries(addresses: string[]): Promise<VoterSumma
     voters,
   };
 }
+
+/** Read-only view of every wallet that has voted in GE6 (for cross-election overlaps). */
+export async function getGe6VoterIndex(): Promise<{
+  updatedAt: number;
+  size: number;
+  has: (address: string) => boolean;
+  addresses: () => IterableIterator<string>;
+}> {
+  const built = await getStats();
+  const voters = store.state!.voters;
+  return {
+    updatedAt: built.snapshot.updatedAt,
+    size: voters.size,
+    has: (address) => voters.has(address),
+    addresses: () => voters.keys(),
+  };
+}
+
+/** Addresses of GE6's top `n` wallets by tokens (ties at the cutoff included). */
+export async function getGe6TopAddresses(n: number): Promise<string[]> {
+  const { rankByVoter } = await getStats();
+  const out: string[] = [];
+  for (const [address, rank] of rankByVoter) if (rank <= n) out.push(address);
+  return out;
+}

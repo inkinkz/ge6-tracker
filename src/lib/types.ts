@@ -107,7 +107,7 @@ export type VoterSummaries = {
 };
 
 /** A past election this app compares GE6 against. */
-export type PastEdition = "ge4" | "ge5";
+export type PastEdition = "ge3" | "ge4" | "ge5";
 
 export type PastGeMember = { name: string; tokens: number };
 
@@ -144,4 +144,69 @@ export type PastGeComparison = {
   };
   rows: PastGeRow[];
   members: PastGeMemberOption[];
+};
+
+export type GeId = "ge3" | "ge4" | "ge5" | "ge6";
+
+/** One election's headline numbers; GE6 values are "so far", null where unknown. */
+export type GeEditionStats = {
+  id: GeId;
+  label: string;
+  live: boolean;
+  tokens: number;
+  wallets: number;
+  /** Members who received votes (unknown for GE6: votes are hashed until results). */
+  members: number | null;
+  /** Vote transactions (unknown for GE5: its export is pre-aggregated). */
+  votes: number | null;
+  avgPerWallet: number;
+  medianPerWallet: number;
+  top10Share: number;
+  walletsForHalf: number;
+  topMember: { name: string; tokens: number } | null;
+};
+
+/** Wallets from one election that voted again in the next. */
+export type GeFlow = { from: string; to: string; fromWallets: number; returning: number; live: boolean };
+
+/** Wallets in an election that hadn't voted in any earlier one (since GE3). */
+export type GeNewWallets = { label: string; wallets: number; newWallets: number; live: boolean };
+
+export type GeMemberHistory = {
+  key: string;
+  nick: string;
+  group: string | null;
+  /** True for e.g. GE4's "Pim", which doesn't say which group's Pim it was. */
+  groupUnknown: boolean;
+  results: Record<"ge3" | "ge4" | "ge5", { rank: number; tokens: number; wallets: number } | null>;
+};
+
+export type GeCompare = {
+  ge6Available: boolean;
+  updatedAt: number | null;
+  editions: GeEditionStats[];
+  flows: GeFlow[];
+  newWallets: GeNewWallets[];
+  loyal: { ge3to5: number; ge3to6: number | null };
+  members: GeMemberHistory[];
+  /** Union of each election's top wallets (see TOP_PER_EDITION in lib/compare.ts). */
+  topPerEdition: number;
+  wallets: GeWalletRow[];
+};
+
+/** One wallet's result in a past election, for the combined table on /compare. */
+export type GePastResult = {
+  tokens: number;
+  rank: number;
+  /** Top member and its share of this wallet's votes (only known for that election's top wallets). */
+  top: { name: string; share: number } | null;
+};
+
+/** A wallet that's in the top of any election, with its result in every election. */
+export type GeWalletRow = {
+  address: string;
+  ge6: { tokens: number; votes: number; rank: number } | null;
+  ge5: GePastResult | null;
+  ge4: GePastResult | null;
+  ge3: GePastResult | null;
 };

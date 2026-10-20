@@ -1,18 +1,20 @@
 import "server-only";
 import { cacheLife } from "next/cache";
+import ge3 from "@/data/ge3-top.json";
 import ge4 from "@/data/ge4-top.json";
 import ge5 from "@/data/ge5-top.json";
 import { getVoterSummaries } from "./tracker";
 import type { PastEdition, PastGeComparison, PastGeRow, VoterSummaries } from "./types";
 
 const EDITIONS: Record<PastEdition, { label: string; number: number; data: typeof ge5 }> = {
+  ge3: { label: "GE3", number: 3, data: ge3 },
   ge4: { label: "GE4", number: 4, data: ge4 },
   ge5: { label: "GE5", number: 5, data: ge5 },
 };
 
 /**
  * A past election's top wallets (top 200) joined with their GE6 votes so far.
- * The past data is static (src/data/<edition>-top.json, from `npm run data:ge4` / `data:ge5`);
+ * The past data is static (src/data/<edition>-top.json, from `npm run data:ge3` … `data:ge5`);
  * the GE6 side comes from the live tracker. Cached like the home page: regenerated in the
  * background at most every 2 minutes, with no client polling, so a view costs one CDN request.
  */

@@ -1,23 +1,28 @@
-// Builds src/data/<edition>-top.json (a past election's top wallets) from its vote export.
+// Builds two files per past election from its vote export:
+//   src/data/<edition>-top.json      top wallets (for /ge3, /ge4, /ge5)
+//   src/data/<edition>-summary.json  election-wide stats, member totals, and every voting wallet
+//                                    with its total (for /compare)
 //
+//   npm run data:ge3 [-- path/to/ge3_result.csv]
 //   npm run data:ge4 [-- path/to/ge4_result.csv]
 //   npm run data:ge5 [-- path/to/ge5_voters.csv]
 //
 // Two export formats are supported (detected from the header):
-//   GE4: one row per vote, quoted CSV — "Wallet address", "Answer" (member), "Vote amount" in wei
-//   GE5: one row per wallet × member — "Wallet address", "Answer" (member), "Token" in GE5 tokens
-// Only what the page needs is kept: wallet address, totals, and the members it voted for.
-// App-internal columns (wallet code, vote keys/hashes) are deliberately dropped.
+//   GE3/GE4: one row per vote (GE4 quoted) — "Wallet address", "Answer" (member), "Vote amount" in wei
+//   GE5:     one row per wallet × member — "Wallet address", "Answer" (member), "Token" in tokens
+// Only addresses, totals, and member names are kept. App-internal columns (wallet code, vote
+// keys/hashes) are deliberately dropped.
 
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const EDITIONS = {
+  ge3: { csv: "ge3_result.csv" },
   ge4: { csv: "ge4_result.csv" },
   ge5: { csv: "ge5_voters.csv" },
 };
-const TOP_N = 200;
+const TOP_N = 300;
 const MEMBERS_PER_WALLET = 3;
 const DECIMALS = 18;
 const UNIT = 10n ** BigInt(DECIMALS);
@@ -30,6 +35,7 @@ if (!EDITIONS[edition]) {
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const input = resolve(root, process.argv[3] ?? EDITIONS[edition].csv);
 const output = resolve(root, `src/data/${edition}-top.json`);
+const summaryOutput = resolve(root, `src/data/${edition}-summary.json`);
 
 /** Minimal RFC 4180 line parser: handles quoted fields and "" escapes (no embedded newlines). */
 function parseLine(line) {
@@ -133,8 +139,59 @@ const data = {
   top,
 };
 
+// --- Election-wide summary (compare page) -------------------------------------------------
+
+const walletTokens = ranked.map((w) => toTokens(w.atto));
+const median =
+  walletTokens.length % 2
+    ? walletTokens[(walletTokens.length - 1) / 2]
+    : (walletTokens[walletTokens.length / 2 - 1] + walletTokens[walletTokens.length / 2]) / 2;
+const sumAtto = (list) => list.reduce((s, w) => s + w.atto, 0n);
+let walletsForHalf = 0;
+for (let acc = 0n; walletsForHalf < ranked.length && acc * 2n < grandTotal; walletsForHalf++) {
+  acc += ranked[walletsForHalf].atto;
+}
+const share = (atto) => Number((atto * 1_000_000n) / grandTotal) / 1_000_000;
+
+const memberTotals = new Map(); // name -> { atto, wallets }
+for (const w of ranked) {
+  for (const m of w.members) {
+    const t = memberTotals.get(m.name) ?? { atto: 0n, wallets: 0 };
+    t.atto += m.atto;
+    t.wallets += 1;
+    memberTotals.set(m.name, t);
+  }
+}
+const members = [...memberTotals.entries()]
+  .map(([name, t]) => ({ name, atto: t.atto, wallets: t.wallets }))
+  .sort((a, b) => byAmountDesc(a, b) || a.name.localeCompare(b.name))
+  .map((m) => ({ name: m.name, tokens: toTokens(m.atto), wallets: m.wallets }));
+
+const byAddress = [...ranked].sort((a, b) => a.address.localeCompare(b.address));
+const summary = {
+  edition,
+  stats: {
+    tokens: toTokens(grandTotal),
+    wallets: wallets.size,
+    members: memberNames.size,
+    // Per-vote exports (GE3/GE4) have one row per vote; GE5's export is pre-aggregated.
+    votes: isWei ? lines.length - 1 : null,
+    avgPerWallet: toTokens(grandTotal / BigInt(wallets.size)),
+    medianPerWallet: Math.round(median * 100) / 100,
+    top10Share: share(sumAtto(ranked.slice(0, 10))),
+    top100Share: share(sumAtto(ranked.slice(0, 100))),
+    walletsForHalf,
+  },
+  members,
+  // Every voting wallet as one string of 40-hex-char addresses (no 0x), sorted by address, and
+  // its total in the same order: compact for the bundle, and enough to rank any wallet.
+  wallets: byAddress.map((w) => w.address.slice(2)).join(""),
+  amounts: byAddress.map((w) => toTokens(w.atto)),
+};
+
 mkdirSync(dirname(output), { recursive: true });
 writeFileSync(output, `${JSON.stringify(data, null, 1)}\n`);
+writeFileSync(summaryOutput, `${JSON.stringify(summary)}\n`);
 console.log(
-  `wrote ${output}: top ${top.length} of ${wallets.size} wallets, ${memberNames.size} members, ${data.totals.tokens} tokens`,
+  `wrote ${output} + ${summaryOutput}: top ${top.length} of ${wallets.size} wallets, ${memberNames.size} members, ${data.totals.tokens} tokens`,
 );

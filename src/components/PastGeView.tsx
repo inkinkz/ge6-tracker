@@ -9,7 +9,7 @@ import { useSavedWallet } from '@/lib/use-saved-wallet';
 import { BrandHeader } from './Header';
 import { SiteFooter } from './SiteFooter';
 import { ThemeToggle } from './ThemeToggle';
-import { Section, Segmented } from './ui';
+import { MemberName, Section, Segmented } from './ui';
 
 type Sort = 'past' | 'ge6';
 type Filter = 'all' | 'voted' | 'not-voted';
@@ -17,19 +17,6 @@ type Filter = 'all' | 'voted' | 'not-voted';
 const PAGE_SIZE = 25;
 /** rank | wallet | past GE | GE6 — shared by the header row and every wallet row. */
 const COLUMNS = 'grid grid-cols-[1.5rem_minmax(0,1fr)_4.25rem_4.25rem] gap-x-2';
-
-/** "Nenie CGM48" → name + group, so the group can be de-emphasized (GE4 names have no group). */
-function MemberName({ name }: { name: string }) {
-  const i = name.lastIndexOf(' ');
-  const nick = i > 0 ? name.slice(0, i) : name;
-  const group = i > 0 ? name.slice(i + 1) : '';
-  return (
-    <span>
-      <span className='font-semibold text-ink'>{nick}</span>
-      {group ? <span className='ml-1 text-xs font-normal text-muted'>{group}</span> : null}
-    </span>
-  );
-}
 
 function Tile({
   label,
@@ -82,27 +69,41 @@ function SortHeader({
   );
 }
 
-const EDITION_TABS: { id: PastEdition; label: string }[] = [
-  { id: 'ge4', label: 'GE4' },
-  { id: 'ge5', label: 'GE5' },
+const EDITION_TABS: { href: string; label: string; id?: PastEdition }[] = [
+  { id: 'ge3', href: '/ge3', label: 'GE3' },
+  { id: 'ge4', href: '/ge4', label: 'GE4' },
+  { id: 'ge5', href: '/ge5', label: 'GE5' },
+  { href: '/compare', label: 'เทียบทุก GE' },
 ];
 
-/** Switch between the past elections; plain links without prefetch so no extra requests. */
+/** Switch between the past elections; links without prefetch so they cost no extra requests. */
 function EditionTabs({ current }: { current: PastEdition }) {
   return (
-    <nav aria-label='เลือกการเลือกตั้งที่จะเทียบกับ GE6'>
-      <ul className='inline-flex rounded-full bg-surface-2 p-1 text-sm'>
-        {EDITION_TABS.map((t) => (
-          <li key={t.id}>
+    <nav aria-label='เลือกการเลือกตั้งที่จะเทียบกับ GE6' className='-mx-4 sm:mx-0'>
+      <ul className='no-scrollbar flex gap-1 overflow-x-auto px-4 sm:px-0'>
+        <li className='inline-flex shrink-0 rounded-full bg-surface-2 p-1 text-sm'>
+          {EDITION_TABS.filter((t) => t.id).map((t) => (
             <Link
-              href={`/${t.id}`}
+              key={t.href}
+              href={t.href}
               prefetch={false}
               aria-current={t.id === current ? 'page' : undefined}
               className={`inline-flex min-h-9 items-center rounded-full px-3.5 font-medium whitespace-nowrap ${
                 t.id === current ? 'bg-ink text-page shadow-sm' : 'text-ink-2 hover:text-ink'
               }`}
             >
-              {t.label} → GE6
+              {t.label}
+            </Link>
+          ))}
+        </li>
+        {EDITION_TABS.filter((t) => !t.id).map((t) => (
+          <li key={t.href} className='shrink-0'>
+            <Link
+              href={t.href}
+              prefetch={false}
+              className='inline-flex min-h-11 items-center rounded-full px-3.5 text-sm font-medium whitespace-nowrap text-link hover:underline'
+            >
+              {t.label} →
             </Link>
           </li>
         ))}

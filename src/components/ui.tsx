@@ -126,3 +126,16 @@ export function ShareBar({
     </div>
   );
 }
+
+/** "Nenie CGM48" → name + group, so the group can be de-emphasized (GE4 names have no group). */
+export function MemberName({ name }: { name: string }) {
+  const i = name.lastIndexOf(' ');
+  const nick = i > 0 ? name.slice(0, i) : name;
+  const group = i > 0 ? name.slice(i + 1) : '';
+  return (
+    <span>
+      <span className='font-semibold text-ink'>{nick}</span>
+      {group ? <span className='ml-1 text-xs font-normal text-muted'>{group}</span> : null}
+    </span>
+  );
+}

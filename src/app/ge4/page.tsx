@@ -4,9 +4,9 @@ import { PastGeView } from "@/components/PastGeView";
 import { getPastComparison } from "@/lib/past-ge";
 
 export const metadata: Metadata = {
-  title: "Top 200 กระเป๋าจาก GE4 ใน GE6 — GE6 Vote Tracker",
+  title: "Top 300 กระเป๋าจาก GE4 ใน GE6 — GE6 Vote Tracker",
   description:
-    "200 กระเป๋าที่โหวตมากที่สุดใน BNK48 & CGM48 General Election ครั้งที่ 4 เมมเบอร์ที่แต่ละกระเป๋าโหวตให้มากที่สุด และยอดโทเคนที่โหวตใน GE6 แล้ว",
+    "300 กระเป๋าที่โหวตมากที่สุดใน BNK48 & CGM48 General Election ครั้งที่ 4 เมมเบอร์ที่แต่ละกระเป๋าโหวตให้มากที่สุด และยอดโทเคนที่โหวตใน GE6 แล้ว",
 };
 
 // getPastComparison is cached (`use cache`), so this page is prerendered and regenerated in the
