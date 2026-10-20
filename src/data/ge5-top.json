@@ -1,5 +1,5 @@
 {
- "source": "GE5 voter export (wallet × member totals)",
+ "edition": "ge5",
  "totals": {
   "tokens": 1161494.37,
   "wallets": 3160,
@@ -148,24 +148,24 @@
   },
   {
    "rank": 10,
-   "address": "0x76961dd459ce0f92b580cb88c2368a77ebe623e9",
-   "tokens": 10001,
-   "memberCount": 1,
-   "members": [
-    {
-     "name": "Kaning CGM48",
-     "tokens": 10001
-    }
-   ]
-  },
-  {
-   "rank": 10,
    "address": "0x13467ddd950c0d226c3bd2caa8456959b9b1213b",
    "tokens": 10001,
    "memberCount": 1,
    "members": [
     {
      "name": "Kaofrang BNK48",
+     "tokens": 10001
+    }
+   ]
+  },
+  {
+   "rank": 10,
+   "address": "0x76961dd459ce0f92b580cb88c2368a77ebe623e9",
+   "tokens": 10001,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
      "tokens": 10001
     }
    ]
@@ -644,7 +644,7 @@
   },
   {
    "rank": 45,
-   "address": "0xb1af95b4f58693912cc70c1321566b9a37dd2afe",
+   "address": "0x032afa6f647f0d3a4d742628fc504423c966e893",
    "tokens": 4800,
    "memberCount": 1,
    "members": [
@@ -692,7 +692,7 @@
   },
   {
    "rank": 45,
-   "address": "0x032afa6f647f0d3a4d742628fc504423c966e893",
+   "address": "0xb1af95b4f58693912cc70c1321566b9a37dd2afe",
    "tokens": 4800,
    "memberCount": 1,
    "members": [
@@ -1040,18 +1040,6 @@
   },
   {
    "rank": 74,
-   "address": "0xacdfb2f1e3ccee6da1a43b4d8ecf2e2682b025d7",
-   "tokens": 3600,
-   "memberCount": 1,
-   "members": [
-    {
-     "name": "Kaning CGM48",
-     "tokens": 3600
-    }
-   ]
-  },
-  {
-   "rank": 74,
    "address": "0x6d109ad1fe9900f295aa22213bd576c06d842dca",
    "tokens": 3600,
    "memberCount": 1,
@@ -1064,7 +1052,7 @@
   },
   {
    "rank": 74,
-   "address": "0xc7669c3a797544adaaeb16e5aac5a1c7bf1cd3ff",
+   "address": "0x919998e2da50ce1af81c15acbb9b2e1729676cb3",
    "tokens": 3600,
    "memberCount": 1,
    "members": [
@@ -1076,7 +1064,19 @@
   },
   {
    "rank": 74,
-   "address": "0x919998e2da50ce1af81c15acbb9b2e1729676cb3",
+   "address": "0xacdfb2f1e3ccee6da1a43b4d8ecf2e2682b025d7",
+   "tokens": 3600,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
+     "tokens": 3600
+    }
+   ]
+  },
+  {
+   "rank": 74,
+   "address": "0xc7669c3a797544adaaeb16e5aac5a1c7bf1cd3ff",
    "tokens": 3600,
    "memberCount": 1,
    "members": [
@@ -1336,24 +1336,24 @@
   },
   {
    "rank": 97,
-   "address": "0xcdf84f9cef6bac8a79e679cd2cfad7ea75f625fa",
-   "tokens": 3000,
-   "memberCount": 1,
-   "members": [
-    {
-     "name": "Kaning CGM48",
-     "tokens": 3000
-    }
-   ]
-  },
-  {
-   "rank": 97,
    "address": "0xc800093183be492099fd104577199445c36e3bff",
    "tokens": 3000,
    "memberCount": 1,
    "members": [
     {
      "name": "Pancake BNK48",
+     "tokens": 3000
+    }
+   ]
+  },
+  {
+   "rank": 97,
+   "address": "0xcdf84f9cef6bac8a79e679cd2cfad7ea75f625fa",
+   "tokens": 3000,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
      "tokens": 3000
     }
    ]
@@ -1608,34 +1608,6 @@
   },
   {
    "rank": 120,
-   "address": "0xcadf21a50d5c6b1c765f7571d4fe5a610ec6a6bd",
-   "tokens": 2400,
-   "memberCount": 2,
-   "members": [
-    {
-     "name": "Pancake BNK48",
-     "tokens": 2294
-    },
-    {
-     "name": "Hoop BNK48",
-     "tokens": 106
-    }
-   ]
-  },
-  {
-   "rank": 120,
-   "address": "0x9f678b8dc46d3c5b18c70f96ef504c7983fc126c",
-   "tokens": 2400,
-   "memberCount": 1,
-   "members": [
-    {
-     "name": "Kaning CGM48",
-     "tokens": 2400
-    }
-   ]
-  },
-  {
-   "rank": 120,
    "address": "0x03b7cbbe676e272919207936f01cfad982c027d8",
    "tokens": 2400,
    "memberCount": 1,
@@ -1660,12 +1632,12 @@
   },
   {
    "rank": 120,
-   "address": "0x9d8037080045eecf06a73a3446ade68138610176",
+   "address": "0x4845993d67c7ec610c18d25ba2d12b300ca96912",
    "tokens": 2400,
    "memberCount": 1,
    "members": [
     {
-     "name": "Kaning CGM48",
+     "name": "Pancake BNK48",
      "tokens": 2400
     }
    ]
@@ -1696,12 +1668,24 @@
   },
   {
    "rank": 120,
-   "address": "0x4845993d67c7ec610c18d25ba2d12b300ca96912",
+   "address": "0x9d8037080045eecf06a73a3446ade68138610176",
    "tokens": 2400,
    "memberCount": 1,
    "members": [
     {
-     "name": "Pancake BNK48",
+     "name": "Kaning CGM48",
+     "tokens": 2400
+    }
+   ]
+  },
+  {
+   "rank": 120,
+   "address": "0x9f678b8dc46d3c5b18c70f96ef504c7983fc126c",
+   "tokens": 2400,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Kaning CGM48",
      "tokens": 2400
     }
    ]
@@ -1715,6 +1699,22 @@
     {
      "name": "Pancake BNK48",
      "tokens": 2400
+    }
+   ]
+  },
+  {
+   "rank": 120,
+   "address": "0xcadf21a50d5c6b1c765f7571d4fe5a610ec6a6bd",
+   "tokens": 2400,
+   "memberCount": 2,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 2294
+    },
+    {
+     "name": "Hoop BNK48",
+     "tokens": 106
     }
    ]
   },
@@ -1984,12 +1984,60 @@
   },
   {
    "rank": 147,
+   "address": "0x370d7d176378746a18c779769b9d671ef36698ad",
+   "tokens": 2100,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 2100
+    }
+   ]
+  },
+  {
+   "rank": 147,
+   "address": "0x5f0fdfe34078c3ad984f8d0c884db80e8454b4ed",
+   "tokens": 2100,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 2100
+    }
+   ]
+  },
+  {
+   "rank": 147,
    "address": "0x5ff9be6148adde20f7e37ae9c868a7f956f3c84c",
    "tokens": 2100,
    "memberCount": 1,
    "members": [
     {
      "name": "Kaning CGM48",
+     "tokens": 2100
+    }
+   ]
+  },
+  {
+   "rank": 147,
+   "address": "0xa628ef8d9afa8578f3bd8118f61999fe7f882fe0",
+   "tokens": 2100,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 2100
+    }
+   ]
+  },
+  {
+   "rank": 147,
+   "address": "0xb1a9beb41867bd37a134c4979c99578801af4ca9",
+   "tokens": 2100,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
      "tokens": 2100
     }
    ]
@@ -2020,55 +2068,7 @@
   },
   {
    "rank": 147,
-   "address": "0xa628ef8d9afa8578f3bd8118f61999fe7f882fe0",
-   "tokens": 2100,
-   "memberCount": 1,
-   "members": [
-    {
-     "name": "Pancake BNK48",
-     "tokens": 2100
-    }
-   ]
-  },
-  {
-   "rank": 147,
-   "address": "0x370d7d176378746a18c779769b9d671ef36698ad",
-   "tokens": 2100,
-   "memberCount": 1,
-   "members": [
-    {
-     "name": "Pancake BNK48",
-     "tokens": 2100
-    }
-   ]
-  },
-  {
-   "rank": 147,
    "address": "0xf34abf57a6e11b7cf3f9d078a1360954a0a83663",
-   "tokens": 2100,
-   "memberCount": 1,
-   "members": [
-    {
-     "name": "Pancake BNK48",
-     "tokens": 2100
-    }
-   ]
-  },
-  {
-   "rank": 147,
-   "address": "0x5f0fdfe34078c3ad984f8d0c884db80e8454b4ed",
-   "tokens": 2100,
-   "memberCount": 1,
-   "members": [
-    {
-     "name": "Pancake BNK48",
-     "tokens": 2100
-    }
-   ]
-  },
-  {
-   "rank": 147,
-   "address": "0xb1a9beb41867bd37a134c4979c99578801af4ca9",
    "tokens": 2100,
    "memberCount": 1,
    "members": [
@@ -2324,43 +2324,55 @@
   },
   {
    "rank": 171,
-   "address": "0xd0bb42b0ddb2b083d1605c0fa5de89c001d94465",
-   "tokens": 1800,
-   "memberCount": 1,
-   "members": [
-    {
-     "name": "Pancake BNK48",
-     "tokens": 1800
-    }
-   ]
-  },
-  {
-   "rank": 171,
-   "address": "0xd181fd19c1d271fd11a4146c530c3d3f58fd70d4",
-   "tokens": 1800,
-   "memberCount": 1,
-   "members": [
-    {
-     "name": "Pancake BNK48",
-     "tokens": 1800
-    }
-   ]
-  },
-  {
-   "rank": 171,
-   "address": "0xa36558ee986a5b9b88fb4b6f47845b51ba2c5393",
-   "tokens": 1800,
-   "memberCount": 1,
-   "members": [
-    {
-     "name": "Pancake BNK48",
-     "tokens": 1800
-    }
-   ]
-  },
-  {
-   "rank": 171,
    "address": "0x0af176abe8c1a8b82b2862a95093c87be0135e86",
+   "tokens": 1800,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 1800
+    }
+   ]
+  },
+  {
+   "rank": 171,
+   "address": "0x2426e58119e85799ebb6249a9e58778e23eefdd7",
+   "tokens": 1800,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 1800
+    }
+   ]
+  },
+  {
+   "rank": 171,
+   "address": "0x25f00c5184df4fac7f2587a5cab48fb9de54f125",
+   "tokens": 1800,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 1800
+    }
+   ]
+  },
+  {
+   "rank": 171,
+   "address": "0x50d94dcddd82b2591e943042b53dba2058aec906",
+   "tokens": 1800,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 1800
+    }
+   ]
+  },
+  {
+   "rank": 171,
+   "address": "0x55ddf3dcaad76f053f90b7d74319a4db0f3c565d",
    "tokens": 1800,
    "memberCount": 1,
    "members": [
@@ -2396,7 +2408,7 @@
   },
   {
    "rank": 171,
-   "address": "0x2426e58119e85799ebb6249a9e58778e23eefdd7",
+   "address": "0x848c9265de873bf055fd29b6f8bcfe564d87557d",
    "tokens": 1800,
    "memberCount": 1,
    "members": [
@@ -2408,7 +2420,7 @@
   },
   {
    "rank": 171,
-   "address": "0xf01d25ad9949ae6322c7b26656f45cefe73a47c1",
+   "address": "0xa36558ee986a5b9b88fb4b6f47845b51ba2c5393",
    "tokens": 1800,
    "memberCount": 1,
    "members": [
@@ -2420,7 +2432,19 @@
   },
   {
    "rank": 171,
-   "address": "0x25f00c5184df4fac7f2587a5cab48fb9de54f125",
+   "address": "0xd0bb42b0ddb2b083d1605c0fa5de89c001d94465",
+   "tokens": 1800,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 1800
+    }
+   ]
+  },
+  {
+   "rank": 171,
+   "address": "0xd181fd19c1d271fd11a4146c530c3d3f58fd70d4",
    "tokens": 1800,
    "memberCount": 1,
    "members": [
@@ -2444,43 +2468,19 @@
   },
   {
    "rank": 171,
-   "address": "0x55ddf3dcaad76f053f90b7d74319a4db0f3c565d",
-   "tokens": 1800,
-   "memberCount": 1,
-   "members": [
-    {
-     "name": "Pancake BNK48",
-     "tokens": 1800
-    }
-   ]
-  },
-  {
-   "rank": 171,
-   "address": "0x50d94dcddd82b2591e943042b53dba2058aec906",
-   "tokens": 1800,
-   "memberCount": 1,
-   "members": [
-    {
-     "name": "Pancake BNK48",
-     "tokens": 1800
-    }
-   ]
-  },
-  {
-   "rank": 171,
-   "address": "0x848c9265de873bf055fd29b6f8bcfe564d87557d",
-   "tokens": 1800,
-   "memberCount": 1,
-   "members": [
-    {
-     "name": "Pancake BNK48",
-     "tokens": 1800
-    }
-   ]
-  },
-  {
-   "rank": 171,
    "address": "0xec2347f9b5f3d5a404588d7e50e239b096c00528",
+   "tokens": 1800,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Pancake BNK48",
+     "tokens": 1800
+    }
+   ]
+  },
+  {
+   "rank": 171,
+   "address": "0xf01d25ad9949ae6322c7b26656f45cefe73a47c1",
    "tokens": 1800,
    "memberCount": 1,
    "members": [
@@ -2680,24 +2680,24 @@
   },
   {
    "rank": 198,
-   "address": "0xdec1808862b073074acd0a6d0ee1802f871ee2b7",
-   "tokens": 1600,
-   "memberCount": 1,
-   "members": [
-    {
-     "name": "Neen BNK48",
-     "tokens": 1600
-    }
-   ]
-  },
-  {
-   "rank": 198,
    "address": "0x58fa840046cae9b688890adc67fc0bc97f4d6d20",
    "tokens": 1600,
    "memberCount": 1,
    "members": [
     {
      "name": "Pancake BNK48",
+     "tokens": 1600
+    }
+   ]
+  },
+  {
+   "rank": 198,
+   "address": "0xdec1808862b073074acd0a6d0ee1802f871ee2b7",
+   "tokens": 1600,
+   "memberCount": 1,
+   "members": [
+    {
+     "name": "Neen BNK48",
      "tokens": 1600
     }
    ]

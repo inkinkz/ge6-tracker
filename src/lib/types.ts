@@ -106,37 +106,42 @@ export type VoterSummaries = {
   voters: Record<string, { tokens: number; votes: number; rank: number; lastVoteAt: number }>;
 };
 
-export type Ge5Member = { name: string; tokens: number };
+/** A past election this app compares GE6 against. */
+export type PastEdition = "ge4" | "ge5";
 
-export type Ge5Row = {
-  /** Rank among GE5 voters by total tokens. */
+export type PastGeMember = { name: string; tokens: number };
+
+export type PastGeRow = {
+  /** Rank among that election's voters by total tokens. */
   rank: number;
   address: string;
-  /** Total GE5 tokens from this wallet. */
+  /** Total tokens this wallet voted in that election. */
   tokens: number;
-  /** How many members this wallet voted for in GE5. */
+  /** How many members this wallet voted for in that election. */
   memberCount: number;
   /** Members this wallet voted for most (largest first); members[0] is its top pick. */
-  members: Ge5Member[];
+  members: PastGeMember[];
   /** This wallet's GE6 votes so far, or null if it hasn't voted in GE6 yet. */
   ge6: { tokens: number; votes: number; rank: number; lastVoteAt: number } | null;
 };
 
-/** A member that is some listed wallet's top GE5 pick (for the member filter). */
-export type Ge5MemberOption = { name: string; wallets: number };
+/** A member that is some listed wallet's top pick (for the member filter). */
+export type PastGeMemberOption = { name: string; wallets: number };
 
-export type Ge5Comparison = {
-  ge5: { wallets: number; members: number };
+export type PastGeComparison = {
+  /** e.g. { id: "ge4", label: "GE4", number: 4 } */
+  edition: { id: PastEdition; label: string; number: number };
+  past: { wallets: number; members: number };
   ge6: {
     available: boolean;
     updatedAt: number | null;
     totalTokens: number;
     totalVoters: number;
-    /** GE6 tokens voted so far by the listed GE5 wallets. */
+    /** GE6 tokens voted so far by the listed wallets. */
     topTokens: number;
-    /** How many of the listed GE5 wallets have voted in GE6. */
+    /** How many of the listed wallets have voted in GE6. */
     returning: number;
   };
-  rows: Ge5Row[];
-  members: Ge5MemberOption[];
+  rows: PastGeRow[];
+  members: PastGeMemberOption[];
 };

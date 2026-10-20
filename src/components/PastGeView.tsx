@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
-import type { Ge5Comparison, Ge5Row } from '@/lib/types';
+import type { PastEdition, PastGeComparison, PastGeRow } from '@/lib/types';
 import { explorerAddressUrl } from '@/lib/config';
 import { fmtDateTime, fmtNumber, fmtPercent, fmtTokens, shortAddr } from '@/lib/format';
 import { useSavedWallet } from '@/lib/use-saved-wallet';
@@ -11,14 +11,14 @@ import { SiteFooter } from './SiteFooter';
 import { ThemeToggle } from './ThemeToggle';
 import { Section, Segmented } from './ui';
 
-type Sort = 'ge5' | 'ge6';
+type Sort = 'past' | 'ge6';
 type Filter = 'all' | 'voted' | 'not-voted';
 
 const PAGE_SIZE = 25;
-/** rank | wallet | GE5 | GE6 — shared by the header row and every wallet row. */
+/** rank | wallet | past GE | GE6 — shared by the header row and every wallet row. */
 const COLUMNS = 'grid grid-cols-[1.5rem_minmax(0,1fr)_4.25rem_4.25rem] gap-x-2';
 
-/** "Nenie CGM48" → name + group, so the group can be de-emphasized. */
+/** "Nenie CGM48" → name + group, so the group can be de-emphasized (GE4 names have no group). */
 function MemberName({ name }: { name: string }) {
   const i = name.lastIndexOf(' ');
   const nick = i > 0 ? name.slice(0, i) : name;
@@ -82,11 +82,50 @@ function SortHeader({
   );
 }
 
+const EDITION_TABS: { id: PastEdition; label: string }[] = [
+  { id: 'ge4', label: 'GE4' },
+  { id: 'ge5', label: 'GE5' },
+];
+
+/** Switch between the past elections; plain links without prefetch so no extra requests. */
+function EditionTabs({ current }: { current: PastEdition }) {
+  return (
+    <nav aria-label='เลือกการเลือกตั้งที่จะเทียบกับ GE6'>
+      <ul className='inline-flex rounded-full bg-surface-2 p-1 text-sm'>
+        {EDITION_TABS.map((t) => (
+          <li key={t.id}>
+            <Link
+              href={`/${t.id}`}
+              prefetch={false}
+              aria-current={t.id === current ? 'page' : undefined}
+              className={`inline-flex min-h-9 items-center rounded-full px-3.5 font-medium whitespace-nowrap ${
+                t.id === current ? 'bg-ink text-page shadow-sm' : 'text-ink-2 hover:text-ink'
+              }`}
+            >
+              {t.label} → GE6
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+}
+
 /**
  * Two calm lines per wallet (amounts + top member); everything else opens on tap so the list
  * stays scannable on a phone.
  */
-function WalletRow({ row, mine, sort }: { row: Ge5Row; mine: boolean; sort: Sort }) {
+function WalletRow({
+  row,
+  mine,
+  sort,
+  label,
+}: {
+  row: PastGeRow;
+  mine: boolean;
+  sort: Sort;
+  label: string;
+}) {
   const pick = row.members[0];
   const pickShare = row.tokens > 0 ? pick.tokens / row.tokens : 0;
   const ge6Tokens = row.ge6?.tokens ?? 0;
@@ -112,7 +151,7 @@ function WalletRow({ row, mine, sort }: { row: Ge5Row; mine: boolean; sort: Sort
                 </span>
               ) : null}
             </span>
-            <span className={amount(sort === 'ge5')}>{fmtTokens(row.tokens)}</span>
+            <span className={amount(sort === 'past')}>{fmtTokens(row.tokens)}</span>
             <span className={amount(sort === 'ge6', ge6Tokens === 0)}>{fmtTokens(ge6Tokens)}</span>
 
             <span className='col-span-3 col-start-2 flex items-center justify-between gap-2 text-sm'>
@@ -149,7 +188,7 @@ function WalletRow({ row, mine, sort }: { row: Ge5Row; mine: boolean; sort: Sort
           </div>
           <div>
             <div className='text-xs text-muted'>
-              เมมเบอร์ที่โหวตใน GE5 ({fmtNumber(row.memberCount)} คน)
+              เมมเบอร์ที่โหวตใน {label} ({fmtNumber(row.memberCount)} คน)
             </div>
             <ul className='mt-1 space-y-1'>
               {row.members.map((m) => (
@@ -179,13 +218,14 @@ function WalletRow({ row, mine, sort }: { row: Ge5Row; mine: boolean; sort: Sort
   );
 }
 
-export function Ge5View({ data }: { data: Ge5Comparison }) {
+export function PastGeView({ data }: { data: PastGeComparison }) {
   const [myWallet] = useSavedWallet();
-  const [sort, setSort] = useState<Sort>('ge5');
+  const [sort, setSort] = useState<Sort>('past');
   const [filter, setFilter] = useState<Filter>('all');
   const [member, setMember] = useState<string | null>(null);
   const [limit, setLimit] = useState(PAGE_SIZE);
-  const { ge5, ge6, members } = data;
+  const { edition, past, ge6, members } = data;
+  const label = edition.label;
   const topN = data.rows.length;
 
   const rows = useMemo(() => {
@@ -219,12 +259,12 @@ export function Ge5View({ data }: { data: Ge5Comparison }) {
 
       <main className='mx-auto max-w-3xl px-4 pt-7 pb-14 sm:pt-10'>
         <div className='mb-7 space-y-2.5 sm:mb-9'>
-          <p className='text-sm font-medium text-data'>GE5 → GE6</p>
+          <EditionTabs current={edition.id} />
           <h1 className='text-[22px] leading-snug font-bold text-balance sm:text-3xl'>
-            Top {fmtNumber(topN)} กระเป๋าจาก GE5 โหวต GE6 ไปแล้วเท่าไร
+            Top {fmtNumber(topN)} กระเป๋าจาก {label} โหวต GE6 ไปแล้วเท่าไร
           </h1>
           <p className='text-[15px] leading-relaxed text-ink-2'>
-            กระเป๋าที่โหวตมากที่สุด {fmtNumber(topN)} อันดับแรกใน General Election ครั้งที่ 5
+            กระเป๋าที่โหวตมากที่สุด {fmtNumber(topN)} อันดับแรกใน General Election ครั้งที่ {edition.number}
             เมมเบอร์ที่แต่ละกระเป๋าโหวตให้มากที่สุด และยอดที่กระเป๋าเดียวกันโหวตใน GE6 แล้ว
           </p>
           <p className='text-xs text-muted'>
@@ -269,7 +309,7 @@ export function Ge5View({ data }: { data: Ge5Comparison }) {
             title={
               member
                 ? `กระเป๋าที่โหวตให้ ${member} มากที่สุด`
-                : `รายชื่อ Top ${fmtNumber(topN)} ของ GE5`
+                : `รายชื่อ Top ${fmtNumber(topN)} ของ ${label}`
             }
             subtitle={`${fmtNumber(rows.length)} กระเป๋า`}
           >
@@ -308,20 +348,26 @@ export function Ge5View({ data }: { data: Ge5Comparison }) {
             </label>
 
             <p className='mb-3 text-xs leading-relaxed text-muted'>
-              ชื่อใต้กระเป๋า = เมมเบอร์ที่โหวตให้มากที่สุดใน GE5 · แตะ GE5 / GE6 เพื่อเรียง ·
+              ชื่อใต้กระเป๋า = เมมเบอร์ที่โหวตให้มากที่สุดใน {label} · แตะ {label} / GE6 เพื่อเรียง ·
               แตะแถวเพื่อดูรายละเอียด
             </p>
             <div className={`${COLUMNS} items-center border-b border-line pb-2 text-xs text-ink-2`}>
               <span className='text-right'>อันดับ</span>
               <span>กระเป๋า</span>
-              <SortHeader label='GE5' active={sort === 'ge5'} onClick={() => sortBy('ge5')} />
+              <SortHeader label={label} active={sort === 'past'} onClick={() => sortBy('past')} />
               <SortHeader label='GE6' active={sort === 'ge6'} onClick={() => sortBy('ge6')} />
             </div>
 
             {shown.length ? (
               <ol className='divide-y divide-line'>
                 {shown.map((r) => (
-                  <WalletRow key={r.address} row={r} mine={myWallet === r.address} sort={sort} />
+                  <WalletRow
+                    key={r.address}
+                    row={r}
+                    mine={myWallet === r.address}
+                    sort={sort}
+                    label={label}
+                  />
                 ))}
               </ol>
             ) : (
@@ -343,8 +389,8 @@ export function Ge5View({ data }: { data: Ge5Comparison }) {
 
         <SiteFooter>
           <p>
-            ข้อมูล GE5 มาจากผลโหวตรายกระเป๋าแยกตามเมมเบอร์ ({fmtNumber(ge5.wallets)} กระเป๋า ·{' '}
-            {fmtNumber(ge5.members)} เมมเบอร์)
+            ข้อมูล {label} มาจากผลโหวตรายกระเป๋าแยกตามเมมเบอร์ ({fmtNumber(past.wallets)} กระเป๋า ·{' '}
+            {fmtNumber(past.members)} เมมเบอร์)
           </p>
         </SiteFooter>
       </main>

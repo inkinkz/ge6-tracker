@@ -122,13 +122,22 @@ export function SectionNav() {
     <nav aria-label="ไปยังส่วนต่างๆ" className="-mx-5 sm:mx-0">
       <ul className="no-scrollbar flex gap-2.5 overflow-x-auto px-5 py-1 [mask-image:linear-gradient(to_right,transparent,#000_20px,#000_calc(100%-28px),transparent)] sm:flex-wrap sm:px-0 sm:[mask-image:none]">
         <li className="shrink-0">
-          {/* No prefetch: otherwise every home-page visitor would also download /ge5. */}
+          {/* No prefetch: otherwise every home-page visitor would also download /ge5 and /ge4. */}
           <Link
             href="/ge5"
             prefetch={false}
             className="inline-flex min-h-10 items-center gap-1.5 rounded-full bg-data px-4 text-sm font-semibold whitespace-nowrap text-white hover:opacity-90"
           >
             Top 200 จาก GE5 <span aria-hidden>→</span>
+          </Link>
+        </li>
+        <li className="shrink-0">
+          <Link
+            href="/ge4"
+            prefetch={false}
+            className="inline-flex min-h-10 items-center gap-1.5 rounded-full bg-data px-4 text-sm font-semibold whitespace-nowrap text-white hover:opacity-90"
+          >
+            Top 200 จาก GE4 <span aria-hidden>→</span>
           </Link>
         </li>
         {NAV.map((n) => (

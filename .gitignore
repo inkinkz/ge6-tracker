@@ -43,3 +43,6 @@ next-env.d.ts
 
 # raw GE5 export (contains app account IDs); the page uses src/data/ge5-top.json
 /ge5_voters.csv
+
+# raw GE4 export (app account IDs, vote keys and hashes); the page uses src/data/ge4-top.json
+/ge4_result.csv
