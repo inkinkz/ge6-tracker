@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import type { GeCompare, GeEditionStats, GeMemberHistory, GeWalletRow } from '@/lib/types';
 import { explorerAddressUrl } from '@/lib/config';
-import { fmtCompact, fmtDateTime, fmtNumber, fmtPercent, fmtTokens, shortAddr } from '@/lib/format';
+import { fmtCompact, fmtDateTime, fmtNumber, fmtPercent, fmtTokens } from '@/lib/format';
 import { useSavedWallet } from '@/lib/use-saved-wallet';
 import { BrandHeader } from './Header';
 import { SiteFooter } from './SiteFooter';
@@ -127,6 +127,8 @@ type WalletSort = 'ge6' | 'ge5' | 'ge4' | 'ge3';
 type WalletFilter = 'all' | 'ge6' | 'no-ge6' | 'every';
 const WALLET_COLS: WalletSort[] = ['ge6', 'ge5', 'ge4', 'ge3'];
 const WALLET_PAGE = 25;
+/** GE6 | GE5 | GE4 | GE3 | expand chevron — shared by the header and every wallet row. */
+const WALLET_GRID = 'grid grid-cols-[repeat(4,minmax(0,1fr))_1rem] gap-2';
 const tokensIn = (r: GeWalletRow, id: WalletSort) => r[id]?.tokens ?? 0;
 
 /** Column header that doubles as the sort control. */
@@ -241,6 +243,80 @@ function WalletDetail({ row, opened }: { row: GeWalletRow; opened: boolean }) {
   );
 }
 
+/** Copy text, with a fallback for browsers without the async Clipboard API (older iOS, http). */
+async function copyText(text: string): Promise<boolean> {
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  } catch {
+    // fall through to the legacy path
+  }
+  const el = document.createElement('textarea');
+  el.value = text;
+  el.setAttribute('readonly', '');
+  // Off-screen but selectable; 16px avoids iOS zooming into the field.
+  el.style.cssText = 'position:fixed;top:0;left:-9999px;font-size:16px;opacity:0';
+  document.body.appendChild(el);
+  el.select();
+  el.setSelectionRange(0, text.length);
+  let ok = false;
+  try {
+    ok = document.execCommand('copy');
+  } catch {
+    ok = false;
+  }
+  el.remove();
+  return ok;
+}
+
+/** Full wallet address; tapping copies it (and doesn't expand the row). */
+function CopyAddress({ address, mine }: { address: string; mine: boolean }) {
+  const [state, setState] = useState<'idle' | 'copied' | 'failed'>('idle');
+  useEffect(() => {
+    if (state === 'idle') return;
+    const t = setTimeout(() => setState('idle'), 1600);
+    return () => clearTimeout(t);
+  }, [state]);
+  return (
+    <button
+      type='button'
+      onClick={async (e) => {
+        // Inside <summary>: keep the tap from toggling the row.
+        e.preventDefault();
+        e.stopPropagation();
+        setState((await copyText(address)) ? 'copied' : 'failed');
+      }}
+      aria-label={`คัดลอกที่อยู่กระเป๋า ${address}`}
+      className={`group/copy relative -my-1 inline-flex min-w-0 items-center gap-1 rounded-md py-1 text-left font-mono text-[11px] break-all hover:text-ink sm:text-[13px] ${
+        mine ? 'font-semibold text-ink' : 'text-ink-2'
+      }`}
+    >
+      <span>{address}</span>
+      {/* Same-size icon in every state so the line never reflows; the message floats above. */}
+      {state === 'copied' ? (
+        <svg viewBox='0 0 16 16' aria-hidden className='size-3 shrink-0 text-good-text'>
+          <path d='m3 8.5 3 3 7-7' fill='none' stroke='currentColor' strokeWidth='1.8' strokeLinecap='round' />
+        </svg>
+      ) : (
+        <svg viewBox='0 0 16 16' aria-hidden className='size-3 shrink-0 text-muted group-hover/copy:text-ink'>
+          <rect x='5' y='5' width='8.5' height='8.5' rx='1.5' fill='none' stroke='currentColor' strokeWidth='1.3' />
+          <path d='M3 10.5V3.5A1.5 1.5 0 0 1 4.5 2h6' fill='none' stroke='currentColor' strokeWidth='1.3' strokeLinecap='round' />
+        </svg>
+      )}
+      <span
+        role='status'
+        className={`pointer-events-none absolute bottom-full left-0 mb-1 rounded-md px-2 py-0.5 font-sans text-[11px] font-semibold whitespace-nowrap shadow-sm transition-opacity ${
+          state === 'idle' ? 'opacity-0' : 'opacity-100'
+        } ${state === 'failed' ? 'bg-critical text-white' : 'bg-ink text-page'}`}
+      >
+        {state === 'idle' ? '' : state === 'failed' ? 'คัดลอกไม่ได้' : 'คัดลอกแล้ว'}
+      </span>
+    </button>
+  );
+}
+
 /** Every election's top wallets in one list, with GE6 → GE3 amounts side by side. */
 function WalletTable({ rows, topN }: { rows: GeWalletRow[]; topN: number }) {
   const [myWallet] = useSavedWallet();
@@ -292,7 +368,7 @@ function WalletTable({ rows, topN }: { rows: GeWalletRow[]; topN: number }) {
         แตะ GE6 / GE5 / GE4 / GE3 เพื่อเรียง ·
         แตะแถวเพื่อดูอันดับและเมมเบอร์ที่โหวตให้มากที่สุดของแต่ละครั้ง
       </p>
-      <div className={`${COLS} border-b border-line pb-2 text-xs`}>
+      <div className={`${WALLET_GRID} border-b border-line pb-2 text-xs`}>
         {WALLET_COLS.map((id) => (
           <ColumnSort
             key={id}
@@ -304,6 +380,7 @@ function WalletTable({ rows, topN }: { rows: GeWalletRow[]; topN: number }) {
             }}
           />
         ))}
+        <span aria-hidden />
       </div>
 
       {shown.length ? (
@@ -321,35 +398,17 @@ function WalletTable({ rows, topN }: { rows: GeWalletRow[]; topN: number }) {
                   }}
                 >
                   <summary className='cursor-pointer list-none py-3.5 [&::-webkit-details-marker]:hidden'>
-                    <div className='flex items-baseline justify-between gap-2'>
-                      <span className='flex min-w-0 items-baseline gap-2'>
-                        <span className='text-xs text-muted tabular'>{i + 1}</span>
-                        <span
-                          className={`truncate font-mono text-[13px] ${mine ? 'font-semibold text-ink' : 'text-ink-2'}`}
-                        >
-                          {shortAddr(r.address)}
+                    {/* Full address on its own line; the chevron sits with the amounts to leave room. */}
+                    <div className='flex min-w-0 flex-wrap items-center gap-x-1.5'>
+                      <span className='text-xs text-muted tabular'>{i + 1}</span>
+                      <CopyAddress address={r.address} mine={mine} />
+                      {mine ? (
+                        <span className='shrink-0 rounded bg-data px-1.5 text-[11px] font-semibold text-white'>
+                          ของฉัน
                         </span>
-                        {mine ? (
-                          <span className='shrink-0 rounded bg-data px-1.5 text-[11px] font-semibold text-white'>
-                            ของฉัน
-                          </span>
-                        ) : null}
-                      </span>
-                      <svg
-                        viewBox='0 0 16 16'
-                        aria-hidden
-                        className='size-4 shrink-0 text-muted transition-transform group-open:rotate-180'
-                      >
-                        <path
-                          d='m4 6 4 4 4-4'
-                          fill='none'
-                          stroke='currentColor'
-                          strokeWidth='1.5'
-                          strokeLinecap='round'
-                        />
-                      </svg>
+                      ) : null}
                     </div>
-                    <div className={`${COLS} mt-1.5`}>
+                    <div className={`${WALLET_GRID} mt-1.5 items-center`}>
                       {WALLET_COLS.map((id) => {
                         const t = tokensIn(r, id);
                         return (
@@ -367,6 +426,19 @@ function WalletTable({ rows, topN }: { rows: GeWalletRow[]; topN: number }) {
                           </span>
                         );
                       })}
+                      <svg
+                        viewBox='0 0 16 16'
+                        aria-hidden
+                        className='size-4 shrink-0 text-muted transition-transform group-open:rotate-180'
+                      >
+                        <path
+                          d='m4 6 4 4 4-4'
+                          fill='none'
+                          stroke='currentColor'
+                          strokeWidth='1.5'
+                          strokeLinecap='round'
+                        />
+                      </svg>
                     </div>
                   </summary>
                   <WalletDetail row={r} opened={opened.has(r.address)} />
