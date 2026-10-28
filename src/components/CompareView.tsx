@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { GeCompare, GeEditionStats, GeMemberHistory, GeWalletRow } from '@/lib/types';
 import { explorerAddressUrl } from '@/lib/config';
 import { fmtCompact, fmtDateTime, fmtNumber, fmtPercent, fmtTokens, shortAddr } from '@/lib/format';
@@ -157,7 +157,36 @@ function ColumnSort({
   );
 }
 
-function WalletDetail({ row }: { row: GeWalletRow }) {
+/** GE6 tokens the wallet still holds (not yet voted), fetched when the row is first opened. */
+function Ge6Holding({ address }: { address: string }) {
+  const [state, setState] = useState<{ balance: number } | 'loading' | 'error'>('loading');
+  useEffect(() => {
+    let cancelled = false;
+    fetch(`/api/balance/${address}`)
+      .then((res) => (res.ok ? res.json() : Promise.reject(new Error(`HTTP ${res.status}`))))
+      .then((json: { balance: number }) => !cancelled && setState({ balance: json.balance }))
+      .catch(() => !cancelled && setState('error'));
+    return () => {
+      cancelled = true;
+    };
+  }, [address]);
+  return (
+    <div>
+      <span className='mr-2 text-xs text-muted'>GE6 ในกระเป๋าตอนนี้</span>
+      {state === 'loading' ? (
+        <span className='text-muted'>กำลังโหลด…</span>
+      ) : state === 'error' ? (
+        <span className='text-muted'>ดึงข้อมูลไม่ได้</span>
+      ) : (
+        <span className='font-semibold text-ink tabular'>
+          {fmtTokens(state.balance)} <span className='text-xs font-normal text-muted'>GE6</span>
+        </span>
+      )}
+    </div>
+  );
+}
+
+function WalletDetail({ row, opened }: { row: GeWalletRow; opened: boolean }) {
   return (
     <div className='mb-3.5 space-y-2 rounded-xl bg-surface-2 p-3.5 text-[13px] leading-relaxed'>
       <div>
@@ -168,6 +197,7 @@ function WalletDetail({ row }: { row: GeWalletRow }) {
             : 'ยังไม่ได้โหวต'}
         </span>
       </div>
+      {opened ? <Ge6Holding address={row.address} /> : null}
       {PAST_IDS.map((id) => {
         const r = row[id];
         return (
@@ -208,6 +238,8 @@ function WalletTable({ rows, topN }: { rows: GeWalletRow[]; topN: number }) {
   const [sort, setSort] = useState<WalletSort>('ge6');
   const [filter, setFilter] = useState<WalletFilter>('all');
   const [limit, setLimit] = useState(WALLET_PAGE);
+  // Rows opened at least once; their balance stays loaded after collapsing.
+  const [opened, setOpened] = useState<ReadonlySet<string>>(new Set());
 
   const list = useMemo(() => {
     let out = rows;
@@ -271,7 +303,14 @@ function WalletTable({ rows, topN }: { rows: GeWalletRow[]; topN: number }) {
             const mine = myWallet === r.address;
             return (
               <li key={r.address} className={mine ? '-mx-3 rounded-xl bg-data-wash px-3' : ''}>
-                <details className='group'>
+                <details
+                  className='group'
+                  onToggle={(e) => {
+                    if (e.currentTarget.open && !opened.has(r.address)) {
+                      setOpened((prev) => new Set(prev).add(r.address));
+                    }
+                  }}
+                >
                   <summary className='cursor-pointer list-none py-3.5 [&::-webkit-details-marker]:hidden'>
                     <div className='flex items-baseline justify-between gap-2'>
                       <span className='flex min-w-0 items-baseline gap-2'>
@@ -321,7 +360,7 @@ function WalletTable({ rows, topN }: { rows: GeWalletRow[]; topN: number }) {
                       })}
                     </div>
                   </summary>
-                  <WalletDetail row={r} />
+                  <WalletDetail row={r} opened={opened.has(r.address)} />
                 </details>
               </li>
             );

@@ -1,6 +1,8 @@
 import "server-only";
 import {
   BLOCKSCOUT_RPC_URL,
+  GE6_DECIMALS,
+  GE6_TOKEN,
   NODE_RPC_URL,
   START_BLOCK,
   USER_AGENT,
@@ -115,4 +117,13 @@ export async function fetchIndexedHead(): Promise<number> {
 export async function fetchChainHead(): Promise<{ block: number; timestamp: number }> {
   const b = await rpc<{ number: string; timestamp: string }>(NODE_RPC_URL, "eth_getBlockByNumber", ["latest", false]);
   return { block: hex(b.number), timestamp: hex(b.timestamp) };
+}
+
+/** GE6 tokens a wallet holds right now (not yet voted), via the token's balanceOf. */
+export async function fetchGe6Balance(address: string): Promise<number> {
+  const data = `0x70a08231${address.toLowerCase().replace(/^0x/, "").padStart(64, "0")}`;
+  const raw = await rpc<string>(NODE_RPC_URL, "eth_call", [{ to: GE6_TOKEN, data }, "latest"]);
+  const wei = BigInt(raw === "0x" ? "0x0" : raw);
+  // Keep 6 decimals exactly, then convert (balances are far below 2^53 micro-units).
+  return Number(wei / 10n ** BigInt(GE6_DECIMALS - 6)) / 1e6;
 }
