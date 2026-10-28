@@ -1,5 +1,5 @@
 import { connection } from "next/server";
-import { fetchGe6Balance } from "@/lib/chain";
+import { fetchHoldings } from "@/lib/chain";
 
 export async function GET(_req: Request, ctx: RouteContext<"/api/balance/[address]">) {
   await connection();
@@ -8,9 +8,9 @@ export async function GET(_req: Request, ctx: RouteContext<"/api/balance/[addres
     return Response.json({ error: "รูปแบบที่อยู่กระเป๋าไม่ถูกต้อง" }, { status: 400 });
   }
   try {
-    const balance = await fetchGe6Balance(address);
+    const holdings = await fetchHoldings(address);
     return Response.json(
-      { address: address.toLowerCase(), balance, at: Date.now() },
+      { address: address.toLowerCase(), ...holdings, at: Date.now() },
       {
         headers: {
           // Only fetched when someone opens a wallet row; a minute of sharing per wallet is plenty.

@@ -157,14 +157,21 @@ function ColumnSort({
   );
 }
 
-/** GE6 tokens the wallet still holds (not yet voted), fetched when the row is first opened. */
-function Ge6Holding({ address }: { address: string }) {
-  const [state, setState] = useState<{ balance: number } | 'loading' | 'error'>('loading');
+type Holdings = { ge6: number; bnk: number };
+const Amount = ({ value, unit }: { value: number; unit: string }) => (
+  <span className='font-semibold text-ink tabular'>
+    {fmtTokens(value)} <span className='text-xs font-normal text-muted'>{unit}</span>
+  </span>
+);
+
+/** GE6 (not yet voted) and BNK tokens the wallet holds now, fetched when the row is first opened. */
+function Holdings({ address }: { address: string }) {
+  const [state, setState] = useState<Holdings | 'loading' | 'error'>('loading');
   useEffect(() => {
     let cancelled = false;
     fetch(`/api/balance/${address}`)
       .then((res) => (res.ok ? res.json() : Promise.reject(new Error(`HTTP ${res.status}`))))
-      .then((json: { balance: number }) => !cancelled && setState({ balance: json.balance }))
+      .then((json: Holdings) => !cancelled && setState({ ge6: json.ge6, bnk: json.bnk }))
       .catch(() => !cancelled && setState('error'));
     return () => {
       cancelled = true;
@@ -172,15 +179,17 @@ function Ge6Holding({ address }: { address: string }) {
   }, [address]);
   return (
     <div>
-      <span className='mr-2 text-xs text-muted'>GE6 ในกระเป๋าตอนนี้</span>
+      <span className='mr-2 text-xs text-muted'>ในกระเป๋าตอนนี้</span>
       {state === 'loading' ? (
         <span className='text-muted'>กำลังโหลด…</span>
       ) : state === 'error' ? (
         <span className='text-muted'>ดึงข้อมูลไม่ได้</span>
       ) : (
-        <span className='font-semibold text-ink tabular'>
-          {fmtTokens(state.balance)} <span className='text-xs font-normal text-muted'>GE6</span>
-        </span>
+        <>
+          <Amount value={state.ge6} unit='GE6' />
+          <span className='mx-1.5 text-muted'>·</span>
+          <Amount value={state.bnk} unit='BNK' />
+        </>
       )}
     </div>
   );
@@ -197,7 +206,7 @@ function WalletDetail({ row, opened }: { row: GeWalletRow; opened: boolean }) {
             : 'ยังไม่ได้โหวต'}
         </span>
       </div>
-      {opened ? <Ge6Holding address={row.address} /> : null}
+      {opened ? <Holdings address={row.address} /> : null}
       {PAST_IDS.map((id) => {
         const r = row[id];
         return (

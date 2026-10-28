@@ -7,6 +7,10 @@ export const VOTE_CONTRACT = '0x86a1F49e1b1Cbd69971e99B66123264c75Ac2c8F';
 export const GE6_TOKEN = '0x2f5c60bdE7A5ebD2b116BB03cB5232fA1Ea55F1C';
 export const GE6_DECIMALS = 18;
 
+/** BNK48's "BNK Governance token" (BNK, 18 decimals); shown next to GE6 holdings on /compare. */
+export const BNK_TOKEN = "0xA992ad80Fa6136702382123Ae717890Bc587491d";
+export const BNK_DECIMALS = 18;
+
 /**
  * keccak256("Voted(address,uint256,uint256,bytes32)")
  * topics: [sig, voter, index]  data: [amount, hash]

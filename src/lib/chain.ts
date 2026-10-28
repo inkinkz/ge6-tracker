@@ -1,6 +1,8 @@
 import "server-only";
 import {
   BLOCKSCOUT_RPC_URL,
+  BNK_DECIMALS,
+  BNK_TOKEN,
   GE6_DECIMALS,
   GE6_TOKEN,
   NODE_RPC_URL,
@@ -119,11 +121,20 @@ export async function fetchChainHead(): Promise<{ block: number; timestamp: numb
   return { block: hex(b.number), timestamp: hex(b.timestamp) };
 }
 
-/** GE6 tokens a wallet holds right now (not yet voted), via the token's balanceOf. */
-export async function fetchGe6Balance(address: string): Promise<number> {
+/** An ERC-20 balance via balanceOf, in whole tokens. */
+async function fetchTokenBalance(token: string, decimals: number, address: string): Promise<number> {
   const data = `0x70a08231${address.toLowerCase().replace(/^0x/, "").padStart(64, "0")}`;
-  const raw = await rpc<string>(NODE_RPC_URL, "eth_call", [{ to: GE6_TOKEN, data }, "latest"]);
-  const wei = BigInt(raw === "0x" ? "0x0" : raw);
+  const raw = await rpc<string>(NODE_RPC_URL, "eth_call", [{ to: token, data }, "latest"]);
+  const units = BigInt(raw === "0x" ? "0x0" : raw);
   // Keep 6 decimals exactly, then convert (balances are far below 2^53 micro-units).
-  return Number(wei / 10n ** BigInt(GE6_DECIMALS - 6)) / 1e6;
+  return Number(units / 10n ** BigInt(decimals - 6)) / 1e6;
+}
+
+/** What a wallet holds right now: GE6 not yet voted, and BNK governance tokens. */
+export async function fetchHoldings(address: string): Promise<{ ge6: number; bnk: number }> {
+  const [ge6, bnk] = await Promise.all([
+    fetchTokenBalance(GE6_TOKEN, GE6_DECIMALS, address),
+    fetchTokenBalance(BNK_TOKEN, BNK_DECIMALS, address),
+  ]);
+  return { ge6, bnk };
 }
