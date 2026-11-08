@@ -7,6 +7,7 @@ import { ThemeToggle } from "./ThemeToggle";
 const NAV = [
   { id: "overview", label: "ภาพรวม" },
   { id: "activity", label: "กราฟ" },
+  { id: "tokens", label: "เส้นทางโทเคน" },
   { id: "top", label: "อันดับกระเป๋า" },
   { id: "recent", label: "โหวตล่าสุด" },
   { id: "lookup", label: "เช็กกระเป๋า" },

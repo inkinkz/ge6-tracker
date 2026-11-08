@@ -65,6 +65,42 @@ export type SupplySnapshot = {
   inWallets: number;
 };
 
+/** One distribution wallet: what the treasury gave it and how much it has passed on to fans. */
+export type DistributorWallet = {
+  address: string;
+  /** GE6 received from the treasury (net of anything sent back). */
+  allocated: number;
+  /** GE6 sent on to fans. */
+  sent: number;
+  /** On-chain balance now (null if the balance read failed). */
+  balance: number | null;
+  /** Distinct fan wallets it has sent GE6 to. */
+  recipients: number;
+  lastSentAt: number | null;
+};
+
+/** One Bangkok day of token movement. */
+export type FlowDay = {
+  /** Day start, unix seconds. */
+  t: number;
+  /** GE6 sent from organizer wallets to fans that day. */
+  distributed: number;
+  /** GE6 voted that day. */
+  voted: number;
+};
+
+/** Built from every transfer out of the organizer wallets. */
+export type TokenFlow = {
+  /** Distinct fan wallets that have received GE6 straight from an organizer wallet. */
+  recipients: number;
+  /** What the treasury sent straight to fans, skipping the distribution wallets. */
+  direct: { sent: number; recipients: number };
+  /** Largest allocation first. */
+  wallets: DistributorWallet[];
+  /** From the first day tokens reached fans (or the first vote, if earlier) to today. */
+  daily: FlowDay[];
+};
+
 export type StatsSnapshot = {
   /** Server time of the last successful upstream sync, ms. */
   updatedAt: number;
@@ -94,6 +130,8 @@ export type StatsSnapshot = {
   };
   /** Where every GE6 token sits; null until the first on-chain read succeeds. */
   supply: SupplySnapshot | null;
+  /** Organizer → fan token movement; null until the organizer transfer history has loaded. */
+  flow: TokenFlow | null;
   topVoters: VoterEntry[];
   distribution: DistributionBucket[];
   daily: SeriesPoint[];

@@ -9,6 +9,7 @@ import {
   GE6_TREASURY,
   NODE_RPC_URL,
   START_BLOCK,
+  TRANSFER_TOPIC,
   USER_AGENT,
   VOTE_CONTRACT,
   VOTED_TOPIC,
@@ -41,6 +42,7 @@ export const unpackRow = (p: PackedRow): VoteRow => ({
 type RpcLog = {
   blockNumber: string;
   data: string;
+  logIndex?: string;
   topics: (string | null)[];
   transactionHash: string;
 };
@@ -112,6 +114,68 @@ export async function fetchVotes(fromBlock: number, toBlock: number): Promise<Vo
   return [...out.values()].sort((a, b) => a.index - b.index);
 }
 
+/** One GE6 `Transfer` out of an organizer wallet. */
+export type OrgTransfer = {
+  block: number;
+  /** Lowercase 0x addresses. */
+  from: string;
+  to: string;
+  wei: bigint;
+  /** `${tx}:${logIndex}` — one transaction can move tokens to many wallets (multipleTransfer). */
+  key: string;
+};
+
+/** Serializable form of OrgTransfer: [block, from, to, weiDecimal, key]. */
+export type PackedTransfer = [number, string, string, string, string];
+
+export const packTransfer = (t: OrgTransfer): PackedTransfer => [t.block, t.from, t.to, t.wei.toString(), t.key];
+export const unpackTransfer = (p: PackedTransfer): OrgTransfer => ({
+  block: p[0],
+  from: p[1],
+  to: p[2],
+  wei: BigInt(p[3]),
+  key: p[4],
+});
+
+const addressTopic = (a: string) => `0x${a.toLowerCase().replace(/^0x/, "").padStart(64, "0")}`;
+
+/** Every GE6 transfer sent by any of `senders` in [fromBlock, toBlock], paging through the 1,000-log cap. */
+export async function fetchTransfersFrom(senders: string[], fromBlock: number, toBlock: number): Promise<OrgTransfer[]> {
+  const out = new Map<string, OrgTransfer>();
+  const fromTopics = senders.map(addressTopic);
+  let from = fromBlock;
+  while (from <= toBlock) {
+    const logs = await rpc<RpcLog[]>(BLOCKSCOUT_RPC_URL, "eth_getLogs", [
+      {
+        address: GE6_TOKEN,
+        topics: [TRANSFER_TOPIC, fromTopics],
+        fromBlock: `0x${from.toString(16)}`,
+        toBlock: `0x${toBlock.toString(16)}`,
+      },
+    ]);
+    let lastBlock = from;
+    for (const log of logs) {
+      const data = log.data.startsWith("0x") ? log.data.slice(2) : log.data;
+      const block = hex(log.blockNumber);
+      const tx = log.transactionHash.toLowerCase();
+      const t: OrgTransfer = {
+        block,
+        from: `0x${(log.topics[1] ?? "").slice(-40).toLowerCase()}`,
+        to: `0x${(log.topics[2] ?? "").slice(-40).toLowerCase()}`,
+        wei: BigInt(`0x${data.slice(0, 64) || "0"}`),
+        key: `${tx}:${hex(log.logIndex ?? "0")}`,
+      };
+      out.set(t.key, t);
+      if (block > lastBlock) lastBlock = block;
+    }
+    if (logs.length < MAX_LOGS_PER_RESPONSE) break;
+    // Page was full: continue from the last block seen (re-reading it; the Map dedupes by tx + log index).
+    if (lastBlock === from) throw new Error(`more than ${MAX_LOGS_PER_RESPONSE} organizer transfers in block ${from}`);
+    from = lastBlock;
+  }
+  return [...out.values()].sort((a, b) => a.block - b.block);
+}
+
 /** Latest block Blockscout has indexed (logs are only reliable up to here). */
 export async function fetchIndexedHead(): Promise<number> {
   return hex(await rpc<string>(BLOCKSCOUT_RPC_URL, "eth_blockNumber", []));
@@ -149,7 +213,7 @@ async function rpcBatch(url: string, calls: { method: string; params: unknown[] 
   }
 }
 
-const balanceOfData = (address: string) => `0x70a08231${address.toLowerCase().replace(/^0x/, "").padStart(64, "0")}`;
+const balanceOfData = (address: string) => `0x70a08231${addressTopic(address).slice(2)}`;
 const toBigInt = (raw: string) => BigInt(raw === "0x" ? "0x0" : raw);
 
 /** Where every GE6 token sits at one block, in wei (1e18 = 1 GE6). */
@@ -157,6 +221,8 @@ export type SupplyRead = {
   block: number;
   totalWei: bigint;
   treasuryWei: bigint;
+  /** Balance of each GE6_DISTRIBUTORS wallet, same order. */
+  distributorWei: bigint[];
   distributorsWei: bigint;
   /** The vote contract never sends GE6 out, so this is everything voted so far. */
   votedWei: bigint;
@@ -180,6 +246,7 @@ export async function fetchSupply(block: number): Promise<SupplyRead> {
     block,
     totalWei: total,
     treasuryWei: treasury,
+    distributorWei: distributors,
     distributorsWei: distributors.reduce((a, b) => a + b, 0n),
     votedWei: voted,
   };

@@ -3,11 +3,8 @@ import type { SupplySnapshot } from "@/lib/types";
 import { GE6_TREASURY } from "@/lib/config";
 import { fmtNumber, fmtPercent, fmtTokens } from "@/lib/format";
 import { AnimatedNumber } from "./AnimatedNumber";
+import { Swatch } from "./chart";
 import { AddressLink } from "./ui";
-
-function Swatch({ className }: { className: string }) {
-  return <span aria-hidden className={`inline-block size-2.5 shrink-0 rounded-sm ring-1 ring-line ring-inset ${className}`} />;
-}
 
 /** Keeps a phrase on one line so notes wrap only at the " · " separators. */
 function Nw({ children }: { children: ReactNode }) {

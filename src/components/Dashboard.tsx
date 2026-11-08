@@ -8,9 +8,12 @@ import { useLiveStats } from '@/lib/use-live-stats';
 import { useSavedWallet } from '@/lib/use-saved-wallet';
 import { ActivityChart } from './ActivityChart';
 import { Distribution } from './Distribution';
+import { Distributors } from './Distributors';
 import { Header, SectionNav } from './Header';
 import { Overview } from './Overview';
 import { RecentVotes } from './RecentVotes';
+import { TokenJourney } from './TokenJourney';
+import { TokenTimeline } from './TokenTimeline';
 import { TopVoters } from './TopVoters';
 import { WalletLookup } from './WalletLookup';
 import { SiteFooter } from './SiteFooter';
@@ -108,6 +111,13 @@ export function Dashboard({ initial }: { initial: StatsSnapshot | null }) {
             ) : null}
             <Overview data={data} />
             <ActivityChart daily={data.daily} hourly={data.hourly} />
+            {data.supply || data.flow ? (
+              <div className='grid items-start gap-5 sm:gap-6 lg:grid-cols-2'>
+                {data.supply ? <TokenJourney supply={data.supply} /> : null}
+                {data.flow ? <Distributors flow={data.flow} /> : null}
+              </div>
+            ) : null}
+            {data.flow ? <TokenTimeline daily={data.flow.daily} /> : null}
             <div className='grid items-start gap-5 sm:gap-6 lg:grid-cols-2'>
               <TopVoters data={data} myWallet={myWallet} />
               <RecentVotes votes={data.recent} myWallet={myWallet} pollSeconds={pollSeconds} />

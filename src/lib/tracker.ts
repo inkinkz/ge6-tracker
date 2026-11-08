@@ -4,7 +4,10 @@ import {
   CONFIRMATIONS,
   GE6_DECIMALS,
   GE6_DISTRIBUTORS,
+  GE6_MINT_BLOCK,
   HOURLY_WINDOW_HOURS,
+  ORG_WINDOW_BLOCKS,
+  ORGANIZER_WALLETS,
   RECENT_VOTES_LIMIT,
   START_BLOCK,
   SYNC_MIN_INTERVAL_MS,
@@ -18,18 +21,24 @@ import {
   fetchChainHead,
   fetchIndexedHead,
   fetchSupply,
+  fetchTransfersFrom,
   fetchVotes,
   unpackRow,
+  unpackTransfer,
+  type OrgTransfer,
   type SupplyRead,
   type VoteRow,
 } from "./chain";
-import { getWindowVotes } from "./windows";
+import { getWindowOrgTransfers, getWindowVotes } from "./windows";
 import type {
+  DistributorWallet,
   DistributionBucket,
+  FlowDay,
   RecentVote,
   SeriesPoint,
   StatsSnapshot,
   SupplySnapshot,
+  TokenFlow,
   VoterEntry,
   VoterSummaries,
   WalletInfo,
@@ -58,10 +67,19 @@ type State = {
   anchor: { block: number; timestamp: number };
   /** Token supply split, read at `syncedBlock` on each sync (kept from the last good read on failure). */
   supply: SupplyRead | null;
+  /** Transfers out of the organizer wallets; null until the full history has loaded once. */
+  org: OrgIndex | null;
   lastSyncAt: number;
   lastRepairAt: number;
   dirty: boolean;
   built: Built | null;
+};
+
+type OrgIndex = {
+  rows: OrgTransfer[];
+  seen: Set<string>;
+  /** Every organizer transfer at or below this block is in `rows`. */
+  syncedBlock: number;
 };
 
 type LiveFields = "updatedAt" | "policy" | "syncedBlock" | "syncedBlockAt";
@@ -106,6 +124,7 @@ function emptyState(anchor: State["anchor"]): State {
     syncedBlock: START_BLOCK - 1,
     anchor,
     supply: null,
+    org: null,
     lastSyncAt: 0,
     lastRepairAt: 0,
     dirty: true,
@@ -219,11 +238,51 @@ async function refreshSupply(s: State) {
       !prev ||
       prev.totalWei !== next.totalWei ||
       prev.treasuryWei !== next.treasuryWei ||
-      prev.distributorsWei !== next.distributorsWei ||
+      next.distributorWei.some((w, i) => w !== prev.distributorWei?.[i]) ||
       prev.votedWei !== next.votedWei;
     if (changed) s.dirty = true;
   } catch (err) {
     console.error("[ge6] supply read failed, keeping the last one:", err);
+  }
+}
+
+const ORG_SENDERS = ORGANIZER_WALLETS.join(",");
+
+function addOrgRow(org: OrgIndex, row: OrgTransfer): boolean {
+  if (org.seen.has(row.key)) return false;
+  org.seen.add(row.key);
+  org.rows.push(row);
+  return true;
+}
+
+/**
+ * Bring the organizer transfer index up to the vote index's block. The first load reads the cached
+ * completed windows plus the open tail; later syncs only read the new blocks. A failure keeps
+ * whatever was loaded and retries from there on the next sync.
+ */
+async function syncOrg(s: State) {
+  const target = s.syncedBlock;
+  try {
+    if (!s.org) {
+      const org: OrgIndex = { rows: [], seen: new Set(), syncedBlock: GE6_MINT_BLOCK - 1 };
+      const windows: number[] = [];
+      for (let start = GE6_MINT_BLOCK; start + ORG_WINDOW_BLOCKS - 1 <= target - WINDOW_SAFETY_BLOCKS; start += ORG_WINDOW_BLOCKS) {
+        windows.push(start);
+      }
+      const packed = await mapLimit(windows, 6, (start) => getWindowOrgTransfers(start, ORG_SENDERS));
+      for (const rows of packed) for (const p of rows) addOrgRow(org, unpackTransfer(p));
+      const tailFrom = windows.length ? windows[windows.length - 1] + ORG_WINDOW_BLOCKS : GE6_MINT_BLOCK;
+      for (const row of await fetchTransfersFrom(ORGANIZER_WALLETS, tailFrom, target)) addOrgRow(org, row);
+      org.syncedBlock = target;
+      s.org = org;
+      s.dirty = true;
+    } else if (target > s.org.syncedBlock) {
+      const rows = await fetchTransfersFrom(ORGANIZER_WALLETS, s.org.syncedBlock + 1, target);
+      for (const row of rows) if (addOrgRow(s.org, row)) s.dirty = true;
+      s.org.syncedBlock = target;
+    }
+  } catch (err) {
+    console.error("[ge6] organizer transfer sync failed:", err);
   }
 }
 
@@ -234,7 +293,7 @@ async function runSync() {
   } else {
     await incremental(store.state);
   }
-  await Promise.all([repairGaps(store.state), refreshSupply(store.state)]);
+  await Promise.all([repairGaps(store.state), refreshSupply(store.state), syncOrg(store.state)]);
   store.state.lastSyncAt = Date.now();
 }
 
@@ -442,6 +501,8 @@ function build(s: State): Built {
     };
   }
 
+  const flow = s.org ? buildFlow(s, s.org, dayKey, nowDay) : null;
+
   const lastIndex = s.rows.length ? s.rows[s.rows.length - 1].index : -1;
   const body: Built["body"] = {
     firstVoteAt,
@@ -463,6 +524,7 @@ function build(s: State): Built {
       walletsForHalf,
     },
     supply,
+    flow,
     topVoters,
     distribution,
     daily,
@@ -472,6 +534,71 @@ function build(s: State): Built {
   };
   const compact = compactNumbers(body);
   return { body: compact, bodyJson: JSON.stringify(compact), rankByVoter, builtAt: Date.now() };
+}
+
+/** Per-wallet totals and a daily organizer → fan / vote series, from the organizer transfer index. */
+function buildFlow(s: State, org: OrgIndex, dayKey: (ts: number) => number, nowDay: number): TokenFlow {
+  const at = (block: number) => tsOf(s, block);
+  type Agg = { allocated: bigint; sent: bigint; recipients: Set<string>; lastBlock: number };
+  const per = new Map<string, Agg>(
+    ORGANIZER_WALLETS.map((a) => [a, { allocated: 0n, sent: 0n, recipients: new Set<string>(), lastBlock: 0 }]),
+  );
+  const fans = new Set<string>();
+  const distributedByDay = new Map<number, number>();
+  for (const r of org.rows) {
+    const from = per.get(r.from);
+    if (!from) continue;
+    const to = per.get(r.to);
+    if (to) {
+      // Organizer → organizer: an allocation (or a return), not a distribution.
+      to.allocated += r.wei;
+      from.allocated -= r.wei;
+      continue;
+    }
+    from.sent += r.wei;
+    from.recipients.add(r.to);
+    if (r.block > from.lastBlock) from.lastBlock = r.block;
+    fans.add(r.to);
+    const day = dayKey(at(r.block));
+    distributedByDay.set(day, (distributedByDay.get(day) ?? 0) + toMicro(r.wei));
+  }
+
+  const votedByDay = new Map<number, number>();
+  for (const r of s.rows) {
+    const day = dayKey(at(r.block));
+    votedByDay.set(day, (votedByDay.get(day) ?? 0) + toMicro(r.wei));
+  }
+  const days = [...distributedByDay.keys(), ...votedByDay.keys()];
+  const firstDay = days.length ? Math.min(...days) : nowDay;
+  const daily: FlowDay[] = Array.from({ length: Math.max(nowDay - firstDay + 1, 1) }, (_, i) => {
+    const day = firstDay + i;
+    return {
+      t: day * 86400 - TZ_OFFSET_SEC,
+      distributed: fromMicro(distributedByDay.get(day) ?? 0),
+      voted: fromMicro(votedByDay.get(day) ?? 0),
+    };
+  });
+
+  const wallets: DistributorWallet[] = GE6_DISTRIBUTORS.map((address, i) => {
+    const a = per.get(address.toLowerCase())!;
+    const balance = s.supply?.distributorWei?.[i];
+    return {
+      address,
+      allocated: toTokens(a.allocated),
+      sent: toTokens(a.sent),
+      balance: balance === undefined ? null : toTokens(balance),
+      recipients: a.recipients.size,
+      lastSentAt: a.lastBlock ? at(a.lastBlock) : null,
+    };
+  }).sort((x, y) => y.allocated - x.allocated);
+
+  const treasury = per.get(ORGANIZER_WALLETS[0])!;
+  return {
+    recipients: fans.size,
+    direct: { sent: toTokens(treasury.sent), recipients: treasury.recipients.size },
+    wallets,
+    daily,
+  };
 }
 
 /** Fresh-enough stats (syncs with Blockscout at most every SYNC_MIN_INTERVAL_MS per instance). */

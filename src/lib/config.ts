@@ -36,6 +36,21 @@ export const GE6_DISTRIBUTORS = [
   '0x4924829CBBFB3B7DE7469098A7867d43a5cd248a',
 ];
 
+/** All organizer wallets, lowercase: the treasury first, then the distribution wallets. */
+export const ORGANIZER_WALLETS = [GE6_TREASURY, ...GE6_DISTRIBUTORS].map((a) => a.toLowerCase());
+
+/** Block of the GE6 mint. Organizer transfers are indexed from here. */
+export const GE6_MINT_BLOCK = 48_783_515;
+
+/** keccak256("Transfer(address,address,uint256)") — topics: [sig, from, to]  data: [amount] */
+export const TRANSFER_TOPIC = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef';
+
+/**
+ * Organizer transfers are sparse (~16k over the whole event), so their cached windows are wider
+ * than the vote windows. 200,000 blocks ≈ 7 days.
+ */
+export const ORG_WINDOW_BLOCKS = 200_000;
+
 /** BNK48's "BNK Governance token" (BNK, 18 decimals); shown next to GE6 holdings on /compare. */
 export const BNK_TOKEN = "0xA992ad80Fa6136702382123Ae717890Bc587491d";
 export const BNK_DECIMALS = 18;
