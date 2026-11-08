@@ -110,14 +110,15 @@ export function Dashboard({ initial }: { initial: StatsSnapshot | null }) {
               </p>
             ) : null}
             <Overview data={data} />
+            {data.flow ? <TokenTimeline daily={data.flow.daily} /> : null}
             <ActivityChart daily={data.daily} hourly={data.hourly} />
+
             {data.supply || data.flow ? (
               <div className='grid items-start gap-5 sm:gap-6 lg:grid-cols-2'>
                 {data.supply ? <TokenJourney supply={data.supply} /> : null}
                 {data.flow ? <Distributors flow={data.flow} /> : null}
               </div>
             ) : null}
-            {data.flow ? <TokenTimeline daily={data.flow.daily} /> : null}
             <div className='grid items-start gap-5 sm:gap-6 lg:grid-cols-2'>
               <TopVoters data={data} myWallet={myWallet} />
               <RecentVotes votes={data.recent} myWallet={myWallet} pollSeconds={pollSeconds} />
