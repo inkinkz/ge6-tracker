@@ -1,6 +1,7 @@
 import type { StatsSnapshot, WindowStats } from "@/lib/types";
 import { fmtDateTime, fmtNumber, fmtTokens } from "@/lib/format";
 import { AnimatedNumber } from "./AnimatedNumber";
+import { Supply } from "./Supply";
 import { AddressLink, TxLink } from "./ui";
 
 function Delta({ children }: { children: React.ReactNode }) {
@@ -89,6 +90,8 @@ export function Overview({ data }: { data: StatsSnapshot }) {
         />
         <Tile label="เฉลี่ยต่อครั้ง" value={fmtNumber(totals.avgPerVote, 2)} unit="GE6" note="ต่อ 1 ธุรกรรมโหวต" />
       </div>
+
+      {data.supply ? <Supply supply={data.supply} /> : null}
 
       <section aria-label="ช่วงเวลาล่าสุด" className="grid gap-6 rounded-2xl border border-line bg-surface p-5 sm:grid-cols-2 sm:gap-8 sm:p-6">
         <WindowColumn title="ชั่วโมงล่าสุด" w={last1h} />

@@ -3,6 +3,7 @@ import {
   BLOCK_TIME_SEC,
   CONFIRMATIONS,
   GE6_DECIMALS,
+  GE6_DISTRIBUTORS,
   HOURLY_WINDOW_HOURS,
   RECENT_VOTES_LIMIT,
   START_BLOCK,
@@ -13,13 +14,22 @@ import {
   WINDOW_SAFETY_BLOCKS,
   getPollPolicy,
 } from "./config";
-import { fetchChainHead, fetchIndexedHead, fetchVotes, unpackRow, type VoteRow } from "./chain";
+import {
+  fetchChainHead,
+  fetchIndexedHead,
+  fetchSupply,
+  fetchVotes,
+  unpackRow,
+  type SupplyRead,
+  type VoteRow,
+} from "./chain";
 import { getWindowVotes } from "./windows";
 import type {
   DistributionBucket,
   RecentVote,
   SeriesPoint,
   StatsSnapshot,
+  SupplySnapshot,
   VoterEntry,
   VoterSummaries,
   WalletInfo,
@@ -46,6 +56,8 @@ type State = {
   syncedBlock: number;
   /** Known (block, timestamp) pair; other timestamps are derived from the 3s block period. */
   anchor: { block: number; timestamp: number };
+  /** Token supply split, read at `syncedBlock` on each sync (kept from the last good read on failure). */
+  supply: SupplyRead | null;
   lastSyncAt: number;
   lastRepairAt: number;
   dirty: boolean;
@@ -93,6 +105,7 @@ function emptyState(anchor: State["anchor"]): State {
     totalWei: 0n,
     syncedBlock: START_BLOCK - 1,
     anchor,
+    supply: null,
     lastSyncAt: 0,
     lastRepairAt: 0,
     dirty: true,
@@ -192,6 +205,28 @@ async function repairGaps(s: State) {
   sortRows(s);
 }
 
+/**
+ * Read the supply split at the block the votes are synced to, so "voted" matches the vote total.
+ * One batched request; a failure only leaves the previous reading in place.
+ */
+async function refreshSupply(s: State) {
+  if (s.supply?.block === s.syncedBlock) return;
+  try {
+    const next = await fetchSupply(s.syncedBlock);
+    const prev = s.supply;
+    s.supply = next;
+    const changed =
+      !prev ||
+      prev.totalWei !== next.totalWei ||
+      prev.treasuryWei !== next.treasuryWei ||
+      prev.distributorsWei !== next.distributorsWei ||
+      prev.votedWei !== next.votedWei;
+    if (changed) s.dirty = true;
+  } catch (err) {
+    console.error("[ge6] supply read failed, keeping the last one:", err);
+  }
+}
+
 async function runSync() {
   store.lastAttemptAt = Date.now();
   if (!store.state) {
@@ -199,7 +234,7 @@ async function runSync() {
   } else {
     await incremental(store.state);
   }
-  await repairGaps(store.state);
+  await Promise.all([repairGaps(store.state), refreshSupply(store.state)]);
   store.state.lastSyncAt = Date.now();
 }
 
@@ -386,6 +421,27 @@ function build(s: State): Built {
     h.tokens = fromMicro(h.tokens);
   }
 
+  // Supply split, in exact micro-GE6 so created = organizer + voted + inWallets to the last digit.
+  let supply: SupplySnapshot | null = null;
+  if (s.supply) {
+    const created = toMicro(s.supply.totalWei);
+    const treasury = toMicro(s.supply.treasuryWei);
+    const distributors = toMicro(s.supply.distributorsWei);
+    const voted = toMicro(s.supply.votedWei);
+    const organizer = treasury + distributors;
+    supply = {
+      block: s.supply.block,
+      created: fromMicro(created),
+      organizer: fromMicro(organizer),
+      treasury: fromMicro(treasury),
+      distributors: fromMicro(distributors),
+      distributorWallets: GE6_DISTRIBUTORS.length,
+      distributed: fromMicro(created - organizer),
+      voted: fromMicro(voted),
+      inWallets: fromMicro(created - organizer - voted),
+    };
+  }
+
   const lastIndex = s.rows.length ? s.rows[s.rows.length - 1].index : -1;
   const body: Built["body"] = {
     firstVoteAt,
@@ -406,6 +462,7 @@ function build(s: State): Built {
       top100Share: share(sumTop(100)),
       walletsForHalf,
     },
+    supply,
     topVoters,
     distribution,
     daily,

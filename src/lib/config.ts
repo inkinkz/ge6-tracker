@@ -7,6 +7,35 @@ export const VOTE_CONTRACT = '0x86a1F49e1b1Cbd69971e99B66123264c75Ac2c8F';
 export const GE6_TOKEN = '0x2f5c60bdE7A5ebD2b116BB03cB5232fA1Ea55F1C';
 export const GE6_DECIMALS = 18;
 
+/**
+ * Every GE6 token was minted in a single transaction (block 48,783,515) to this wallet: 5,000,027 GE6,
+ * nothing minted or burned since. It hands tokens to fans directly and funds the distribution wallets.
+ */
+export const GE6_TREASURY = '0x88dE4a0c186efe75fd359F4EBf36E5C4144E1255';
+
+/**
+ * Wallets funded only by the treasury (round allocations: 800,004 / 800,004 / 144,003 / 96,003 /
+ * 50,001 / 16,203 / 16,203 / 10,803 / 10,803 / 1,825 GE6), each sending GE6 on to hundreds of fans.
+ * Tokens still here haven't reached fans yet, so they count as the organizer's.
+ *
+ * Identified from the full GE6 transfer history (Nov 2026): these are the only treasury recipients
+ * that received more than 49 GE6, and no token has ever been sent back into any organizer wallet.
+ * If the organizer funds a new distribution wallet, add it here — until then its balance shows up
+ * as "in fans' wallets".
+ */
+export const GE6_DISTRIBUTORS = [
+  '0x4BFE835bfC51e3B0fFDdC89951d0Eab7Ff175f0F',
+  '0x7A6446b20Dcae3aed0E6a1D21Ba5d6787a341148',
+  '0x563A62883fd50d8463c1621528fCA9D54ca7F8C9',
+  '0xf1c567e495AD13d48EB684a7BFbE33e3aE566AbB',
+  '0x90a1e95D305df30B0e00f63CC3b9Ff9BFEfA9109',
+  '0x8E6D24B7DE8F178027e16D9c8F1C8D73eDd2E5a4',
+  '0xa66e830BC83c98A78AC20D1b705E8abE1C768195',
+  '0xd754a0bFF84998306f306DA12a3eEedbDD8abf41',
+  '0x59CA9C4D13D65c03bc3bdB227D3e745cCCCc50cc',
+  '0x4924829CBBFB3B7DE7469098A7867d43a5cd248a',
+];
+
 /** BNK48's "BNK Governance token" (BNK, 18 decimals); shown next to GE6 holdings on /compare. */
 export const BNK_TOKEN = "0xA992ad80Fa6136702382123Ae717890Bc587491d";
 export const BNK_DECIMALS = 18;

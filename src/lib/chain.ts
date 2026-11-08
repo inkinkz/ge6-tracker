@@ -4,7 +4,9 @@ import {
   BNK_DECIMALS,
   BNK_TOKEN,
   GE6_DECIMALS,
+  GE6_DISTRIBUTORS,
   GE6_TOKEN,
+  GE6_TREASURY,
   NODE_RPC_URL,
   START_BLOCK,
   USER_AGENT,
@@ -121,11 +123,72 @@ export async function fetchChainHead(): Promise<{ block: number; timestamp: numb
   return { block: hex(b.number), timestamp: hex(b.timestamp) };
 }
 
+/** Several JSON-RPC calls in one HTTP request; results come back in call order. */
+async function rpcBatch(url: string, calls: { method: string; params: unknown[] }[], attempt = 0): Promise<string[]> {
+  try {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "content-type": "application/json", "user-agent": USER_AGENT },
+      body: JSON.stringify(calls.map((c, id) => ({ jsonrpc: "2.0", id, ...c }))),
+      signal: AbortSignal.timeout(20_000),
+    });
+    if (!res.ok) throw new Error(`batch: HTTP ${res.status}`);
+    const json = (await res.json()) as { id: number; result?: string; error?: { message?: string } }[];
+    if (!Array.isArray(json)) throw new Error("batch: not an array");
+    const out: string[] = new Array(calls.length);
+    for (const r of json) {
+      if (r.error || r.result === undefined) throw new Error(`batch #${r.id}: ${r.error?.message ?? "empty result"}`);
+      out[r.id] = r.result;
+    }
+    if (out.some((r) => r === undefined)) throw new Error("batch: missing results");
+    return out;
+  } catch (err) {
+    if (attempt >= 2) throw err;
+    await new Promise((r) => setTimeout(r, 500 * 2 ** attempt));
+    return rpcBatch(url, calls, attempt + 1);
+  }
+}
+
+const balanceOfData = (address: string) => `0x70a08231${address.toLowerCase().replace(/^0x/, "").padStart(64, "0")}`;
+const toBigInt = (raw: string) => BigInt(raw === "0x" ? "0x0" : raw);
+
+/** Where every GE6 token sits at one block, in wei (1e18 = 1 GE6). */
+export type SupplyRead = {
+  block: number;
+  totalWei: bigint;
+  treasuryWei: bigint;
+  distributorsWei: bigint;
+  /** The vote contract never sends GE6 out, so this is everything voted so far. */
+  votedWei: bigint;
+};
+
+/**
+ * totalSupply plus the organizer wallets' and vote contract's balances, all read at the same block
+ * in a single request so the parts always add up.
+ */
+export async function fetchSupply(block: number): Promise<SupplyRead> {
+  const tag = `0x${block.toString(16)}`;
+  const call = (data: string) => ({ method: "eth_call", params: [{ to: GE6_TOKEN, data }, tag] });
+  const raw = await rpcBatch(NODE_RPC_URL, [
+    call("0x18160ddd"), // totalSupply()
+    call(balanceOfData(GE6_TREASURY)),
+    call(balanceOfData(VOTE_CONTRACT)),
+    ...GE6_DISTRIBUTORS.map((a) => call(balanceOfData(a))),
+  ]);
+  const [total, treasury, voted, ...distributors] = raw.map(toBigInt);
+  return {
+    block,
+    totalWei: total,
+    treasuryWei: treasury,
+    distributorsWei: distributors.reduce((a, b) => a + b, 0n),
+    votedWei: voted,
+  };
+}
+
 /** An ERC-20 balance via balanceOf, in whole tokens. */
 async function fetchTokenBalance(token: string, decimals: number, address: string): Promise<number> {
-  const data = `0x70a08231${address.toLowerCase().replace(/^0x/, "").padStart(64, "0")}`;
-  const raw = await rpc<string>(NODE_RPC_URL, "eth_call", [{ to: token, data }, "latest"]);
-  const units = BigInt(raw === "0x" ? "0x0" : raw);
+  const raw = await rpc<string>(NODE_RPC_URL, "eth_call", [{ to: token, data: balanceOfData(address) }, "latest"]);
+  const units = toBigInt(raw);
   // Keep 6 decimals exactly, then convert (balances are far below 2^53 micro-units).
   return Number(units / 10n ** BigInt(decimals - 6)) / 1e6;
 }

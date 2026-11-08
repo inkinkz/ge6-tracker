@@ -44,6 +44,27 @@ export type WindowStats = {
   newVoters: number;
 };
 
+/**
+ * GE6 token supply split by who holds it, read at one block:
+ * created = organizer + distributed, and distributed = voted + inWallets.
+ */
+export type SupplySnapshot = {
+  block: number;
+  /** All GE6 ever minted (totalSupply). */
+  created: number;
+  /** Still in the minting wallet and the distribution wallets. */
+  organizer: number;
+  treasury: number;
+  distributors: number;
+  distributorWallets: number;
+  /** Handed out to fans (created − organizer; no token has ever gone back to the organizer). */
+  distributed: number;
+  /** Held by the vote contract: already voted. */
+  voted: number;
+  /** Handed out but not voted yet: still sitting in fans' wallets. */
+  inWallets: number;
+};
+
 export type StatsSnapshot = {
   /** Server time of the last successful upstream sync, ms. */
   updatedAt: number;
@@ -71,6 +92,8 @@ export type StatsSnapshot = {
     /** Fewest wallets that together hold half of all voted tokens. */
     walletsForHalf: number;
   };
+  /** Where every GE6 token sits; null until the first on-chain read succeeds. */
+  supply: SupplySnapshot | null;
   topVoters: VoterEntry[];
   distribution: DistributionBucket[];
   daily: SeriesPoint[];

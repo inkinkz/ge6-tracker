@@ -15,6 +15,9 @@
   --data: #2a78d6;
   --data-wash: rgba(42, 120, 214, 0.1);
   --data-soft: #cde2fb;
+  /* Token-supply bar: voted (--data) | in fans' wallets | still with the organizer. Adjacent pairs checked for CVD/normal-vision separation. */
+  --supply-wallet: #86b4ec;
+  --supply-org: #e6e5df;
   --link: #1c5cab;
   --good: #0ca30c;
   --good-text: #006300;
@@ -36,6 +39,8 @@
   --data: #3987e5;
   --data-wash: rgba(57, 135, 229, 0.14);
   --data-soft: #184f95;
+  --supply-wallet: #1f5596;
+  --supply-org: #333331;
   --link: #86b6ef;
   --good-text: #0ca30c;
 }
@@ -53,6 +58,8 @@
   --color-data: var(--data);
   --color-data-wash: var(--data-wash);
   --color-data-soft: var(--data-soft);
+  --color-supply-wallet: var(--supply-wallet);
+  --color-supply-org: var(--supply-org);
   --color-link: var(--link);
   --color-good: var(--good);
   --color-good-text: var(--good-text);
