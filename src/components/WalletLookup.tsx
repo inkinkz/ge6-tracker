@@ -104,7 +104,7 @@ export function WalletLookup() {
             prefetch={false}
             className="mt-3 inline-flex min-h-8 items-center gap-1 text-sm font-medium text-link underline-offset-2 hover:underline"
           >
-            ดูประวัติโหวต GE3–GE5 และยอดที่ถืออยู่ <span aria-hidden>→</span>
+            ดูประวัติโหวต GE3–GE5, Thai-Japan และยอดที่ถืออยู่ <span aria-hidden>→</span>
           </Link>
 
           {info.found ? (

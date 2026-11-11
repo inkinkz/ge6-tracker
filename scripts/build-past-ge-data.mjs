@@ -7,9 +7,10 @@
 //   npm run data:ge3 [-- path/to/ge3_result.csv]
 //   npm run data:ge4 [-- path/to/ge4_result.csv]
 //   npm run data:ge5 [-- path/to/ge5_voters.csv]
+//   npm run data:thai-japan [-- path/to/thai-japan_result.csv]
 //
 // Two export formats are supported (detected from the header):
-//   GE3/GE4: one row per vote (GE4 quoted) — "Wallet address", "Answer" (member), "Vote amount" in wei
+//   GE3/GE4/Thai-Japan: one row per vote (GE4 quoted) — "Wallet address", "Answer" (member), "Vote amount" in wei
 //   GE5:     one row per wallet × member — "Wallet address", "Answer" (member), "Token" in tokens
 // Only addresses, totals, and member names are kept. App-internal columns (wallet code, vote
 // keys/hashes) are deliberately dropped.
@@ -22,6 +23,8 @@ const EDITIONS = {
   ge3: { csv: "ge3_result.csv" },
   ge4: { csv: "ge4_result.csv" },
   ge5: { csv: "ge5_voters.csv" },
+  // Not a General Election: only used by the wallet page (/wallet), same export format as GE3/GE4.
+  "thai-japan": { csv: "thai-japan_result.csv" },
 };
 const TOP_N = 300;
 const MEMBERS_PER_WALLET = 3;

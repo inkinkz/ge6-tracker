@@ -272,19 +272,24 @@ export type GeWalletRow = {
   ge3: GePastResult | null;
 };
 
-/** One wallet's votes in a past election (from the full vote export). */
+/** A past vote the wallet page shows: GE3–GE5, plus the Thai-Japan vote. */
+export type PastVoteId = PastEdition | "thai-japan";
+
+/** One wallet's votes in a past vote (from the full vote export). */
 export type PastWalletResult = {
-  edition: PastEdition;
+  id: PastVoteId;
   label: string;
-  /** Wallets that voted in that election. */
+  /** Wallets that voted in it. */
   totalWallets: number;
-  /** Null when this wallet didn't vote in that election. */
+  /** Null when this wallet didn't vote in it. */
   votes: { tokens: number; rank: number; members: PastGeMember[] } | null;
 };
 
-/** Everything the /wallet page shows about one address. */
+/** Everything the /wallet page shows about one address from past votes. */
 export type WalletHistory = {
   address: string;
   /** GE3, GE4, GE5 in that order. */
-  past: PastWalletResult[];
+  elections: PastWalletResult[];
+  /** Other votes (Thai-Japan). */
+  others: PastWalletResult[];
 };

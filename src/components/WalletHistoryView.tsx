@@ -99,12 +99,12 @@ export function WalletHistoryView() {
 
       <main className='mx-auto max-w-3xl px-4 pt-7 pb-14 sm:pt-10'>
         <div className='mb-7 space-y-2.5 sm:mb-9'>
-          <p className='text-sm font-medium text-data'>GE3 · GE4 · GE5 · GE6</p>
+          <p className='text-sm font-medium text-data'>GE3 · GE4 · GE5 · GE6 · Thai-Japan</p>
           <h1 className='text-[22px] leading-snug font-bold text-balance sm:text-3xl'>
             ประวัติการโหวตของกระเป๋า
           </h1>
           <p className='text-[15px] leading-relaxed text-ink-2'>
-            ใส่ที่อยู่กระเป๋าเพื่อดูว่าเคยโหวตให้เมมเบอร์คนไหนเท่าไรใน GE3–GE5 ยอดที่โหวตใน GE6 แล้ว
+            ใส่ที่อยู่กระเป๋าเพื่อดูว่าเคยโหวตให้เมมเบอร์คนไหนเท่าไรใน GE3–GE5 และ Thai-Japan ยอดที่โหวตใน GE6 แล้ว
             และโทเคนที่ยังถืออยู่
           </p>
         </div>
@@ -164,7 +164,7 @@ export function WalletHistoryView() {
         ) : null}
 
         <SiteFooter>
-          <p>ข้อมูล GE3–GE5 มาจากผลโหวตรายกระเป๋าของแต่ละครั้ง · GE6 และยอดคงเหลืออ่านสดจากบล็อกเชน Token X</p>
+          <p>ข้อมูล GE3–GE5 และ Thai-Japan มาจากผลโหวตรายกระเป๋าของแต่ละครั้ง · GE6 และยอดคงเหลืออ่านสดจากบล็อกเชน Token X</p>
         </SiteFooter>
       </main>
     </>
@@ -284,13 +284,13 @@ function Ge6Votes({ part }: { part: Part<WalletInfo> }) {
 function PastVotes({ part }: { part: Part<WalletHistory> }) {
   if (!part.ok) {
     return (
-      <Section id='past' title='GE3–GE5'>
+      <Section id='past' title='GE3–GE5 และ Thai-Japan'>
         <p className='text-sm text-critical'>{part.error}</p>
       </Section>
     );
   }
   // Newest election first.
-  const past = [...part.data.past].reverse();
+  const past = [...part.data.elections].reverse();
   const votedIn = past.filter((p) => p.votes);
   const total = votedIn.reduce((s, p) => s + (p.votes?.tokens ?? 0), 0);
   return (
@@ -301,7 +301,10 @@ function PastVotes({ part }: { part: Part<WalletHistory> }) {
           : 'กระเป๋านี้ไม่ได้โหวตใน GE3–GE5'}
       </p>
       {past.map((p) => (
-        <PastElection key={p.edition} result={p} />
+        <PastElection key={p.id} result={p} />
+      ))}
+      {part.data.others.map((p) => (
+        <PastElection key={p.id} result={p} />
       ))}
     </>
   );
@@ -311,7 +314,7 @@ function PastElection({ result }: { result: PastWalletResult }) {
   const v = result.votes;
   return (
     <Section
-      id={result.edition}
+      id={result.id}
       title={result.label}
       subtitle={
         v

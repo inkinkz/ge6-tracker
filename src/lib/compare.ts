@@ -12,7 +12,7 @@ import type { GeCompare, GeEditionStats, GeMemberHistory, GePastResult, GeWallet
 /** The combined wallet table takes each election's top this-many wallets (GE3–GE5 and GE6). */
 const TOP_PER_EDITION = 300;
 
-export type PastId = "ge3" | "ge4" | "ge5";
+type PastId = "ge3" | "ge4" | "ge5";
 /** Shape of src/data/<edition>-summary.json (see scripts/build-past-ge-data.mjs). */
 type Summary = {
   stats: Omit<GeEditionStats, "id" | "label" | "live" | "topMember" | "members"> & { members: number };
@@ -30,9 +30,9 @@ const PAST: { id: PastId; label: string; summary: Summary; top: TopFile }[] = [
 
 // Every past wallet's total and rank, plus top members for each election's top wallets. Parsed
 // once per server instance; the summaries never change at runtime.
-export type PastIndex = Map<string, GePastResult>;
+type PastIndex = Map<string, GePastResult>;
 let pastIndexes: Record<PastId, PastIndex> | null = null;
-export function pastIndex(): Record<PastId, PastIndex> {
+function pastIndex(): Record<PastId, PastIndex> {
   if (!pastIndexes) {
     const build = ({ summary, top }: (typeof PAST)[number]): PastIndex => {
       const { wallets, amounts } = summary;
