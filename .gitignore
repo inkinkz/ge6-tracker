@@ -49,3 +49,6 @@ next-env.d.ts
 
 # raw GE3 export (app account IDs, vote keys and hashes); the pages use src/data/ge3-*.json
 /ge3_result.csv
+
+# raw Thai-Japan vote export (app account IDs, vote keys and hashes); /wallet uses src/data/thai-japan-*.json
+/thai-japan_result.csv

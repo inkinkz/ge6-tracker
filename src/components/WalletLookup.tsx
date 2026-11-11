@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 import type { WalletInfo } from "@/lib/types";
 import { fmtDateTime, fmtNumber, fmtPercent, fmtTokens, shortAddr } from "@/lib/format";
@@ -97,6 +98,14 @@ export function WalletLookup() {
               {isSaved ? "✓ กระเป๋าของฉัน (แตะเพื่อเลิกจำ)" : "จำเป็นกระเป๋าของฉัน"}
             </button>
           </div>
+
+          <Link
+            href={`/wallet?address=${info.address}`}
+            prefetch={false}
+            className="mt-3 inline-flex min-h-8 items-center gap-1 text-sm font-medium text-link underline-offset-2 hover:underline"
+          >
+            ดูประวัติโหวต GE3–GE5, Thai-Japan และยอดที่ถืออยู่ <span aria-hidden>→</span>
+          </Link>
 
           {info.found ? (
             <>

@@ -142,6 +142,15 @@ export function SectionNav() {
             Top 300 จาก GE ก่อนๆ <span aria-hidden>→</span>
           </Link>
         </li>
+        <li className="shrink-0">
+          <Link
+            href="/wallet"
+            prefetch={false}
+            className="inline-flex min-h-10 items-center gap-1.5 rounded-full bg-data px-4 text-sm font-semibold whitespace-nowrap text-white hover:opacity-90"
+          >
+            ประวัติโหวตของกระเป๋า <span aria-hidden>→</span>
+          </Link>
+        </li>
         {NAV.map((n) => (
           <li key={n.id} className="shrink-0">
             <a
