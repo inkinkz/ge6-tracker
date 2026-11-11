@@ -1,7 +1,8 @@
-// Builds two files per past election from its vote export:
+// Builds three files per past election from its vote export:
 //   src/data/<edition>-top.json      top wallets (for /ge3, /ge4, /ge5)
 //   src/data/<edition>-summary.json  election-wide stats, member totals, and every voting wallet
 //                                    with its total (for /compare)
+//   src/data/<edition>-wallets.json  every voting wallet's per-member totals (for /wallet)
 //
 //   npm run data:ge3 [-- path/to/ge3_result.csv]
 //   npm run data:ge4 [-- path/to/ge4_result.csv]
@@ -36,6 +37,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const input = resolve(root, process.argv[3] ?? EDITIONS[edition].csv);
 const output = resolve(root, `src/data/${edition}-top.json`);
 const summaryOutput = resolve(root, `src/data/${edition}-summary.json`);
+const breakdownOutput = resolve(root, `src/data/${edition}-wallets.json`);
 
 /** Minimal RFC 4180 line parser: handles quoted fields and "" escapes (no embedded newlines). */
 function parseLine(line) {
@@ -189,9 +191,23 @@ const summary = {
   amounts: byAddress.map((w) => toTokens(w.atto)),
 };
 
+// --- Every wallet's member breakdown (wallet lookup page) ----------------------------------
+
+// Rows line up with `summary.wallets` / `summary.amounts` (same address order). Each row is a flat
+// [memberIndex, tokens, memberIndex, tokens, …] list, largest first; indexes point into `members`
+// (the summary's member order). Written by the same run as the summary, so they always match.
+const memberIndex = new Map(members.map((m, i) => [m.name, i]));
+const breakdown = {
+  edition,
+  wallets: byAddress.length,
+  members: members.map((m) => m.name),
+  rows: byAddress.map((w) => w.members.flatMap((m) => [memberIndex.get(m.name), toTokens(m.atto)])),
+};
+
 mkdirSync(dirname(output), { recursive: true });
 writeFileSync(output, `${JSON.stringify(data, null, 1)}\n`);
 writeFileSync(summaryOutput, `${JSON.stringify(summary)}\n`);
+writeFileSync(breakdownOutput, `${JSON.stringify(breakdown)}\n`);
 console.log(
-  `wrote ${output} + ${summaryOutput}: top ${top.length} of ${wallets.size} wallets, ${memberNames.size} members, ${data.totals.tokens} tokens`,
+  `wrote ${output} + ${summaryOutput} + ${breakdownOutput}: top ${top.length} of ${wallets.size} wallets, ${memberNames.size} members, ${data.totals.tokens} tokens`,
 );

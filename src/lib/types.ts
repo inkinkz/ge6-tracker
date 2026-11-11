@@ -271,3 +271,20 @@ export type GeWalletRow = {
   ge4: GePastResult | null;
   ge3: GePastResult | null;
 };
+
+/** One wallet's votes in a past election (from the full vote export). */
+export type PastWalletResult = {
+  edition: PastEdition;
+  label: string;
+  /** Wallets that voted in that election. */
+  totalWallets: number;
+  /** Null when this wallet didn't vote in that election. */
+  votes: { tokens: number; rank: number; members: PastGeMember[] } | null;
+};
+
+/** Everything the /wallet page shows about one address. */
+export type WalletHistory = {
+  address: string;
+  /** GE3, GE4, GE5 in that order. */
+  past: PastWalletResult[];
+};
