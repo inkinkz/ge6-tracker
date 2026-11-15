@@ -10,8 +10,9 @@
     "data:ge3": "node scripts/build-past-ge-data.mjs ge3",
     "data:ge4": "node scripts/build-past-ge-data.mjs ge4",
     "data:ge5": "node scripts/build-past-ge-data.mjs ge5",
+    "data:ge6": "node scripts/build-past-ge-data.mjs ge6 && node scripts/build-ge6-results.mjs",
     "data:thai-japan": "node scripts/build-past-ge-data.mjs thai-japan",
-    "data:all": "npm run data:ge3 && npm run data:ge4 && npm run data:ge5 && npm run data:thai-japan"
+    "data:all": "npm run data:ge3 && npm run data:ge4 && npm run data:ge5 && npm run data:ge6 && npm run data:thai-japan"
   },
   "dependencies": {
     "next": "16.4.1",

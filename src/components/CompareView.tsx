@@ -4,16 +4,17 @@ import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import type { GeCompare, GeEditionStats, GeMemberHistory, GeWalletRow } from '@/lib/types';
 import { explorerAddressUrl } from '@/lib/config';
-import { fmtCompact, fmtDateTime, fmtNumber, fmtPercent, fmtTokens } from '@/lib/format';
+import { fmtCompact, fmtNumber, fmtPercent, fmtTokens } from '@/lib/format';
 import { useSavedWallet } from '@/lib/use-saved-wallet';
 import { BrandHeader } from './Header';
 import { SiteFooter } from './SiteFooter';
 import { ThemeToggle } from './ThemeToggle';
 import { MemberName, Section, Segmented, ShareBar } from './ui';
 
-type MemberSort = 'ge5' | 'ge4' | 'ge3';
+type MemberSort = 'ge6' | 'ge5' | 'ge4' | 'ge3';
 const MEMBER_PAGE = 20;
 // Newest election first everywhere on this page.
+const GE_IDS = ['ge6', 'ge5', 'ge4', 'ge3'] as const;
 const PAST_IDS = ['ge5', 'ge4', 'ge3'] as const;
 
 /** Short token amounts for narrow cells: 3,667 → "3.7K", 277,696 → "277.7K". */
@@ -54,7 +55,6 @@ function EditionHeader({ editions }: { editions: GeEditionStats[] }) {
       {editions.map((e) => (
         <div key={e.id}>
           <div className='text-sm font-semibold'>{e.label}</div>
-          <div className='text-[11px] text-muted'>{e.live ? 'ตอนนี้' : 'ผลจริง'}</div>
         </div>
       ))}
     </div>
@@ -91,7 +91,7 @@ function Overview({ data }: { data: GeCompare }) {
     <Section
       id='overview'
       title='ภาพรวมแต่ละครั้ง'
-      subtitle='แถบใต้ตัวเลขเทียบกันในแถวเดียวกัน · GE6 ยังโหวตอยู่ จึงเป็นยอด ณ ตอนนี้'
+      subtitle='ผลจริงทุกครั้ง · แถบใต้ตัวเลขเทียบกันในแถวเดียวกัน'
     >
       <EditionHeader editions={editions} />
       <div className='divide-y divide-line'>
@@ -117,7 +117,7 @@ function Overview({ data }: { data: GeCompare }) {
         </div>
       </div>
       <p className='mt-3 text-xs leading-relaxed text-muted'>
-        GE5 ไม่มีข้อมูลรายครั้ง · ผลรายเมมเบอร์ของ GE6 จะรู้หลังประกาศผล
+        GE5 ไม่มีข้อมูลรายครั้ง
       </p>
     </Section>
   );
@@ -166,7 +166,7 @@ const Amount = ({ value, unit }: { value: number; unit: string }) => (
   </span>
 );
 
-/** GE6 (not yet voted) and BNK tokens the wallet holds now, fetched when the row is first opened. */
+/** GE6 (never voted) and BNK tokens the wallet holds now, fetched when the row is first opened. */
 function Holdings({ address }: { address: string }) {
   const [state, setState] = useState<Holdings | 'loading' | 'error'>('loading');
   useEffect(() => {
@@ -200,16 +200,8 @@ function Holdings({ address }: { address: string }) {
 function WalletDetail({ row, opened }: { row: GeWalletRow; opened: boolean }) {
   return (
     <div className='mb-3.5 space-y-2 rounded-xl bg-surface-2 p-3.5 text-[13px] leading-relaxed'>
-      <div>
-        <span className='mr-2 text-xs text-muted'>GE6</span>
-        <span className='text-ink-2 tabular'>
-          {row.ge6
-            ? `อันดับ #${fmtNumber(row.ge6.rank)} · ${fmtNumber(row.ge6.votes)} ครั้ง`
-            : 'ยังไม่ได้โหวต'}
-        </span>
-      </div>
       {opened ? <Holdings address={row.address} /> : null}
-      {PAST_IDS.map((id) => {
+      {GE_IDS.map((id) => {
         const r = row[id];
         return (
           <div key={id}>
@@ -358,8 +350,8 @@ function WalletTable({ rows, topN }: { rows: GeWalletRow[]; topN: number }) {
           }}
           options={[
             { value: 'all', label: 'ทั้งหมด' },
-            { value: 'ge6', label: 'โหวต GE6 แล้ว' },
-            { value: 'no-ge6', label: 'ยังไม่โหวต GE6' },
+            { value: 'ge6', label: 'โหวต GE6' },
+            { value: 'no-ge6', label: 'ไม่ได้โหวต GE6' },
             { value: 'every', label: 'โหวตครบทุกครั้ง' },
           ]}
         />
@@ -469,13 +461,11 @@ function FlowRow({
   title,
   value,
   of,
-  live,
   caption,
 }: {
   title: string;
   value: number;
   of: number;
-  live: boolean;
   caption: string;
 }) {
   const share = of > 0 ? value / of : 0;
@@ -484,7 +474,6 @@ function FlowRow({
       <div className='flex items-baseline justify-between gap-3'>
         <span className='text-sm font-semibold'>
           {title}
-          {live ? <span className='ml-1.5 text-[11px] font-normal text-muted'>ตอนนี้</span> : null}
         </span>
         <span className='shrink-0 text-[15px] font-semibold tabular'>{fmtPercent(share)}</span>
       </div>
@@ -516,7 +505,6 @@ function Returning({ data }: { data: GeCompare }) {
             title={`${f.from} → ${f.to}`}
             value={f.returning}
             of={f.fromWallets}
-            live={f.live}
             caption={`กระเป๋าของ ${f.from} กลับมาโหวต ${f.to}`}
           />
         ))}
@@ -530,7 +518,6 @@ function Returning({ data }: { data: GeCompare }) {
             title={n.label}
             value={n.newWallets}
             of={n.wallets}
-            live={n.live}
             caption={`กระเป๋าของ ${n.label} เป็นกระเป๋าใหม่`}
           />
         ))}
@@ -545,9 +532,9 @@ function Returning({ data }: { data: GeCompare }) {
           </div>
         </div>
         <div className='rounded-xl bg-surface-2 px-3.5 py-3'>
-          <div className='text-xs text-ink-2'>โหวตครบ GE3–GE6 (ตอนนี้)</div>
+          <div className='text-xs text-ink-2'>โหวตครบ GE3–GE6</div>
           <div className='mt-1 text-xl font-semibold tabular'>
-            {loyal.ge3to6 === null ? '–' : fmtNumber(loyal.ge3to6)}{' '}
+            {fmtNumber(loyal.ge3to6)}{' '}
             <span className='text-sm font-normal text-muted'>กระเป๋า</span>
           </div>
         </div>
@@ -575,27 +562,28 @@ function RankCell({
 }
 
 function Members({ members }: { members: GeMemberHistory[] }) {
-  const [sort, setSort] = useState<MemberSort>('ge5');
+  const [sort, setSort] = useState<MemberSort>('ge6');
   const [limit, setLimit] = useState(MEMBER_PAGE);
   const rows = useMemo(() => {
-    const others = PAST_IDS.filter((id) => id !== sort);
-    const rank = (m: GeMemberHistory, id: (typeof PAST_IDS)[number]) => m.results[id]?.rank ?? 999;
+    const others = GE_IDS.filter((id) => id !== sort);
+    const rank = (m: GeMemberHistory, id: (typeof GE_IDS)[number]) => m.results[id]?.rank ?? 999;
     return [...members].sort(
       (a, b) =>
         rank(a, sort) - rank(b, sort) ||
         rank(a, others[0]) - rank(b, others[0]) ||
         rank(a, others[1]) - rank(b, others[1]) ||
+        rank(a, others[2]) - rank(b, others[2]) ||
         a.nick.localeCompare(b.nick),
     );
   }, [members, sort]);
   const shown = rows.slice(0, limit);
-  const grid = 'grid grid-cols-[minmax(0,1fr)_3.5rem_3.5rem_3.5rem] items-center gap-x-2';
+  const grid = 'grid grid-cols-[minmax(0,1fr)_3.25rem_3.25rem_3.25rem_3.25rem] items-center gap-x-1.5';
 
   return (
     <Section
       id='members'
-      title='อันดับเมมเบอร์ GE3–GE5'
-      subtitle='อันดับตามยอดโทเคนที่ได้รับในแต่ละครั้ง · GE6 จะรู้หลังประกาศผล'
+      title='อันดับเมมเบอร์ GE3–GE6'
+      subtitle='อันดับตามยอดโทเคนที่ได้รับในแต่ละครั้ง · แตะชื่อเมมเบอร์ GE6 เพื่อดูสถิติ GE6 ทั้งหมด'
     >
       <div className='mb-4'>
         <Segmented
@@ -606,6 +594,7 @@ function Members({ members }: { members: GeMemberHistory[] }) {
             setLimit(MEMBER_PAGE);
           }}
           options={[
+            { value: 'ge6', label: 'GE6' },
             { value: 'ge5', label: 'GE5' },
             { value: 'ge4', label: 'GE4' },
             { value: 'ge3', label: 'GE3' },
@@ -614,7 +603,7 @@ function Members({ members }: { members: GeMemberHistory[] }) {
       </div>
       <div className={`${grid} border-b border-line pb-2 text-xs text-ink-2`}>
         <span>เมมเบอร์</span>
-        {PAST_IDS.map((id) => (
+        {GE_IDS.map((id) => (
           <span key={id} className={`text-center ${id === sort ? 'font-semibold text-ink' : ''}`}>
             {id.toUpperCase()}
           </span>
@@ -624,11 +613,17 @@ function Members({ members }: { members: GeMemberHistory[] }) {
         {shown.map((m) => (
           <li key={m.key} className={`${grid} py-3`}>
             <span className='min-w-0 truncate'>
-              <span className='font-semibold'>{m.nick}</span>
+              {m.slug ? (
+                <Link href={`/member/${m.slug}`} prefetch={false} className='font-semibold underline-offset-2 hover:underline'>
+                  {m.nick}
+                </Link>
+              ) : (
+                <span className='font-semibold'>{m.nick}</span>
+              )}
               {m.group ? <span className='ml-1 text-xs text-muted'>{m.group}</span> : null}
               {m.groupUnknown ? <span className='ml-1 text-xs text-muted'>(ไม่ระบุวง)</span> : null}
             </span>
-            {PAST_IDS.map((id) => (
+            {GE_IDS.map((id) => (
               <RankCell key={id} result={m.results[id]} sorted={id === sort} />
             ))}
           </li>
@@ -675,11 +670,6 @@ export function CompareView({ data }: { data: GeCompare }) {
           <p className='text-[15px] leading-relaxed text-ink-2'>
             ยอดโทเคน จำนวนกระเป๋า กระเป๋าที่กลับมาโหวต และอันดับเมมเบอร์ของแต่ละครั้ง
           </p>
-          <p className='text-xs text-muted'>
-            {data.ge6Available && data.updatedAt
-              ? `ข้อมูล GE6 ณ ${fmtDateTime(data.updatedAt / 1000)} น.`
-              : 'ตอนนี้ดึงข้อมูล GE6 ไม่ได้ชั่วคราว จึงแสดงเฉพาะ GE3–GE5'}
-          </p>
           <nav aria-label='Top กระเป๋าของแต่ละครั้ง' className='flex flex-wrap gap-2 pt-1'>
             {PAST_IDS.map((id) => (
               <Link
@@ -702,7 +692,7 @@ export function CompareView({ data }: { data: GeCompare }) {
         </div>
 
         <SiteFooter>
-          <p>ข้อมูล GE3–GE5 มาจากผลโหวตรายกระเป๋าของแต่ละครั้ง · GE6 อ่านสดจากบล็อกเชน Token X</p>
+          <p>ข้อมูล GE3–GE6 มาจากผลโหวตรายกระเป๋าของแต่ละครั้ง · ยอดที่ถืออยู่อ่านจากบล็อกเชน Token X เมื่อเปิดดู</p>
         </SiteFooter>
       </main>
     </>

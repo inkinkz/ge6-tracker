@@ -1,51 +1,157 @@
-// JSON shapes shared by the API routes and the client. Token amounts are GE6 (already divided by 1e18).
+// JSON shapes shared by the server and the client. Token amounts are GE6 (already divided by 1e18).
+// GE6 data is static: built from the official result export by scripts/build-ge6-results.mjs.
 
-import type { PollPolicy } from "./config";
+/** Wallets bucketed by how much they voted. */
+export type SizeBucket = {
+  label: string;
+  wallets: number;
+  tokens: number;
+  /** Share of the tokens in scope, 0–1. */
+  share: number;
+};
 
-export type VoterEntry = {
+export type Ge6Group = "BNK48" | "CGM48";
+
+/** One member's final GE6 result (src/data/ge6-results.json → members). */
+export type Ge6MemberSummary = {
+  rank: number;
+  /** As in the export, e.g. "Pancake BNK48". */
+  name: string;
+  nick: string;
+  group: Ge6Group | null;
+  /** URL segment for /member/[slug], e.g. "pancake-bnk48". */
+  slug: string;
+  tokens: number;
+  /** Share of all GE6 votes, 0–1. */
+  share: number;
+  wallets: number;
+  votes: number;
+  avgPerWallet: number;
+  medianPerWallet: number;
+  /** Share of her tokens from her biggest wallet / her top 10 wallets. */
+  top1Share: number;
+  top10Share: number;
+  /** Fewest of her wallets that make up half her tokens. */
+  walletsForHalf: number;
+  /** Wallets that voted for her and nobody else, and their share of her tokens. */
+  soleWallets: number;
+  soleShare: number;
+  /** Share of her tokens voted in the final 24 hours. */
+  finalDayShare: number;
+  /** Her wallets that didn't vote in GE5 at all. */
+  newWallets: number;
+  topVoter: { address: string; tokens: number; share: number; rank: number; memberCount: number };
+  /** Her GE5 result (matched by exact name), null if she wasn't in GE5. */
+  ge5: { rank: number; tokens: number; wallets: number } | null;
+};
+
+export type Ge6TopWallet = {
   rank: number;
   address: string;
   tokens: number;
-  votes: number;
-  /** Fraction of all voted tokens, 0–1. */
   share: number;
+  votes: number;
+  memberCount: number;
+  /** Largest first, up to 5. */
+  members: PastGeMember[];
+  /** Also voted in GE5. */
+  ge5: boolean;
+};
+
+export type Ge6Day = { t: number; tokens: number; votes: number; wallets: number; newWallets: number; cumulativeTokens: number };
+
+/** A GE5 member who isn't in GE6, and where the wallets that voted for her most went. */
+export type Ge6Departed = {
+  name: string;
+  ge5Rank: number;
+  ge5Tokens: number;
+  /** GE5 wallets whose top pick she was. */
+  fans: number;
+  votedGe6: number;
+  ge6Tokens: number;
+  to: { name: string; slug: string; tokens: number; wallets: number }[];
+};
+
+type RecordVote = { address: string; member: string; tokens: number; at: number };
+
+export type Ge6Results = {
+  firstVoteAt: number;
   lastVoteAt: number;
+  closeAt: number;
+  totals: {
+    tokens: number;
+    wallets: number;
+    votes: number;
+    members: number;
+    avgPerWallet: number;
+    medianPerWallet: number;
+    avgPerVote: number;
+    medianPerVote: number;
+    top1Share: number;
+    top10Share: number;
+    top100Share: number;
+    walletsForHalf: number;
+    singleMemberWallets: number;
+    /** Wallets that voted for members of both BNK48 and CGM48. */
+    bothGroups: number;
+  };
+  groups: { group: Ge6Group; members: number; tokens: number; share: number; wallets: number; votes: number }[];
+  members: Ge6MemberSummary[];
+  topWallets: Ge6TopWallet[];
+  daily: Ge6Day[];
+  /** The last 24 hours before voting closed, by hour. */
+  finalHours: { t: number; tokens: number; votes: number }[];
+  /** Bangkok hour of day 0–23 across the whole vote. */
+  hourOfDay: { hour: number; tokens: number; votes: number }[];
+  walletSize: SizeBucket[];
+  membersPerWallet: SizeBucket[];
+  /** Member pairs voted for by the most wallets; overlap = share of the smaller fan base. */
+  pairs: { a: string; b: string; wallets: number; overlap: number }[];
+  departed: Ge6Departed[];
+  ge5: { ge5Wallets: number; returning: number; newWallets: number };
+  records: {
+    largestVote: RecordVote;
+    mostVotes: { address: string; votes: number; tokens: number };
+    mostMembers: { address: string; members: number; tokens: number };
+    firstVote: RecordVote;
+    lastVote: RecordVote;
+  };
 };
 
-export type RecentVote = {
-  index: number;
-  tx: string;
-  voter: string;
+export type Ge6MemberVoter = {
+  /** Rank among her wallets. */
+  rank: number;
+  address: string;
+  /** Tokens this wallet gave her, and their share of her total. */
   tokens: number;
-  at: number;
-};
-
-export type SeriesPoint = {
-  /** Bucket start, unix seconds. */
-  t: number;
-  tokens: number;
-  votes: number;
-  newVoters: number;
-  cumulativeTokens: number;
-};
-
-export type DistributionBucket = {
-  label: string;
-  voters: number;
-  tokens: number;
-  /** Share of all voted tokens, 0–1. */
   share: number;
+  /** This wallet's whole GE6 total and overall rank. */
+  walletTokens: number;
+  walletRank: number;
+  memberCount: number;
 };
 
-export type WindowStats = {
-  tokens: number;
-  votes: number;
-  activeVoters: number;
-  newVoters: number;
+/** Everything /member/[slug] shows (src/data/ge6-members.json, plus GE3–GE5 history at runtime). */
+export type Ge6MemberDetail = Ge6MemberSummary & {
+  firstVoteAt: number;
+  largestVote: { address: string; tokens: number; at: number };
+  peakDay: { t: number; tokens: number };
+  /** Tokens per Bangkok day, aligned with Ge6Results.daily. */
+  daily: number[];
+  walletSize: SizeBucket[];
+  topVoters: Ge6MemberVoter[];
+  alsoVoted: { name: string; slug: string; wallets: number; tokens: number }[];
+  ge5Wallets: {
+    /** Her GE6 wallets that also voted in GE5, and those that voted for her in GE5 too. */
+    fromGe5: number;
+    votedHerInGe5: number;
+    /** GE5 wallets whose top pick she was, and what they did in GE6. */
+    fans: { fans: number; votedGe6: number; stayed: number; stayedTop: number; ge6Tokens: number } | null;
+  };
 };
 
 /**
- * GE6 token supply split by who holds it, read at one block:
+ * GE6 token supply split by who held it when voting closed (frozen in src/data/ge6-tokens.json):
  * created = organizer + distributed, and distributed = voted + inWallets.
  */
 export type SupplySnapshot = {
@@ -59,9 +165,9 @@ export type SupplySnapshot = {
   distributorWallets: number;
   /** Handed out to fans (created − organizer; no token has ever gone back to the organizer). */
   distributed: number;
-  /** Held by the vote contract: already voted. */
+  /** Held by the vote contract at close: everything voted on-chain. */
   voted: number;
-  /** Handed out but not voted yet: still sitting in fans' wallets. */
+  /** Handed out but never voted: left in fans' wallets. */
   inWallets: number;
 };
 
@@ -72,7 +178,7 @@ export type DistributorWallet = {
   allocated: number;
   /** GE6 sent on to fans. */
   sent: number;
-  /** On-chain balance now (null if the balance read failed). */
+  /** Balance when voting closed. */
   balance: number | null;
   /** Distinct fan wallets it has sent GE6 to. */
   recipients: number;
@@ -97,74 +203,8 @@ export type TokenFlow = {
   direct: { sent: number; recipients: number };
   /** Largest allocation first. */
   wallets: DistributorWallet[];
-  /** From the first day tokens reached fans (or the first vote, if earlier) to today. */
+  /** From the first day tokens reached fans to the day voting closed. */
   daily: FlowDay[];
-};
-
-export type StatsSnapshot = {
-  /** Server time of the last successful upstream sync, ms. */
-  updatedAt: number;
-  /** How often clients should poll (set by TRAFFIC_MODE on the server). */
-  policy: PollPolicy;
-  syncedBlock: number;
-  /** Timestamp of `syncedBlock`, unix seconds. */
-  syncedBlockAt: number;
-  firstVoteAt: number | null;
-  totals: {
-    tokens: number;
-    votes: number;
-    voters: number;
-    avgPerVote: number;
-    avgPerVoter: number;
-    medianPerVoter: number;
-    largestVote: RecentVote | null;
-  };
-  last1h: WindowStats;
-  last24h: WindowStats;
-  concentration: {
-    top1Share: number;
-    top10Share: number;
-    top100Share: number;
-    /** Fewest wallets that together hold half of all voted tokens. */
-    walletsForHalf: number;
-  };
-  /** Where every GE6 token sits; null until the first on-chain read succeeds. */
-  supply: SupplySnapshot | null;
-  /** Organizer → fan token movement; null until the organizer transfer history has loaded. */
-  flow: TokenFlow | null;
-  topVoters: VoterEntry[];
-  distribution: DistributionBucket[];
-  daily: SeriesPoint[];
-  hourly: SeriesPoint[];
-  recent: RecentVote[];
-  integrity: {
-    /** Highest on-chain vote index + 1. */
-    expectedVotes: number;
-    missingVotes: number;
-  };
-};
-
-export type WalletInfo = {
-  address: string;
-  found: boolean;
-  rank: number | null;
-  totalVoters: number;
-  tokens: number;
-  votes: number;
-  share: number;
-  firstVoteAt: number | null;
-  lastVoteAt: number | null;
-  recent: RecentVote[];
-  updatedAt: number;
-};
-
-export type VoterSummaries = {
-  /** Server time of the GE6 data, ms. */
-  updatedAt: number;
-  totalTokens: number;
-  totalVoters: number;
-  /** Keyed by lowercase address; wallets that haven't voted in GE6 are absent. */
-  voters: Record<string, { tokens: number; votes: number; rank: number; lastVoteAt: number }>;
 };
 
 /** A past election this app compares GE6 against. */
@@ -182,8 +222,8 @@ export type PastGeRow = {
   memberCount: number;
   /** Members this wallet voted for most (largest first); members[0] is its top pick. */
   members: PastGeMember[];
-  /** This wallet's GE6 votes so far, or null if it hasn't voted in GE6 yet. */
-  ge6: { tokens: number; votes: number; rank: number; lastVoteAt: number } | null;
+  /** This wallet's GE6 result, or null if it didn't vote in GE6. */
+  ge6: { tokens: number; rank: number; memberCount: number; members: PastGeMember[] } | null;
 };
 
 /** A member that is some listed wallet's top pick (for the member filter). */
@@ -194,13 +234,11 @@ export type PastGeComparison = {
   edition: { id: PastEdition; label: string; number: number };
   past: { wallets: number; members: number };
   ge6: {
-    available: boolean;
-    updatedAt: number | null;
     totalTokens: number;
     totalVoters: number;
-    /** GE6 tokens voted so far by the listed wallets. */
+    /** GE6 tokens voted by the listed wallets. */
     topTokens: number;
-    /** How many of the listed wallets have voted in GE6. */
+    /** How many of the listed wallets voted in GE6. */
     returning: number;
   };
   rows: PastGeRow[];
@@ -209,15 +247,14 @@ export type PastGeComparison = {
 
 export type GeId = "ge3" | "ge4" | "ge5" | "ge6";
 
-/** One election's headline numbers; GE6 values are "so far", null where unknown. */
+/** One election's headline numbers, null where unknown. */
 export type GeEditionStats = {
   id: GeId;
   label: string;
-  live: boolean;
   tokens: number;
   wallets: number;
-  /** Members who received votes (unknown for GE6: votes are hashed until results). */
-  members: number | null;
+  /** Members who received votes. */
+  members: number;
   /** Vote transactions (unknown for GE5: its export is pre-aggregated). */
   votes: number | null;
   avgPerWallet: number;
@@ -228,10 +265,10 @@ export type GeEditionStats = {
 };
 
 /** Wallets from one election that voted again in the next. */
-export type GeFlow = { from: string; to: string; fromWallets: number; returning: number; live: boolean };
+export type GeFlow = { from: string; to: string; fromWallets: number; returning: number };
 
 /** Wallets in an election that hadn't voted in any earlier one (since GE3). */
-export type GeNewWallets = { label: string; wallets: number; newWallets: number; live: boolean };
+export type GeNewWallets = { label: string; wallets: number; newWallets: number };
 
 export type GeMemberHistory = {
   key: string;
@@ -239,16 +276,16 @@ export type GeMemberHistory = {
   group: string | null;
   /** True for e.g. GE4's "Pim", which doesn't say which group's Pim it was. */
   groupUnknown: boolean;
-  results: Record<"ge3" | "ge4" | "ge5", { rank: number; tokens: number; wallets: number } | null>;
+  results: Record<GeId, { rank: number; tokens: number; wallets: number } | null>;
+  /** GE6 page slug when she's in GE6. */
+  slug: string | null;
 };
 
 export type GeCompare = {
-  ge6Available: boolean;
-  updatedAt: number | null;
   editions: GeEditionStats[];
   flows: GeFlow[];
   newWallets: GeNewWallets[];
-  loyal: { ge3to5: number; ge3to6: number | null };
+  loyal: { ge3to5: number; ge3to6: number };
   members: GeMemberHistory[];
   /** Union of each election's top wallets (see TOP_PER_EDITION in lib/compare.ts). */
   topPerEdition: number;
@@ -266,14 +303,14 @@ export type GePastResult = {
 /** A wallet that's in the top of any election, with its result in every election. */
 export type GeWalletRow = {
   address: string;
-  ge6: { tokens: number; votes: number; rank: number } | null;
+  ge6: GePastResult | null;
   ge5: GePastResult | null;
   ge4: GePastResult | null;
   ge3: GePastResult | null;
 };
 
-/** A past vote the wallet page shows: GE3–GE5, plus the Thai-Japan vote. */
-export type PastVoteId = PastEdition | "thai-japan";
+/** A vote the wallet page shows: GE3–GE6, plus the Thai-Japan vote. */
+export type PastVoteId = GeId | "thai-japan";
 
 /** One wallet's votes in a past vote (from the full vote export). */
 export type PastWalletResult = {
@@ -285,10 +322,10 @@ export type PastWalletResult = {
   votes: { tokens: number; rank: number; members: PastGeMember[] } | null;
 };
 
-/** Everything the /wallet page shows about one address from past votes. */
+/** Everything the /wallet page shows about one address from the vote exports. */
 export type WalletHistory = {
   address: string;
-  /** GE3, GE4, GE5 in that order. */
+  /** GE3, GE4, GE5, GE6 in that order. */
   elections: PastWalletResult[];
   /** Other votes (Thai-Japan). */
   others: PastWalletResult[];

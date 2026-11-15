@@ -1,8 +1,5 @@
-"use client";
-
 import type { TokenFlow } from "@/lib/types";
-import { fmtAgo, fmtDateTime, fmtNumber, fmtPercent, fmtTokens } from "@/lib/format";
-import { useNow } from "@/lib/use-live-stats";
+import { fmtDateTime, fmtNumber, fmtPercent, fmtTokens } from "@/lib/format";
 import { Swatch } from "./chart";
 import { AddressLink, Section } from "./ui";
 
@@ -12,7 +9,6 @@ import { AddressLink, Section } from "./ui";
  * most rows; the allocation itself is printed instead.
  */
 export function Distributors({ flow }: { flow: TokenFlow }) {
-  const now = useNow(60_000);
   const rows = flow.wallets.map((w) => {
     const remaining = w.balance ?? Math.max(0, w.allocated - w.sent);
     return { ...w, remaining, share: w.sent + remaining > 0 ? w.sent / (w.sent + remaining) : 0 };
@@ -33,7 +29,7 @@ export function Distributors({ flow }: { flow: TokenFlow }) {
         </li>
         <li className="inline-flex items-center gap-1.5">
           <Swatch className="bg-supply-org" />
-          ยังเหลือในกระเป๋า
+          เหลือในกระเป๋าตอนปิดโหวต
         </li>
       </ul>
       <ul className="divide-y divide-line">
@@ -73,7 +69,7 @@ export function Distributors({ flow }: { flow: TokenFlow }) {
               {w.lastSentAt ? (
                 <>
                   <span aria-hidden>·</span>
-                  <span className="whitespace-nowrap">ล่าสุด {now ? fmtAgo(w.lastSentAt, now) : fmtDateTime(w.lastSentAt)}</span>
+                  <span className="whitespace-nowrap">แจกครั้งสุดท้าย {fmtDateTime(w.lastSentAt)}</span>
                 </>
               ) : null}
             </div>
