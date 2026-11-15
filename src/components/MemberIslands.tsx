@@ -7,33 +7,36 @@ import { useSavedWallet } from '@/lib/use-saved-wallet';
 import { AreaChart, ColumnChart } from './chart';
 import { Section, Segmented, ShareBar, WalletLink } from './ui';
 
-const SIZES = [10, 25, 50] as const;
+/** List lengths offered; the data holds each member's top 300 wallets (all of them if she has fewer). */
+const SIZES = [10, 50, 100, 300];
 
 /** One member's biggest wallets: what each gave her and its share of her total. */
 export function MemberTopVoters({ nick, voters, wallets }: { nick: string; voters: Ge6MemberVoter[]; wallets: number }) {
-  const [n, setN] = useState<(typeof SIZES)[number]>(10);
+  const [n, setN] = useState(10);
   const [myWallet] = useSavedWallet();
   const rows = voters.slice(0, n);
   const shown = rows.reduce((s, v) => s + v.share, 0);
   const max = voters[0]?.share ?? 0;
-  const mine = myWallet ? voters.find((v) => v.address === myWallet) : undefined;
+  const mineAt = myWallet ? voters.findIndex((v) => v.address === myWallet) : -1;
+  const mine = mineAt >= 0 ? voters[mineAt] : undefined;
+  const hasAll = voters.length === wallets;
+  // Sizes shorter than her list, then one option for the whole list ("all N" when it is every wallet).
+  const options = [
+    ...SIZES.filter((s) => s < voters.length).map((s) => ({ value: s, label: `Top ${s}` })),
+    { value: voters.length, label: hasAll ? `ทั้งหมด ${fmtNumber(voters.length)}` : `Top ${fmtNumber(voters.length)}` },
+  ];
   return (
     <Section
       id='voters'
       title={`กระเป๋าที่โหวตให้ ${nick} มากที่สุด`}
-      subtitle={`Top ${Math.min(n, voters.length)} รวมกัน ${fmtPercent(shown)} ของยอด ${nick} · จาก ${fmtNumber(wallets)} กระเป๋า`}
+      subtitle={`${rows.length === wallets ? `ทั้ง ${fmtNumber(wallets)} กระเป๋า` : `Top ${fmtNumber(rows.length)} รวมกัน ${fmtPercent(shown)} ของยอด ${nick} · จาก ${fmtNumber(wallets)} กระเป๋า`}`}
     >
       {voters.length > 10 ? (
         <div className='mb-2'>
-          <Segmented
-            label='จำนวนอันดับที่แสดง'
-            value={n}
-            onChange={setN}
-            options={SIZES.filter((s) => s <= Math.max(10, voters.length)).map((s) => ({ value: s, label: `Top ${s}` }))}
-          />
+          <Segmented label='จำนวนอันดับที่แสดง' value={n} onChange={setN} options={options} />
         </div>
       ) : null}
-      {mine && mine.rank > n ? (
+      {mine && mineAt >= n ? (
         <p className='mb-2 rounded-xl bg-data-wash px-4 py-2.5 text-sm'>
           กระเป๋าของคุณอยู่อันดับ <b className='tabular'>#{mine.rank}</b> ของ {nick} · {fmtTokens(mine.tokens)} GE6
         </p>
@@ -73,6 +76,19 @@ export function MemberTopVoters({ nick, voters, wallets }: { nick: string; voter
           );
         })}
       </ol>
+      {n < voters.length ? (
+        <button
+          type='button'
+          onClick={() => setN(options.find((o) => o.value > n)?.value ?? voters.length)}
+          className='mt-3 min-h-10 w-full rounded-xl bg-surface-2 text-sm font-medium text-ink-2 hover:text-ink'
+        >
+          ดูเพิ่ม ({options.find((o) => o.value > n)?.label})
+        </button>
+      ) : !hasAll ? (
+        <p className='mt-4 text-xs leading-relaxed text-muted'>
+          แสดง {fmtNumber(voters.length)} อันดับแรกจาก {fmtNumber(wallets)} กระเป๋า · ค้นกระเป๋าอื่นได้ที่หน้าประวัติโหวตของกระเป๋า
+        </p>
+      ) : null}
     </Section>
   );
 }

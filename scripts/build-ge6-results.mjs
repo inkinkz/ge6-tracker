@@ -24,7 +24,7 @@ const readJson = (p) => JSON.parse(readFileSync(resolve(root, p), "utf8"));
 
 const TZ = 7 * 3600; // Asia/Bangkok, no DST
 const TOP_WALLETS = 100;
-const TOP_VOTERS_PER_MEMBER = 50;
+const TOP_VOTERS_PER_MEMBER = 300;
 const MEMBERS_PER_TOP_WALLET = 5;
 const TOP_PAIRS = 15;
 
