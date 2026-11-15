@@ -2,10 +2,12 @@ import "server-only";
 import ge3 from "@/data/ge3-wallets.json";
 import ge4 from "@/data/ge4-wallets.json";
 import ge5 from "@/data/ge5-wallets.json";
+import ge6 from "@/data/ge6-wallets.json";
 import thaiJapan from "@/data/thai-japan-wallets.json";
 import ge3Summary from "@/data/ge3-summary.json";
 import ge4Summary from "@/data/ge4-summary.json";
 import ge5Summary from "@/data/ge5-summary.json";
+import ge6Summary from "@/data/ge6-summary.json";
 import thaiJapanSummary from "@/data/thai-japan-summary.json";
 import type { PastGeMember, PastVoteId, PastWalletResult, WalletHistory } from "./types";
 
@@ -19,6 +21,7 @@ const ELECTIONS: Source[] = [
   { id: "ge3", label: "GE3", breakdown: ge3, summary: ge3Summary },
   { id: "ge4", label: "GE4", breakdown: ge4, summary: ge4Summary },
   { id: "ge5", label: "GE5", breakdown: ge5, summary: ge5Summary },
+  { id: "ge6", label: "GE6", breakdown: ge6, summary: ge6Summary },
 ];
 const OTHERS: Source[] = [{ id: "thai-japan", label: "Thai-Japan", breakdown: thaiJapan, summary: thaiJapanSummary }];
 
@@ -59,7 +62,10 @@ const resultFor = (source: Source, address: string): PastWalletResult => ({
   votes: indexOf(source).get(address) ?? null,
 });
 
-/** One wallet's past votes: total, rank, and every member it voted for, in GE3–GE5 and Thai-Japan. */
+/** One wallet's GE6 result (total, rank, every member it voted for), or null if it didn't vote. */
+export const ge6Wallet = (address: string): Entry | null => indexOf(ELECTIONS[3]).get(address.toLowerCase()) ?? null;
+
+/** One wallet's votes: total, rank, and every member it voted for, in GE3–GE6 and Thai-Japan. */
 export function getWalletHistory(address: string): WalletHistory {
   const addr = address.toLowerCase();
   return {

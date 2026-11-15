@@ -3,14 +3,15 @@
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import type { PastWalletResult, WalletHistory, WalletInfo } from '@/lib/types';
+import type { PastWalletResult, WalletHistory } from '@/lib/types';
 import { explorerAddressUrl } from '@/lib/config';
-import { fmtDateTime, fmtNumber, fmtPercent, fmtTokens } from '@/lib/format';
+import { fmtNumber, fmtPercent, fmtTokens } from '@/lib/format';
+import { memberSlug } from '@/lib/slug';
 import { useSavedWallet } from '@/lib/use-saved-wallet';
 import { BrandHeader } from './Header';
 import { SiteFooter } from './SiteFooter';
 import { ThemeToggle } from './ThemeToggle';
-import { MemberName, Section, ShareBar, TxLink } from './ui';
+import { MemberLink, MemberName, Section, ShareBar } from './ui';
 
 const ADDRESS_RE = /^0x[0-9a-fA-F]{40}$/;
 
@@ -19,7 +20,6 @@ type Holdings = { ge6: number; bnk: number };
 type Part<T> = { ok: true; data: T } | { ok: false; error: string };
 type Loaded = {
   address: string;
-  ge6: Part<WalletInfo>;
   holdings: Part<Holdings>;
   history: Part<WalletHistory>;
 };
@@ -36,12 +36,11 @@ async function getJson<T>(url: string): Promise<Part<T>> {
 }
 
 async function loadWallet(address: string): Promise<Loaded> {
-  const [ge6, holdings, history] = await Promise.all([
-    getJson<WalletInfo>(`/api/wallet/${address}`),
+  const [holdings, history] = await Promise.all([
     getJson<Holdings>(`/api/balance/${address}`),
     getJson<WalletHistory>(`/api/history/${address}`),
   ]);
-  return { address, ge6, holdings, history };
+  return { address, holdings, history };
 }
 
 export function WalletHistoryView() {
@@ -104,8 +103,7 @@ export function WalletHistoryView() {
             ประวัติการโหวตของกระเป๋า
           </h1>
           <p className='text-[15px] leading-relaxed text-ink-2'>
-            ใส่ที่อยู่กระเป๋าเพื่อดูว่าเคยโหวตให้เมมเบอร์คนไหนเท่าไรใน GE3–GE5 และ Thai-Japan ยอดที่โหวตใน GE6 แล้ว
-            และโทเคนที่ยังถืออยู่
+            ใส่ที่อยู่กระเป๋าเพื่อดูว่าโหวตให้เมมเบอร์คนไหนเท่าไรใน GE3–GE6 และ Thai-Japan และโทเคนที่ยังถืออยู่
           </p>
         </div>
 
@@ -158,13 +156,12 @@ export function WalletHistoryView() {
               isSaved={saved === result.address}
               onToggleSave={() => save(saved === result.address ? null : result.address)}
             />
-            <Ge6Votes part={result.ge6} />
             <PastVotes part={result.history} />
           </div>
         ) : null}
 
         <SiteFooter>
-          <p>ข้อมูล GE3–GE5 และ Thai-Japan มาจากผลโหวตรายกระเป๋าของแต่ละครั้ง · GE6 และยอดคงเหลืออ่านสดจากบล็อกเชน Token X</p>
+          <p>ข้อมูล GE3–GE6 และ Thai-Japan มาจากผลโหวตรายกระเป๋าของแต่ละครั้ง · ยอดคงเหลืออ่านจากบล็อกเชน Token X เมื่อเปิดดู</p>
         </SiteFooter>
       </main>
     </>
@@ -184,7 +181,7 @@ function Stat({ label, value, unit, note }: { label: string; value: string; unit
 }
 
 function Summary({ result, isSaved, onToggleSave }: { result: Loaded; isSaved: boolean; onToggleSave: () => void }) {
-  const ge6 = result.ge6.ok ? result.ge6.data : null;
+  const ge6 = result.history.ok ? (result.history.data.elections.find((e) => e.id === 'ge6') ?? null) : null;
   const holdings = result.holdings.ok ? result.holdings.data : null;
   return (
     <section aria-label='สรุปกระเป๋า' className='rounded-2xl border border-line bg-surface p-4 sm:p-6'>
@@ -208,13 +205,19 @@ function Summary({ result, isSaved, onToggleSave }: { result: Loaded; isSaved: b
 
       <div className='mt-5 grid grid-cols-2 gap-x-4 gap-y-5 sm:grid-cols-3'>
         <Stat
-          label='โหวตใน GE6 แล้ว'
-          value={ge6 ? fmtTokens(ge6.tokens) : '–'}
+          label='โหวตใน GE6'
+          value={ge6 ? fmtTokens(ge6.votes?.tokens ?? 0) : '–'}
           unit='GE6'
-          note={ge6 ? (ge6.found ? `อันดับ #${fmtNumber(ge6.rank ?? 0)} · ${fmtNumber(ge6.votes)} ครั้ง` : 'ยังไม่ได้โหวต') : 'ดึงข้อมูลไม่ได้'}
+          note={
+            ge6
+              ? ge6.votes
+                ? `อันดับ #${fmtNumber(ge6.votes.rank)} จาก ${fmtNumber(ge6.totalWallets)} · ให้ ${fmtNumber(ge6.votes.members.length)} คน`
+                : 'ไม่ได้โหวต GE6'
+              : 'ดึงข้อมูลไม่ได้'
+          }
         />
         <Stat
-          label='GE6 ที่ถืออยู่ (ยังไม่โหวต)'
+          label='GE6 ที่เหลือ (ไม่ได้ใช้โหวต)'
           value={holdings ? fmtTokens(holdings.ge6) : '–'}
           unit='GE6'
           note={holdings ? undefined : 'ดึงยอดคงเหลือไม่ได้'}
@@ -230,61 +233,10 @@ function Summary({ result, isSaved, onToggleSave }: { result: Loaded; isSaved: b
   );
 }
 
-function Ge6Votes({ part }: { part: Part<WalletInfo> }) {
-  return (
-    <Section
-      id='ge6'
-      title='GE6 (กำลังโหวต)'
-      subtitle='การโหวต GE6 บนบล็อกเชนเข้ารหัสชื่อเมมเบอร์ไว้จนกว่าจะประกาศผล จึงแสดงได้เฉพาะยอดโทเคน'
-    >
-      {!part.ok ? (
-        <p className='text-sm text-critical'>{part.error}</p>
-      ) : !part.data.found ? (
-        <p className='text-sm text-ink-2'>ยังไม่พบการโหวต GE6 จากกระเป๋านี้ — หากเพิ่งโหวต รอประมาณ 1 นาทีแล้วลองใหม่</p>
-      ) : (
-        <>
-          <div className='grid grid-cols-2 gap-4'>
-            <Stat
-              label='อันดับ'
-              value={`#${fmtNumber(part.data.rank ?? 0)}`}
-              note={`จาก ${fmtNumber(part.data.totalVoters)} กระเป๋า`}
-            />
-            <Stat
-              label='โหวตแล้ว'
-              value={fmtTokens(part.data.tokens)}
-              unit='GE6'
-              note={`${fmtPercent(part.data.share)} ของยอดทั้งหมด`}
-            />
-          </div>
-          <p className='mt-4 text-sm leading-relaxed text-ink-2'>
-            โหวต {fmtNumber(part.data.votes)} ครั้ง · ครั้งแรก{' '}
-            {part.data.firstVoteAt ? fmtDateTime(part.data.firstVoteAt) : '-'} · ล่าสุด{' '}
-            {part.data.lastVoteAt ? fmtDateTime(part.data.lastVoteAt) : '-'}
-          </p>
-          <details className='mt-2 text-sm'>
-            <summary className='cursor-pointer py-1 text-link'>
-              รายการโหวต
-              {part.data.votes > part.data.recent.length ? ` (${part.data.recent.length} ครั้งล่าสุด)` : ''}
-            </summary>
-            <ul className='mt-1 divide-y divide-line'>
-              {part.data.recent.map((v) => (
-                <li key={v.index} className='flex justify-between gap-2 py-1.5'>
-                  <TxLink hash={v.tx}>{fmtDateTime(v.at)}</TxLink>
-                  <span className='font-medium tabular'>{fmtTokens(v.tokens)} GE6</span>
-                </li>
-              ))}
-            </ul>
-          </details>
-        </>
-      )}
-    </Section>
-  );
-}
-
 function PastVotes({ part }: { part: Part<WalletHistory> }) {
   if (!part.ok) {
     return (
-      <Section id='past' title='GE3–GE5 และ Thai-Japan'>
+      <Section id='past' title='GE3–GE6 และ Thai-Japan'>
         <p className='text-sm text-critical'>{part.error}</p>
       </Section>
     );
@@ -293,12 +245,13 @@ function PastVotes({ part }: { part: Part<WalletHistory> }) {
   const past = [...part.data.elections].reverse();
   const votedIn = past.filter((p) => p.votes);
   const total = votedIn.reduce((s, p) => s + (p.votes?.tokens ?? 0), 0);
+  const of = past.length;
   return (
     <>
       <p className='px-1 pt-2 text-sm text-ink-2'>
         {votedIn.length
-          ? `เคยโหวต ${votedIn.length} จาก 3 ครั้งที่ผ่านมา รวม ${fmtTokens(total)} โทเคน`
-          : 'กระเป๋านี้ไม่ได้โหวตใน GE3–GE5'}
+          ? `โหวต ${votedIn.length} จาก ${of} ครั้ง (GE3–GE6) รวม ${fmtTokens(total)} โทเคน`
+          : 'กระเป๋านี้ไม่ได้โหวตใน GE3–GE6'}
       </p>
       {past.map((p) => (
         <PastElection key={p.id} result={p} />
@@ -335,7 +288,7 @@ function PastElection({ result }: { result: PastWalletResult }) {
           {v.members.map((m) => (
             <li key={m.name}>
               <div className='flex items-baseline justify-between gap-3 text-sm'>
-                <MemberName name={m.name} />
+                {result.id === 'ge6' ? <MemberLink name={m.name} slug={memberSlug(m.name)} /> : <MemberName name={m.name} />}
                 <span className='shrink-0 tabular'>
                   <span className='font-medium'>{fmtTokens(m.tokens)}</span>
                   <span className='ml-1.5 text-xs text-muted'>{fmtPercent(v.tokens > 0 ? m.tokens / v.tokens : 0)}</span>

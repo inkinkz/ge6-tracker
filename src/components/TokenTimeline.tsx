@@ -203,8 +203,8 @@ export function TokenTimeline({ daily }: { daily: FlowDay[] }) {
       subtitle={
         view === "cumulative"
           ? peak && peak.inWallets > last.inWallets
-            ? `โทเคนที่ค้างในกระเป๋าแฟนสูงสุด ${fmtTokens(peak.inWallets)} GE6 เมื่อ ${fmtWeekday(peak.t)} · ตอนนี้ ${fmtTokens(last.inWallets)} GE6`
-            : `โทเคนที่แฟนได้รับแล้วแต่ยังไม่โหวต ${fmtTokens(last.inWallets)} GE6 (เวลาประเทศไทย)`
+            ? `โทเคนที่ค้างในกระเป๋าแฟนสูงสุด ${fmtTokens(peak.inWallets)} GE6 เมื่อ ${fmtWeekday(peak.t)} · ตอนปิดโหวต ${fmtTokens(last.inWallets)} GE6`
+            : `โทเคนที่แฟนได้รับแต่ไม่ได้โหวต ${fmtTokens(last.inWallets)} GE6 (เวลาประเทศไทย)`
           : busiest && busiest.distributed > 0
             ? `วันที่แจกมากที่สุด: ${fmtWeekday(busiest.t)} · ${fmtTokens(busiest.distributed)} GE6`
             : "เวลาประเทศไทย"
@@ -231,7 +231,7 @@ export function TokenTimeline({ daily }: { daily: FlowDay[] }) {
             </li>
             <li className="inline-flex items-center gap-1.5">
               <Swatch className="bg-supply-wallet" />
-              ยังอยู่ในกระเป๋าแฟน <span className="tabular font-medium text-ink">{fmtTokens(last.inWallets)}</span>
+              ไม่ได้ใช้โหวต <span className="tabular font-medium text-ink">{fmtTokens(last.inWallets)}</span>
             </li>
             <li className="text-muted">ขอบบน = แจกให้แฟนแล้วทั้งหมด {fmtTokens(last.cumDistributed)}</li>
           </>

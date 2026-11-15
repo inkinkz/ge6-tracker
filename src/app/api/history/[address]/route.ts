@@ -5,7 +5,7 @@ export async function GET(_req: Request, ctx: RouteContext<"/api/history/[addres
   if (!/^0x[0-9a-fA-F]{40}$/.test(address)) {
     return Response.json({ error: "รูปแบบที่อยู่กระเป๋าไม่ถูกต้อง" }, { status: 400 });
   }
-  // GE3–GE5 results are static (bundled data), so responses can be shared for a long time.
+  // GE3–GE6 results are static (bundled data), so responses can be shared for a long time.
   return Response.json(getWalletHistory(address), {
     headers: {
       "Cache-Control": "public, max-age=3600",

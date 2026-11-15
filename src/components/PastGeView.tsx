@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import type { PastEdition, PastGeComparison, PastGeRow } from '@/lib/types';
 import { explorerAddressUrl } from '@/lib/config';
-import { fmtDateTime, fmtNumber, fmtPercent, fmtTokens, shortAddr } from '@/lib/format';
+import { fmtNumber, fmtPercent, fmtTokens, shortAddr } from '@/lib/format';
 import { useSavedWallet } from '@/lib/use-saved-wallet';
 import { BrandHeader } from './Header';
 import { SiteFooter } from './SiteFooter';
@@ -181,11 +181,23 @@ function WalletRow({
         <div className='mb-4 ml-6 space-y-3 rounded-xl bg-surface-2 p-3.5 text-[13px] leading-relaxed'>
           <div>
             <div className='text-xs text-muted'>GE6</div>
-            <div className='text-ink-2 tabular'>
-              {row.ge6
-                ? `อันดับ #${fmtNumber(row.ge6.rank)} · ${fmtNumber(row.ge6.votes)} ครั้ง · ล่าสุด ${fmtDateTime(row.ge6.lastVoteAt)}`
-                : 'ยังไม่ได้โหวต'}
-            </div>
+            {row.ge6 ? (
+              <>
+                <div className='text-ink-2 tabular'>
+                  อันดับ #{fmtNumber(row.ge6.rank)} · โหวตให้ {fmtNumber(row.ge6.memberCount)} คน
+                </div>
+                <ul className='mt-1 space-y-0.5'>
+                  {row.ge6.members.map((m) => (
+                    <li key={m.name} className='flex items-baseline justify-between gap-2'>
+                      <MemberName name={m.name} />
+                      <span className='text-ink-2 tabular'>{fmtTokens(m.tokens)}</span>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            ) : (
+              <div className='text-ink-2'>ไม่ได้โหวต GE6</div>
+            )}
           </div>
           <div>
             <div className='text-xs text-muted'>
@@ -262,48 +274,30 @@ export function PastGeView({ data }: { data: PastGeComparison }) {
         <div className='mb-7 space-y-2.5 sm:mb-9'>
           <EditionTabs current={edition.id} />
           <h1 className='text-[22px] leading-snug font-bold text-balance sm:text-3xl'>
-            Top {fmtNumber(topN)} กระเป๋าจาก {label} โหวต GE6 ไปแล้วเท่าไร
+            Top {fmtNumber(topN)} กระเป๋าจาก {label} โหวต GE6 เท่าไร ให้ใคร
           </h1>
           <p className='text-[15px] leading-relaxed text-ink-2'>
             กระเป๋าที่โหวตมากที่สุด {fmtNumber(topN)} อันดับแรกใน General Election ครั้งที่ {edition.number}
-            เมมเบอร์ที่แต่ละกระเป๋าโหวตให้มากที่สุด และยอดที่กระเป๋าเดียวกันโหวตใน GE6 แล้ว
-          </p>
-          <p className='text-xs text-muted'>
-            {ge6.available && ge6.updatedAt
-              ? `ข้อมูล GE6 ณ ${fmtDateTime(ge6.updatedAt / 1000)} น.`
-              : 'ตอนนี้ดึงข้อมูล GE6 ไม่ได้ชั่วคราว ยอด GE6 จึงแสดงเป็น 0'}
+            เมมเบอร์ที่แต่ละกระเป๋าโหวตให้มากที่สุด และผล GE6 ของกระเป๋าเดียวกัน (แตะแถวเพื่อดูว่าโหวตให้ใครใน GE6)
           </p>
         </div>
 
         <div className='space-y-5 sm:space-y-6'>
           <div className='grid grid-cols-2 gap-4'>
             <Tile
-              label='กลับมาโหวต GE6 แล้ว'
-              value={ge6.available ? fmtNumber(ge6.returning) : '–'}
+              label='กลับมาโหวต GE6'
+              value={fmtNumber(ge6.returning)}
               unit={`/ ${fmtNumber(topN)} กระเป๋า`}
-              note={
-                ge6.available
-                  ? `${fmtNumber(topN - ge6.returning)} กระเป๋ายังไม่ได้โหวต`
-                  : undefined
-              }
+              note={`${fmtNumber(topN - ge6.returning)} กระเป๋าไม่ได้โหวต GE6`}
             />
             <Tile
               label='ยอด GE6 จากกลุ่มนี้'
-              value={ge6.available ? fmtTokens(ge6.topTokens) : '–'}
+              value={fmtTokens(ge6.topTokens)}
               unit='GE6'
-              note={
-                ge6.available && ge6.totalTokens > 0
-                  ? `${fmtPercent(ge6.topTokens / ge6.totalTokens)} ของยอด GE6 ตอนนี้`
-                  : undefined
-              }
+              note={ge6.totalTokens > 0 ? `${fmtPercent(ge6.topTokens / ge6.totalTokens)} ของยอด GE6 ทั้งหมด` : undefined}
             />
           </div>
 
-          {/* <p className='rounded-2xl border border-line bg-surface px-5 py-4 text-sm leading-relaxed text-ink-2'>
-            ใน GE6 บนบล็อกเชนบันทึกแค่ “รหัสแฮช” ของแต่ละโหวต
-            จึงยังดูไม่ได้ว่ากระเป๋าเหล่านี้โหวตให้ใครใน GE6 ตัวเลข GE6
-            ในหน้านี้จึงเป็นจำนวนโทเคนที่โหวตไปแล้วเท่านั้น
-          </p> */}
 
           <Section
             id='wallets'
@@ -324,8 +318,8 @@ export function PastGeView({ data }: { data: PastGeComparison }) {
                 }}
                 options={[
                   { value: 'all', label: 'ทั้งหมด' },
-                  { value: 'voted', label: 'โหวต GE6 แล้ว' },
-                  { value: 'not-voted', label: 'ยังไม่โหวต' },
+                  { value: 'voted', label: 'โหวต GE6' },
+                  { value: 'not-voted', label: 'ไม่ได้โหวต GE6' },
                 ]}
               />
             </div>
