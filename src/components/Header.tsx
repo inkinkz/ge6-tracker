@@ -1,77 +1,19 @@
-"use client";
-
 import Link from "next/link";
-import { useNow, type LiveStatus } from "@/lib/use-live-stats";
 import { ThemeToggle } from "./ThemeToggle";
 
 const NAV = [
   { id: "overview", label: "ภาพรวม" },
-  { id: "activity", label: "กราฟ" },
-  { id: "tokens", label: "เส้นทางโทเคน" },
+  { id: "ranking", label: "ผลอันดับ" },
+  { id: "top-voter", label: "กระเป๋าอันดับ 1 ของเมมเบอร์" },
+  { id: "highlights", label: "สถิติเด่น" },
   { id: "top", label: "อันดับกระเป๋า" },
-  { id: "recent", label: "โหวตล่าสุด" },
-  { id: "lookup", label: "เช็กกระเป๋า" },
+  { id: "activity", label: "กราฟเวลาโหวต" },
+  { id: "overlap", label: "โหวตกี่คน" },
+  { id: "ge5", label: "จาก GE5" },
   { id: "distribution", label: "การกระจายตัว" },
-  { id: "about", label: "เกี่ยวกับข้อมูล" },
+  { id: "tokens", label: "เส้นทางโทเคน" },
+  { id: "lookup", label: "เช็กกระเป๋า" },
 ];
-
-function agoShort(updatedAt: number, now: number) {
-  const s = Math.max(0, Math.round((now - updatedAt) / 1000));
-  if (s < 60) return `${s} วิ.ที่แล้ว`;
-  if (s < 3600) return `${Math.floor(s / 60)} นาทีที่แล้ว`;
-  return `${Math.floor(s / 3600)} ชม.ที่แล้ว`;
-}
-
-function LivePill({
-  status,
-  updatedAt,
-  refreshing,
-  onRefresh,
-}: {
-  status: LiveStatus;
-  updatedAt: number | null;
-  refreshing: boolean;
-  onRefresh: () => void;
-}) {
-  const now = useNow(1000);
-  const dot =
-    status === "live"
-      ? "bg-good live-pulse"
-      : status === "error"
-        ? "bg-critical"
-        : status === "paused"
-          ? "bg-warning"
-          : status === "manual"
-            ? "bg-data"
-            : "bg-axis";
-  const label =
-    status === "live"
-      ? "อัปเดตสด"
-      : status === "paused"
-        ? "หยุดอัปเดตชั่วคราว"
-        : status === "manual"
-          ? "แตะเพื่ออัปเดต"
-          : status === "error"
-            ? "เชื่อมต่อไม่ได้"
-            : "กำลังเชื่อมต่อ";
-  const ago = updatedAt && now ? agoShort(updatedAt, now) : "";
-  const hint = status === "paused" ? "แตะเพื่ออัปเดตต่อ" : status === "error" ? "แตะเพื่อลองใหม่" : ago;
-
-  return (
-    <button
-      type="button"
-      onClick={onRefresh}
-      aria-label={`${label} ${hint} — แตะเพื่อรีเฟรชข้อมูล`}
-      className="flex min-h-10 shrink-0 items-center gap-2.5 rounded-full border border-line bg-surface py-1.5 pr-4 pl-3.5 text-xs sm:text-sm"
-    >
-      <span className={`size-2 rounded-full ${dot} ${refreshing ? "opacity-40" : ""}`} aria-hidden />
-      <span className="flex flex-col items-start gap-0.5 leading-tight sm:flex-row sm:items-center sm:gap-1.5">
-        <span className="font-semibold text-ink">{label}</span>
-        {hint ? <span className="tabular text-muted">{hint}</span> : null}
-      </span>
-    </button>
-  );
-}
 
 /** Sticky bar with the brand on the left and page-specific controls on the right. */
 export function BrandHeader({ href, children }: { href: string; children: React.ReactNode }) {
@@ -102,16 +44,10 @@ export function BrandHeader({ href, children }: { href: string; children: React.
   );
 }
 
-/** Home page header: brand, live status, and theme control. */
-export function Header(props: {
-  status: LiveStatus;
-  updatedAt: number | null;
-  refreshing: boolean;
-  onRefresh: () => void;
-}) {
+/** Home page header: brand and theme control. */
+export function Header() {
   return (
     <BrandHeader href="#overview">
-      <LivePill {...props} />
       <ThemeToggle />
     </BrandHeader>
   );
@@ -120,8 +56,8 @@ export function Header(props: {
 /** Jump links. Scrolls horizontally on phones; the faded edges hint that there is more. */
 export function SectionNav() {
   return (
-    <nav aria-label="ไปยังส่วนต่างๆ" className="-mx-5 sm:mx-0">
-      <ul className="no-scrollbar flex gap-2.5 overflow-x-auto px-5 py-1 [mask-image:linear-gradient(to_right,transparent,#000_20px,#000_calc(100%-28px),transparent)] sm:flex-wrap sm:px-0 sm:[mask-image:none]">
+    <nav aria-label="ไปยังส่วนต่างๆ" className="-mx-4 sm:mx-0">
+      <ul className="no-scrollbar flex gap-2.5 overflow-x-auto px-4 py-1 [mask-image:linear-gradient(to_right,transparent,#000_20px,#000_calc(100%-28px),transparent)] sm:flex-wrap sm:px-0 sm:[mask-image:none]">
         <li className="shrink-0">
           {/* No prefetch: otherwise every home-page visitor would also download these pages. */}
           <Link

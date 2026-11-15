@@ -18,6 +18,9 @@
   /* Token-supply bar: voted (--data) | in fans' wallets | still with the organizer. Adjacent pairs checked for CVD/normal-vision separation. */
   --supply-wallet: #86b4ec;
   --supply-org: #e6e5df;
+  /* Group identity: categorical slots 1 (blue) and 2 (orange), a validated adjacent pair. */
+  --bnk: #2a78d6;
+  --cgm: #eb6834;
   --link: #1c5cab;
   --good: #0ca30c;
   --good-text: #006300;
@@ -41,6 +44,8 @@
   --data-soft: #184f95;
   --supply-wallet: #1f5596;
   --supply-org: #333331;
+  --bnk: #3987e5;
+  --cgm: #d95926;
   --link: #86b6ef;
   --good-text: #0ca30c;
 }
@@ -60,6 +65,8 @@
   --color-data-soft: var(--data-soft);
   --color-supply-wallet: var(--supply-wallet);
   --color-supply-org: var(--supply-org);
+  --color-bnk: var(--bnk);
+  --color-cgm: var(--cgm);
   --color-link: var(--link);
   --color-good: var(--good);
   --color-good-text: var(--good-text);
@@ -90,37 +97,8 @@ body {
   display: none;
 }
 
-@keyframes flash-in {
-  from {
-    background-color: var(--data-wash);
-  }
-  to {
-    background-color: transparent;
-  }
-}
-.flash-in {
-  animation: flash-in 2.4s ease-out;
-}
-
-@keyframes live-pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.35;
-  }
-}
-.live-pulse {
-  animation: live-pulse 1.8s ease-in-out infinite;
-}
-
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
-  }
-  .flash-in,
-  .live-pulse {
-    animation: none;
   }
 }

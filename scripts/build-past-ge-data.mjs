@@ -7,29 +7,31 @@
 //   npm run data:ge3 [-- path/to/ge3_result.csv]
 //   npm run data:ge4 [-- path/to/ge4_result.csv]
 //   npm run data:ge5 [-- path/to/ge5_voters.csv]
+//   npm run data:ge6 [-- path/to/ge6_result.csv]
 //   npm run data:thai-japan [-- path/to/thai-japan_result.csv]
 //
 // Two export formats are supported (detected from the header):
-//   GE3/GE4/Thai-Japan: one row per vote (GE4 quoted) — "Wallet address", "Answer" (member), "Vote amount" in wei
+//   GE3/GE4/GE6/Thai-Japan: one row per vote (GE4 quoted) — "Wallet address", "Answer" (member), "Vote amount" in wei
 //   GE5:     one row per wallet × member — "Wallet address", "Answer" (member), "Token" in tokens
 // Only addresses, totals, and member names are kept. App-internal columns (wallet code, vote
 // keys/hashes) are deliberately dropped.
 
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { writeFileSync, mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { readCsv, toAtto, toTokens } from "./csv.mjs";
 
 const EDITIONS = {
   ge3: { csv: "ge3_result.csv" },
   ge4: { csv: "ge4_result.csv" },
   ge5: { csv: "ge5_voters.csv" },
+  // The final GE6 result export; scripts/build-ge6-results.mjs builds the results pages from the same file.
+  ge6: { csv: "ge6_result.csv" },
   // Not a General Election: only used by the wallet page (/wallet), same export format as GE3/GE4.
   "thai-japan": { csv: "thai-japan_result.csv" },
 };
 const TOP_N = 300;
 const MEMBERS_PER_WALLET = 3;
-const DECIMALS = 18;
-const UNIT = 10n ** BigInt(DECIMALS);
 
 const edition = process.argv[2];
 if (!EDITIONS[edition]) {
@@ -42,51 +44,7 @@ const output = resolve(root, `src/data/${edition}-top.json`);
 const summaryOutput = resolve(root, `src/data/${edition}-summary.json`);
 const breakdownOutput = resolve(root, `src/data/${edition}-wallets.json`);
 
-/** Minimal RFC 4180 line parser: handles quoted fields and "" escapes (no embedded newlines). */
-function parseLine(line) {
-  const cells = [];
-  let cell = "";
-  let quoted = false;
-  for (let i = 0; i < line.length; i++) {
-    const ch = line[i];
-    if (quoted) {
-      if (ch === '"' && line[i + 1] === '"') {
-        cell += '"';
-        i++;
-      } else if (ch === '"') quoted = false;
-      else cell += ch;
-    } else if (ch === '"') quoted = true;
-    else if (ch === ",") {
-      cells.push(cell);
-      cell = "";
-    } else cell += ch;
-  }
-  cells.push(cell);
-  return cells.map((c) => c.trim());
-}
-
-/** Decimal string ("397.5153302") or wei string → exact integer amount in 1e-18 units. */
-function toAtto(value, isWei) {
-  if (isWei) {
-    if (!/^\d+$/.test(value)) throw new Error(`bad wei amount "${value}"`);
-    return BigInt(value);
-  }
-  const m = /^(\d+)(?:\.(\d+))?$/.exec(value);
-  if (!m) throw new Error(`bad token amount "${value}"`);
-  const frac = (m[2] ?? "").slice(0, DECIMALS).padEnd(DECIMALS, "0");
-  return BigInt(m[1]) * UNIT + BigInt(frac);
-}
-
-/** 1e-18 units → GE tokens rounded to 2 decimals (what the UI shows). */
-const toTokens = (atto) => Number((atto + UNIT / 200n) / (UNIT / 100n)) / 100;
-
-const lines = readFileSync(input, "utf8").replace(/^﻿/, "").split(/\r?\n/).filter(Boolean);
-const header = parseLine(lines[0]).map((h) => h.toLowerCase());
-const col = (...names) => {
-  const i = header.findIndex((h) => names.includes(h));
-  if (i < 0) throw new Error(`missing column ${names.join(" / ")} in ${input}`);
-  return i;
-};
+const { header, col, rows: csvRows, lines } = readCsv(input);
 const iMember = col("answer");
 const iAddress = col("wallet address");
 const isWei = header.includes("vote amount");
@@ -96,11 +54,10 @@ const wallets = new Map(); // address -> Map(member -> atto)
 const memberNames = new Set();
 let grandTotal = 0n;
 
-for (const [n, line] of lines.slice(1).entries()) {
-  const cells = parseLine(line);
+for (const [n, cells] of csvRows.entries()) {
   const member = cells[iMember];
   const address = cells[iAddress]?.toLowerCase();
-  if (!member || !/^0x[0-9a-f]{40}$/.test(address ?? "")) throw new Error(`bad row ${n + 2}: ${line}`);
+  if (!member || !/^0x[0-9a-f]{40}$/.test(address ?? "")) throw new Error(`bad row ${n + 2}: ${lines[n + 1]}`);
   const amount = toAtto(cells[iAmount], isWei);
   memberNames.add(member);
   grandTotal += amount;

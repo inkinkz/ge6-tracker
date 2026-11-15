@@ -1,5 +1,5 @@
 import type { SupplySnapshot } from "@/lib/types";
-import { fmtPercent, fmtTokens } from "@/lib/format";
+import { fmtNumber, fmtPercent, fmtTokens } from "@/lib/format";
 import { Swatch } from "./chart";
 import { Section } from "./ui";
 
@@ -26,7 +26,7 @@ export function TokenJourney({ supply }: { supply: SupplySnapshot }) {
       label: "ออกจากกระเป๋าหลัก",
       value: leftTreasury,
       prev: created,
-      stopped: { label: "ยังอยู่ในกระเป๋าหลัก", value: treasury, color: "bg-supply-org" },
+      stopped: { label: "อยู่ในกระเป๋าหลัก", value: treasury, color: "bg-supply-org" },
     },
     {
       label: "ถึงมือแฟน",
@@ -38,7 +38,7 @@ export function TokenJourney({ supply }: { supply: SupplySnapshot }) {
       label: "ใช้โหวตแล้ว",
       value: voted,
       prev: distributed,
-      stopped: { label: "ยังอยู่ในกระเป๋าแฟน", value: inWallets, color: "bg-supply-wallet" },
+      stopped: { label: "แฟนไม่ได้ใช้โหวต", value: inWallets, color: "bg-supply-wallet" },
     },
   ];
   const pct = (n: number) => (created > 0 ? (n / created) * 100 : 0);
@@ -47,7 +47,7 @@ export function TokenJourney({ supply }: { supply: SupplySnapshot }) {
     <Section
       id="tokens"
       title="เส้นทางของโทเคน GE6"
-      subtitle={`จากโทเคนที่สร้างขึ้น ${fmtTokens(created)} GE6 ไปถึงการโหวตได้ ${fmtPercent(created > 0 ? voted / created : 0)}`}
+      subtitle={`ณ ตอนปิดโหวต (บล็อก ${fmtNumber(supply.block)}): โทเคนที่สร้าง ${fmtTokens(created)} GE6 ไปถึงการโหวต ${fmtPercent(created > 0 ? voted / created : 0)} · แฟนใช้โหวต ${fmtPercent(distributed > 0 ? voted / distributed : 0)} ของที่ได้รับ`}
     >
       <ol className="space-y-5">
         {steps.map((st, i) => (

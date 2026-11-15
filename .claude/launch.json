@@ -18,20 +18,6 @@
         "start"
       ],
       "port": 3000
-    },
-    {
-      "name": "ge6-prod-surge",
-      "runtimeExecutable": "env",
-      "runtimeArgs": [
-        "TRAFFIC_MODE=surge",
-        "npm",
-        "run",
-        "start",
-        "--",
-        "-p",
-        "3002"
-      ],
-      "port": 3002
     }
   ]
 }

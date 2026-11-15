@@ -11,9 +11,9 @@ const thai = Anuphan({
 });
 
 export const metadata: Metadata = {
-  title: "GE6 Vote Tracker — ติดตามยอดโหวต BNK48 & CGM48 แบบเรียลไทม์",
+  title: "GE6 Vote Tracker — ผลโหวต BNK48 & CGM48 General Election 6",
   description:
-    "ติดตามยอดโทเคน GE6 ที่ใช้โหวต BNK48 & CGM48 General Election ครั้งที่ 6 แบบเรียลไทม์จากบล็อกเชน Token X: ยอดรวม จำนวนกระเป๋า อันดับกระเป๋าที่โหวตมากที่สุด และความเคลื่อนไหวล่าสุด",
+    "ผลโหวต BNK48 & CGM48 General Election ครั้งที่ 6 จากไฟล์ผลโหวตรายกระเป๋า: อันดับเมมเบอร์ กระเป๋าที่โหวตให้แต่ละคนมากที่สุด ช่วงเวลาที่โหวต แฟนโหวตให้ใครบ้าง และเทียบกับ GE5",
 };
 
 export const viewport: Viewport = {
