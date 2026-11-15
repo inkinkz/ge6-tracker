@@ -27,7 +27,7 @@ out, every number comes from that file and every page is static (no auto-refresh
 ## Member pages (`/member/[slug]`, e.g. `/member/pancake-bnk48`)
 
 One prerendered page per member: rank and GE3–GE5 history, wallets, votes, average/median, her
-#1 wallet, her top 50 wallets (share of her total, whether they voted only for her), tokens per
+#1 wallet, her top 300 wallets (all of them if she has fewer; share of her total, whether they voted only for her), tokens per
 day, share from single-member wallets, GE5 fan retention, which other members her wallets also
 voted for, and her wallet-size distribution.
 
